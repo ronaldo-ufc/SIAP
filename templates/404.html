@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ super() }} - Página não encontrada 
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jumbotron pull-center">
+        <h1>Página não encontrada</h1>
+        <p class="text-danger">Desculpe-nos, a página solicitada não pôde ser encontrada.</p>
+        <p><a href="/" class="btn btn-default btn-lg" role="button"><span class="glyphicon glyphicon-home"></span> Página Inicial</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

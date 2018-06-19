@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% import "funcoes.html" as msg %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      {{ msg.message(mensagem)}}
+    </div>
+    <div class="col-md-6 col-md-offset-3">
+
+      <div class="panel panel-default">
+        <div class="panel-heading"><h4>Cadastro de Permissões de Grupos de Usuários</h4></div>
+        <div class="panel-body">
+          <form name="pesquisa" action="" method="POST">
+            <div class="row">
+              <div class="col-md-4">
+                <label for="privilegio" class="control-label">Grupo de Usuário</label>
+                <select name="privilegio" class="form-control" id="privilegio" required="true" onclick="menuSelect()">
+                  {% for privilegio in privilegios  %}
+                  <option value="{{privilegio.privilegio_codigo}}">{{privilegio.privilegio_nome}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <div class="col-md-4">
+                  <label for="menu" class="control-label">Menu</label>
+                  <select class="form-control" name="menu" id="menu" onclick="subMenuSelect()"></select>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-2 col-md-offset-2" >
+                  <input class="btn btn-primary form-control" type="submit" value="Salvar">
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-md-10 col-md-offset-1" >
+                <table class="table table-bordered table-striped table-condensed table-borderless">
+                  <thead>
+                    <tr class="bg-primary text-center"><td>Ativo</td><td>Submenu</td></tr>
+                  </thead>
+                  <tbody id="submenu">   </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row">
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

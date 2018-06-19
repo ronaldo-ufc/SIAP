@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ super() }} - Erro
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jumbotron pull-center">
+        <h1>Página não encontrada</h1>
+        <p class="text-danger">Desculpe-nos, ocorreu um erro inesperado no sistema.
+        Por favor, entre em contato conosco pelo telefone 3611-4011 ou pelo email
+        <strong><a href="mailto:iptu.sobral.ce.gov.br">iptu@sobral.ce.gov.br</a></strong>
+        </p>
+        <p><a href="/" class="btn btn-default btn-lg" role="button"><span class="glyphicon glyphicon-home"></span> Página Inicial</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

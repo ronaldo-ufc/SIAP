@@ -1,0 +1,93 @@
+<?php
+namespace siap\setor\models;
+use siap\models\DBSiap;
+
+class Setor{
+  private $setor_id;
+  private $nome;
+  private $ativo;
+  private $sigla;
+  private $setor_responsavel;
+  
+  private function bundle($row){
+    $u = new Setor();
+    $u->setSetor_id($row['setor_id']);
+    $u->setNome($row['nome']);
+    $u->setAtivo($row['ativo']);
+    $u->setSigla($row['sigla']);
+    return $u;
+  }
+  
+  static function getAll(){
+    $sql = "select * from setor order by nome";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array());
+    $rows = $stmt->fetchAll();
+    $result = array();
+    foreach ($rows as $row){
+      array_push($result, self::bundle($row));
+    }
+    return $result;
+  }
+  
+  static function getById($setor_id){
+    $sql = "select * from setor where setor_id = ?";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array($setor_id));
+    $row = $stmt->fetch();
+    if ($row == null){
+      return null;
+    }
+    return self::bundle($row);
+  }
+  
+  static function create($nome_setor, $sigla){
+    $sql = "INSERT INTO setor (nome, sigla) VALUES (?, ?)";
+    
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array(strtoupper($nome_setor), strtoupper($sigla)));
+  }
+          
+  function getSetor_id() {
+    return $this->setor_id;
+  }
+
+  function getSetor_responsavel() {
+    return $this->setor_responsavel;
+  }
+
+  function setSetor_id($setor_id) {
+    $this->setor_id = $setor_id;
+  }
+
+  function getNome() {
+    return $this->nome;
+  }
+
+  function setNome($nome) {
+    $this->nome = $nome;
+  }
+  function getAtivo() {
+    return $this->ativo;
+  }
+
+  function setAtivo($ativo) {
+    $this->ativo = $ativo;
+  }
+
+    
+  function setSetor_responsavel($setor_responsavel) {
+    $this->setor_responsavel = $setor_responsavel;
+  }
+
+  function getSigla() {
+    return $this->sigla;
+  }
+
+  function setSigla($sigla) {
+    $this->sigla = $sigla;
+  }
+
+
+}
+

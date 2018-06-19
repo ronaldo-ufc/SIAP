@@ -1,0 +1,65 @@
+{% macro error_message(form, message) %}
+{% if form.errors == 'danger'%}
+<div class="alert alert-danger alert-dismissable">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  {% if message %}
+  {{ message|raw }}
+  {% else %}
+  Erros no formulário. Verifique os campos em <strong>vermelho</strong>.
+  {% endif %}
+</div>
+{% elseif form.errors == 'success' %}
+<div class="alert alert-success alert-dismissable">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  {% if message %}
+  {{ message|raw }}
+  {% else %}
+  Operação realizada com sucesso.
+  {% endif %}
+</div>
+{% endif %}
+{%- endmacro %}
+
+{% macro input(field, cols, classes, label, help, helptype, placeholder) %}
+{% if cols %}
+<div class="col-md-{{ cols }}">
+  {% endif %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    {% if label != False %}
+    <label class="control-label">
+      {{ field.label.text }}{% if field.flags.required %}*{% endif %}
+      {% if help %}
+      {% if helptype == 'text' %}
+      <small>{{ help }}</small>
+      {% elseif helptype == 'tooltip' %}
+      {% elseif helptype == 'dialog' %}
+      <a href="javascript:BootstrapDialog.alert('{{ help }}');void(0);" class="black"><span class="glyphicon glyphicon-question-sign"></span></a>
+      {% endif %}
+      {% endif %}
+    </label>
+    {% endif %}
+
+    {% if classes %}
+    {{ field.label|raw }}
+    {{ field.__invoke({'class': 'form-control ' + classes})|raw }}
+    {% else %}
+    {{ field.label|raw }}
+    {{ field.__invoke({'class': 'form-control'})|raw }}
+    {% endif %}
+
+    {# {% if placeholder == true %}
+    {{ field(class='form-control '+classes, placeholder=field.label.text, varargs) }}
+    {% elseif placeholder != false %}
+    {{ field(class='form-control '+classes, placeholder=placeholder, varargs) }}
+    {% else %}
+    {{ field(class='form-control '+classes, varargs) }}
+    {% endif %} #}
+    {% if field.errors %}
+    <span for="{{ field.name }}" id="{{ field.name }}-error" class="help-block">{{ field.errors|join(' | ') }}</span>
+    {% endif %}
+  </div>
+  {% if cols %}
+</div>
+{% endif %}
+{%- endmacro %}
+

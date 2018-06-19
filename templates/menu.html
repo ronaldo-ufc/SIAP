@@ -1,0 +1,50 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div id="barra-brasil" class="no-print">
+    <a href="http://brasil.gov.br" style="background:#7F7F7F; height: 20px; padding:4px 0 4px 10px; display: block; font-family:sans,sans-serif; text-decoration:none; color:white; ">Portal do Governo Brasileiro</a>
+  </div>
+  <script src="http://barra.brasil.gov.br/barra.js" type="text/javascript" defer async></script>
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand nav-img" href="<?php echo FOR_URL?>home"><img class="img-responsive" style="max-width: 150px" src="http://www.crateus.ufc.br/documentos/site/comunicacao/brasao/Brasao%20Horizontal%20Crate%C3%BAs%20Policromatico.png"></a>
+      <a class="navbar-brand" href="{{ base_url() }}">SIAP - Sistema de Almoxarifado e Patrimônio</a>
+    </div>
+    {% if current_user.logado %}
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        {% for pai in menus_pais %}
+        <li class="nav-item dropdown">
+          <a title="{{pai.menu_hint}}" class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="{{pai.menu_icon}}"></i> {{pai.menu_nome}}
+          </a>
+          <ul class="dropdown-menu">
+            {% for filho in pai.filhos(current_user.usuarioRol) %}
+            <li> <a title="{{filho.menu_hint}}" href="{{ base_url() }}/{{filho.menu_url}}"><i class="{{filho.menu_icon}}"></i> {{filho.menu_nome}} </a> </li>
+            {% endfor %}
+          </ul>
+        </li>
+        {% endfor %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="{{ base_url() }}/assets/img/conf.png">
+          </a>
+          <ul class="dropdown-menu">
+            <li> <a href="{{ base_url() }}/dados/user">Meus dados</a> </li>
+            <li><a href="{{ base_url() }}/dados/edit/pwd">Alterar minha senha</a></li>
+            <li class="divider"></li>
+            <li><a href="{{ base_url() }}/autenticacao/logout" class="js-security-logout">Sair</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+    {% endif %}
+  </div><!-- /.container-fluid -->
+</nav>

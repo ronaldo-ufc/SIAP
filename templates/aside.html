@@ -1,0 +1,48 @@
+<aside class="col-md-3">
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+            <span class="glyphicon glyphicon-usd"></span> Financeiro
+          </a>
+        </h4>
+      </div>
+      <div id="collapseOne" class="panel-collapse collapse in">
+        <div class="panel-body">
+          <a class="btn btn-danger btn-block" href="#"><span class="glyphicon glyphicon-list-alt"></span> Contratos</a>
+          <a class="btn btn-danger btn-block" href="#"><span class="glyphicon glyphicon-stats"></span> Gráficos</a>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapsetwo">
+            <span class="glyphicon glyphicon-lock"></span> Busca p/ secretaria
+          </a>
+        </h4>
+      </div>
+      <div id="collapsetwo" class="panel-collapse collapse">
+        <div class="panel-body">
+          {% for secretaria in secretarias %}
+          <a data-toggle="tooltip" data-placement="left" title="{{secretaria.secretaria_nome|convert_encoding('UTF-8', 'ISO-8859-1')}}" class="btn btn-danger btn-block" href="{{ path_for('contratos-secretaria', {'sec': secretaria.getSecretaria_numero()})}}">{{secretaria.getSecretaria_abrev()|convert_encoding('UTF-8', 'ISO-8859-1')}}</a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+          <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse3"><span class="glyphicon glyphicon-user">
+              </span> Conta</a>
+          </h4>
+      </div>
+      <div id="collapse3" class="panel-collapse collapse ">
+        <div class="panel-body">
+          <a class="btn btn-danger btn-block" href="/autenticacao/logout"><span class="glyphicon glyphicon-off"></span> Sair</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
