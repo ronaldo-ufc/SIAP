@@ -10,6 +10,8 @@ return [
                 __DIR__ . '/../templates/',
                 __DIR__ . '/home/templates/',
                 __DIR__ . '/usuario/templates/',
+                __DIR__ . '/produto/templates/',
+                __DIR__ . '/cadastro/templates/',
                 __DIR__ . '/setor/templates/',
                 __DIR__ . '/auth/templates/'
             ),

@@ -46,5 +46,39 @@ function subMenuSelect() {
                               
 }
 
+function modeloSelect() {
+    
+    var e = document.getElementById("fabricante");
+    var itemSelecionado = e.options[e.selectedIndex].value;
+
+    var url = 'http://10.5.5.10/siap/services/modelos/'+itemSelecionado;
+
+    $.getJSON(url, function (data)  {
+
+      var option_menu = '<option value="">Selecione um modelo... </option>';
+
+      $.each(data, function (i, val) {
+          option_menu +=  '<option value="' + val[0] + '">' + val[1]+ '</option>';
+      });    
+      $('#modelo').html(option_menu);
+    });
+                              
+}
+
+function atualizaSelect(item) {
+  
+    var url = 'http://10.5.5.10/siap/services/receber/item/'+item;
+
+    $.getJSON(url, function (data)  {
+
+      var option_menu;
+
+      $.each(data, function (i, val) {
+          option_menu +=  '<option value="' + val[0] + '">' + val[1]+ '</option>';
+      });    
+      $('#'+item).html(option_menu);
+    });                            
+}
+
 
 

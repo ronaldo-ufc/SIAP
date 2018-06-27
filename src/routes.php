@@ -32,3 +32,21 @@ $app->group('/services', function() use($app)
   require_once(__DIR__ . '/services/routes.php');
   
 })->add($auth);
+
+$app->group('/cadastro', function() use($app) 
+{
+  require_once(__DIR__ . '/cadastro/routes.php');
+  
+})->add($auth);
+
+$app->group('/home', function() use($app) 
+{
+  require_once(__DIR__ . '/home/routes.php');
+  
+})->add($auth);
+
+$app->group('/ativo', function() use($app) 
+{
+  require_once(__DIR__ . '/produto/routes.php');
+  
+})->add($auth);

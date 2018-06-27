@@ -27,7 +27,10 @@ $app->map(['GET', 'POST'], '/responsavel', function($request, $response, $args){
     if ($form->validate()){
       #Validação da data final que não pode ser menor que a data de início
       $mensagem = $form->valida_data_fim();
-      
+      if (!$form->errors){
+         #Verifica se ja tem um responsável cadastrado para o período informado
+        $mensagem = $form->validaChoqueDePeriodo();
+      }
       #Verifico se não tem erros no formulário para inserir no banco
       if (!$form->errors){
         $msg = SetorResponsavel::create($form->getSetor(), $form->getResponsavel(), $form->getDataInicio(), $form->getDataFim());
@@ -38,7 +41,6 @@ $app->map(['GET', 'POST'], '/responsavel', function($request, $response, $args){
           $form->errors = "success";
           $mensagem = 'Operacação realizado com sucesso!';
         }
-        
       }
     }
   }else{
@@ -48,7 +50,7 @@ $app->map(['GET', 'POST'], '/responsavel', function($request, $response, $args){
       foreach ($messages as $_msg){
         $mensagem = $_msg[0];
       }
-      $form->errors = true;
+      $form->errors = 'danger';
     }
   }
 

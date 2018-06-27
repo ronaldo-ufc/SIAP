@@ -28,12 +28,13 @@ class SetorResponsavelForm extends Form {
       array_push($setor, array($val->getSetor_Id(), $val->getNome()));
     }
     
-
-    $this->data_inicio = new DateField(["validators" => [
-        new InputRequired("Data de início é obrigatória") 
-    ]]);
+    $this->data_inicio = new DateField(["value" => date('Y-m-d'),
+                                       "validators" => [new InputRequired("Data de início é obrigatória")]
+    ]);
+    
     $this->data_fim = new DateField(["validators" => [
         new InputRequired("Data de fim é obrigatória")
+       
     ]]);
     
     $this->setor = new SelectField(["choices" =>  $setor,
@@ -44,7 +45,7 @@ class SetorResponsavelForm extends Form {
                                     "validators" => [new InputRequired("Campo usuário é obrigatório")]
     ]);
     
-
+    //$this->data_inicio->data = date('Y-m-d');
   }
  
   public function getDataInicio(){
@@ -63,6 +64,17 @@ class SetorResponsavelForm extends Form {
     if (strtotime($this->data_fim->data) < strtotime($this->data_inicio->data)){
       $this->errors = 'danger';
        return ('Data Final não pode ser menor que a data de início');
+    }else{
+      $this->errors = null;
+    }
+    return false;
+  }
+  public function validaChoqueDePeriodo(){
+    $setor = \siap\setor\models\SetorResponsavel::getLastBySetor($this->getSetor());
+    $hoje = $setor?$setor->getData_fim():date('Y-m-d');
+    if (strtotime($this->data_inicio->data) <= (strtotime($hoje))){
+      $this->errors = 'danger';
+       return ('Existe um Responsável Atual para o Setor Informado. Não Informar Datas Retroativas a Data de Hoje');
     }else{
       $this->errors = null;
     }

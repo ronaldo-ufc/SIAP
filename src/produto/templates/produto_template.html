@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% import "forms.html" as forms %}
+{% import "uteis.html" as functions %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      {{ forms.error_message(form, mensagem)}}
+    </div>
+    <div class="col-md-12">
+      <h3>Modelagem de Produtos</h3>
+      <div class="panel panel-default">
+        <div class="panel-heading"></div>
+        <div class="panel-body">
+          <form name="cadastro" action="" method="POST" enctype="multipart/form-data">
+            <div class="row">
+              {{forms.input(form.nome, 3)}}
+              {{forms.input(form.foto, 9)}}
+            </div>
+            <div class="row">
+              {{forms.input(form.data_atesto, 2)}}
+              {{forms.input(form.nota_fiscal, 2)}}
+              {{forms.input(form.fornecedor, 3)}}
+              {{forms.input(form.fabricante, 2, null, functions.btnAddItens('Fabricante|fabricante', 'Adicionar Tipo de Status'))}}
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="modelo">Modelo</label>{{functions.btnAddItens('Modelo|modelo', 'Adicionar Modelo')}}
+                  <select required class="form-control" id="modelo" name="modelo">  </select>
+                </div>
+              </div>
+
+            </div>
+            <div class="row">
+              {{forms.input(form.tipo_de_aquisicao, 3, null, functions.btnAddItens('Tipo de Aquisição|tipo_de_aquisicao', 'Adicionar Tipo de Aquisição'))}}
+              {{forms.input(form.status, 3, null, functions.btnAddItens('Status|status', 'Adicionar Tipo de Status'))}}
+              {{forms.input(form.setor, 3, null, functions.btnAddItens('Setor|setor', 'Adicionar Setor'))}}
+              {{forms.input(form.estado_de_conservacao, 3, null, functions.btnAddItens('Estado de Conservação|estado_de_conservacao', 'Adicionar Estado de Conservação'))}}
+            </div>
+            <div class="row">
+              {{forms.input(form.descricao, 12)}}
+
+            </div>
+            <div class="row">
+              {{forms.input(form.observacao, 12)}}
+
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <button  type="submit" class="btn btn-primary">
+                    <i class="far fa-save"></i> Salvar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ functions.modalItens() }}
+{% endblock %}
+

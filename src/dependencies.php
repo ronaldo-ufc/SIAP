@@ -37,3 +37,5 @@ $container['flash'] = function () {
 //    };
 //};
 
+$container['upload_directory_imagem'] = '/var/www/html/siap/uploads/imagem/';
+

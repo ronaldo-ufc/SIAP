@@ -34,6 +34,17 @@ class SetorResponsavel{
     }
     return $result;
   }
+  static function getLastBySetor($setor){
+    $sql = "select * from setor_responsavel where setor_id = ? order by data_fim desc limit 1 ";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array($setor));
+    $row = $stmt->fetch();
+    if ($row == null){
+      return false;
+    }
+    return self::bundle($row);
+  }
+
   static function create($setor, $responsavel, $inicio, $fim){
     $sql = 'INSERT INTO setor_responsavel (setor_id, responsavel_id, data_inicio, data_fim) VALUES (?, ?, ?, ?)';
     

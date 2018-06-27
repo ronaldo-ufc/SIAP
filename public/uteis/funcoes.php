@@ -109,46 +109,6 @@ function formatCelular ($tipo)
     return $string;
 }
 
-function geraRegistroCetificado($evento, $tipo, $modalidade, $inscricao){
-  return $evento.'U'.$tipo.'F'.$modalidade.'C'.$inscricao;  
-}
-
-function getMensagemByCodigo($codigo, $txt = NULL){ 
-    switch ($codigo){
-        case 1:
-            return '<div class="alert alert-danger">Não encontramos nenhum usuário com o Login: <strong>'.$txt.'</strong>. Favor inserir um Login válido.</div>';
-            break;
-        case 2:
-            return '<div class="alert alert-success"><p class="text-center">Você deverá receber em breve um e-mail permitindo a redefinição de sua senha. Por favor, verifique seus spams e lixo caso não o encontre.</p></div>';
-            break;
-        case 3:
-            return '<div class="alert alert-danger">Não foi possível fazer a recuperação de senha. Por favor, contate o administrador do sistema</div>';
-            break;
-        case 4:
-            return '<div class="alert alert-info"><strong>'.$txt.'</strong></div>';
-            break;
-        case 5:
-            return '<div class="alert alert-danger"><p><strong>As senhas digitadas nos campos não conferem.</strong></p></div>';
-            break;
-        case 6:
-            return '<div class="alert alert-success"><p class="text-center"><strong>Senha alterada com sucesso.</strong></p></div>';
-            break;
-        ######novos  
-        case 7:
-            return '<div class="alert alert-danger">'.$txt.'</div>';
-            break;
-        case 8:
-            return '<div class="alert alert-warning">'.$txt.'</div>';
-            break;
-        case 9:
-            return '<div class="alert alert-success">'.$txt.'</div>';
-            break;
-        case 10:
-            return '<div class="alert alert-success"><p class="text-center"><strong>E-mail cadastrado com sucesso. <a href="/sigce/recuperar/senha">Clique aqui</a> para ser redirecionado para a Redefinição de Senha</strong></p></div>';
-            break;
-    }
-}
-
 function enviaEmail($nome, $email, $assunto, $msg_,$remetente) {
     //$msg = "*** Email enviado pelo site *** <br/>" . "Email: " . $email . "<br />" . "Mensagem: " . $msg_;
 
@@ -252,3 +212,143 @@ function titleCase($string, $delimiters = array(" ", "-", ".", "'", "O'", "Mc"),
 function tirarAcentos($string){
     return preg_replace(array("/(á|à|ã|â|ä)/","/(Á|À|Ã|Â|Ä)/","/(é|è|ê|ë)/","/(É|È|Ê|Ë)/","/(í|ì|î|ï)/","/(Í|Ì|Î|Ï)/","/(ó|ò|õ|ô|ö)/","/(Ó|Ò|Õ|Ô|Ö)/","/(ú|ù|û|ü)/","/(Ú|Ù|Û|Ü)/","/(ñ)/","/(Ñ)/", "/(Ç)/", "/(ç)/"),explode(" ","a A e E i I o O u U n N C c"),$string);
 }
+
+/**
+ * Moves the uploaded file to the upload directory and assigns it a unique name
+ * to avoid overwriting an existing uploaded file.
+ *
+ * @param string $directory directory to which the file is moved
+ * @return string filename of moved file
+ */
+function moveUploadedFile($directory, $uploadedFile)
+{
+  $imagem = array("pdf", "jpeg", "jpg", "png"); 
+  $extension = strtolower(pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION));
+  if (in_array($extension, $imagem)) {
+    $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
+    $filename = sprintf('%s.%0.8s', $basename, $extension);
+
+    $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+
+    return $filename;
+  }
+  return null;
+}
+
+/**
+ * Moves the uploaded file to the upload directory and assigns it a unique name
+ * to avoid overwriting an existing uploaded Image.
+ *
+ * @param string $directory directory to which the file is moved
+ * @return string filename of moved file
+ */
+function moveUploadedImage($directory, $uploadedFile)
+{
+  $imagem = array("jpg", "jpeg", "png"); 
+  $extension = strtolower(pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION));
+  if (in_array($extension, $imagem)) {
+    $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
+    $filename = sprintf('%s.%0.8s', $basename, $extension);
+
+    $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+    reduzir($directory.$filename);
+    
+    return $filename;
+  }
+  return null;
+}
+
+//// Função que irá redimensionar nossa imagem
+//function redimensionar($caminho, $nomearquivo){
+//    $tipos = array("jpeg", "jpg", "png");
+//    // Determina as novas dimensões
+//    $width = 100;
+//    $height = 100;
+//    
+//    $uploadfile = $caminho.$nomearquivo;
+//    
+//    // Pegamos sua largura e altura originais
+//    list($width_orig, $height_orig) = getimagesize($uploadfile);   
+//    
+//    // Pegamos a largura e altura originais, além do tipo de imagem
+//    list($width_orig, $height_orig, $tipo, $atributo) = getimagesize($caminho.$nomearquivo);
+//
+//    // Se largura é maior que altura, dividimos a largura determinada pela original e multiplicamos a altura pelo resultado, para manter a proporção da imagem
+//    if($width_orig > $height_orig){
+//    $height = ($width/$width_orig)*$height_orig;
+//    // Se altura é maior que largura, dividimos a altura determinada pela original e multiplicamos a largura pelo resultado, para manter a proporção da imagem
+//    } elseif($width_orig < $height_orig) {
+//    $width = ($height/$height_orig)*$width_orig;
+//    } // -> fim if
+//    // Criando a imagem com o novo tamanho
+//    $novaimagem = imagecreatetruecolor($width, $height);
+//    switch($tipo){
+//
+//      // Se o tipo da imagem for gif
+//      case 0:
+//      // Obtém a imagem gif original
+//      $origem = imagecreatefromgif($caminho.$nomearquivo);
+//      // Copia a imagem original para a imagem com novo tamanho
+//      imagecopyresampled($novaimagem, $origem, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+//      // Envia a nova imagem gif para o lugar da antiga
+//      imagegif($novaimagem, $caminho.$nomearquivo);
+//      break;
+//
+//      // Se o tipo da imagem for jpg
+//      case 1:
+//      // Obtém a imagem jpg original
+//      $origem = imagecreatefromjpeg($caminho.$nomearquivo);
+//      // Copia a imagem original para a imagem com novo tamanho
+//      imagecopyresampled($novaimagem, $origem, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+//      // Envia a nova imagem jpg para o lugar da antiga
+//      imagejpeg($novaimagem, $caminho.$nomearquivo);
+//      break;
+//
+//      // Se o tipo da imagem for png
+//      case 2:
+//      // Obtém a imagem png original
+//      $origem = imagecreatefrompng($caminho.$nomearquivo);
+//      // Copia a imagem original para a imagem com novo tamanho
+//      imagecopyresampled($novaimagem, $origem, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+//      // Envia a nova imagem png para o lugar da antiga
+//      imagepng($novaimagem, $caminho.$nomearquivo);
+//      break;
+//    } // -> fim switch
+//
+//    // Destrói a imagem nova criada e já salva no lugar da original
+//    imagedestroy($novaimagem);
+//    // Destrói a cópia de nossa imagem original
+//    imagedestroy($origem);
+//  } // -> fim function redimensionar()
+  
+  function reduzir($filename){
+     // O arquivo. Dependendo da configuração do PHP pode ser uma URL.
+   //$filename = 'original.jpg';
+   //$filename = 'http://exemplo.com/original.jpg';
+
+   // Largura e altura máximos (máximo, pois como é proporcional, o resultado varia)
+   // No caso da pergunta, basta usar $_GET['width'] e $_GET['height'], ou só
+   // $_GET['width'] e adaptar a fórmula de proporção abaixo.
+   $width = 200;
+   $height = 200;
+
+   // Obtendo o tamanho original
+   list($width_orig, $height_orig) = getimagesize($filename);
+
+   // Calculando a proporção
+   $ratio_orig = $width_orig/$height_orig;
+
+   if ($width/$height > $ratio_orig) {
+      $width = $height*$ratio_orig;
+   } else {
+      $height = $width/$ratio_orig;
+   }
+
+   // O resize propriamente dito. Na verdade, estamos gerando uma nova imagem.
+   $image_p = imagecreatetruecolor($width, $height);
+   $image = imagecreatefromjpeg($filename);
+   imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+
+   // Ou, se preferir, Salvando a imagem em arquivo:
+   imagejpeg($image_p, 'nova.jpg', 75);
+  }

@@ -13,7 +13,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand nav-img" href="<?php echo FOR_URL?>home"><img class="img-responsive" style="max-width: 150px" src="http://www.crateus.ufc.br/documentos/site/comunicacao/brasao/Brasao%20Horizontal%20Crate%C3%BAs%20Policromatico.png"></a>
+      <a class="navbar-brand nav-img" href="{{ base_url() }}"><img class="img-responsive" style="max-width: 150px" src="http://www.crateus.ufc.br/documentos/site/comunicacao/brasao/Brasao%20Horizontal%20Crate%C3%BAs%20Policromatico.png"></a>
       <a class="navbar-brand" href="{{ base_url() }}">SIAP - Sistema de Almoxarifado e Patrimônio</a>
     </div>
     {% if current_user.logado %}
@@ -37,8 +37,8 @@
             <img src="{{ base_url() }}/assets/img/conf.png">
           </a>
           <ul class="dropdown-menu">
-            <li> <a href="{{ base_url() }}/dados/user">Meus dados</a> </li>
-            <li><a href="{{ base_url() }}/dados/edit/pwd">Alterar minha senha</a></li>
+            <li> <a href="{{ base_url() }}/home/usuario/dados">Meus dados</a> </li>
+            <!-- <li><a href="{{ base_url() }}/dados/edit/pwd">Alterar minha senha</a></li> -->
             <li class="divider"></li>
             <li><a href="{{ base_url() }}/autenticacao/logout" class="js-security-logout">Sair</a></li>
           </ul>

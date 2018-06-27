@@ -121,7 +121,9 @@ class Usuario {
 
     static function createOrUpdate($login, $nome, $senha, $telefone, $setor, $privilegio, $ativo){
       $user = self::getByLogin($login);
+      #Se tiver usuário cadastrado então é uma atualização se não é um novo usuário
       if ($user) {
+        #Verifica se o usuário ta atualizando a senha.
         $senha = ($senha==null or $senha == '')?$user->getSenha(): $senha;
         $sql = 'UPDATE siap.usuario SET nome = ?, senha = ?, telefone = ?, setor_id = ?, nivel_acesso_id = ?, ativo = ? WHERE login = ?';
       }else{
@@ -129,6 +131,17 @@ class Usuario {
       }
       $stmt = DBSiap::getSiap()->prepare($sql);
       $stmt->execute(array($nome, $senha, $telefone, $setor, $privilegio, $ativo, $login));
+    }
+    /**
+     * @param $row array
+     * @return Informação da operação
+     */
+    static function updatePessoa($login, $nome, $senha, $telefone, $setor){
+      $sql = 'UPDATE siap.usuario SET nome = ?, senha = ?, telefone = ?, setor_id = ? WHERE login = ?';
+     
+      $stmt = DBSiap::getSiap()->prepare($sql);
+      $stmt->execute(array($nome, $senha, $telefone, $setor, $login));
+      return $stmt->errorInfo();
     } 
 
     /**
@@ -136,15 +149,15 @@ class Usuario {
      * @return Usuario
      */
     private static function bundle($row) {
-        $u = new Usuario();
-        $u->setLogin($row['login']);
-        $u->setNome($row['nome']);
-        $u->setSenha($row['senha']);
-        $u->setTelefone($row['telefone']);
-        $u->setSetor($row['setor_id']);
-        $u->setNivelAcesso($row['nivel_acesso_id']);
-        $u->setAtivo($row['ativo']);
-        return $u;
+      $u = new Usuario();
+      $u->setLogin($row['login']);
+      $u->setNome($row['nome']);
+      $u->setSenha($row['senha']);
+      $u->setTelefone($row['telefone']);
+      $u->setSetor($row['setor_id']);
+      $u->setNivelAcesso($row['nivel_acesso_id']);
+      $u->setAtivo($row['ativo']);
+      return $u;
         
     }
 

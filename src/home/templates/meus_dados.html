@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% import "forms.html" as forms %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      {{ forms.error_message(form, mensagem)}}
+    </div>
+    <div class="col-md-12">
+      <h3>Dados da Conta</h3>
+      <div class="panel panel-default">
+        <div class="panel-heading">Cadastro de Novos Usuários</div>
+        <div class="panel-body">
+          <form name="cadastro" action="" method="POST" autocomplete="off">
+            <div class="row">
+              {{forms.input(form.usuario, 3, 'readonlyyv ')}}
+              {{forms.input(form.senha_, 3)}}
+
+
+            </div>
+            <div class="row">
+              {{forms.input(form.nome, 4)}}
+              {{forms.input(form.telefone, 2)}}
+              {{forms.input(form.setor, 3)}}
+              {{forms.input(form.privilegio, 2, 'readonly')}}
+              {{forms.input(form.ativo, 1, 'readonly')}}
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <button  type="submit" class="btn btn-primary">
+                    <i class="far fa-save"></i> Salvar
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                Obs: -
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% import "forms.html" as forms %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      {{ forms.error_message(form, mensagem)}}
+    </div>
+    <div class="col-md-10 col-md-offset-1">
+
+      <div class="panel panel-default">
+        <div class="panel-heading"><h4>Cadastrar Novo Status</h4></div>
+        <div class="panel-body">
+          <form name="pesquisa" action="" method="POST">
+            <div class="row">
+              <div class="col-md-4">
+                <label for="status" class="control-label">Nome</label>
+                <input name="status" type="text" class="form-control" id="status" required>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group"><br>
+                  <button  type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Salvar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="panel panel-default">
+          <div class="panel-heading">Status</div>
+        <div class="panel-body">
+          <table class="table table-striped table-bordered table-condensed">
+            <thead class="bg-primary">
+              <tr><td class="text-center">Nome</td><td class="text-center">Excluir</td></tr>
+            </thead>
+            <tbody>
+              {% for status in statusT %}
+              <tr>
+                  <td class="text-center">{{status.getNome}}</td>
+                  <td class="text-center bg-danger"><a href="status/delete/{{status.getStatus_id}}"><i class="far fa-trash-alt"></i> </a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

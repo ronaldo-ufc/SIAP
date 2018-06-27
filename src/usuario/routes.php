@@ -26,7 +26,7 @@ $app->map(['GET', 'POST'], '/novo', function($request, $response, $args){
         $senha = $form->getSenha();
       }
       Usuario::createOrUpdate($form->getLogin(), strtoupper($form->getNome()), $senha, $form->getTelefone(), $form->getSetor(), $form->getPrivilegio(), $form->getAtivo());
-      $msg = 'Usuário '.$form->getNome().' Salvo com Sucesso!'.$form->getSenha();
+      $msg = 'Usuário '.$form->getNome().' Salvo com Sucesso!';
       $form->errors = 'success';
 
     }else{ 

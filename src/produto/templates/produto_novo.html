@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% import "funcoes.html" as msg %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      {{ msg.message(mensagem)}}
+    </div>
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading"><h3>Cadatrar Produto - Modelo</h3></div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <a href=""><i class="far fa-file"></i> Criar um Produto Novo</a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <h4>Modelos Cadastrados</h4>
+              <table class="table table-striped table-bordered table-condensed">
+                <thead class="bg-primary">
+                  <tr><th >...</th><th >Nome</th><th class="text-center">Gerenciar Modelo</th></tr>
+                </thead>
+                <tbody>
+                  {% for template in templates %}
+                  <tr>
+                    <th class="col-lg-1"><img style="max-width: 100%;" class="img-thumbnail img-responsive" src="../uploads/imagem/{{template.foto}}">
+                    </th>
+                    <td class="col-lg-10"><a href="novo/modelo/{{template.template_id}}"> {{template.nome}}</a></td>
+                    <td class="col-lg-1 bg-info"><p class="text-center"><a href="#"><i class="fas fa-cog"></i></a></p></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
