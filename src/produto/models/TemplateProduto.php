@@ -32,6 +32,7 @@ class TemplateProduto{
     $u->setModelo_id($row['modelo_id']);
     $u->setAquisicao_id($row['aquisicao_id']);
     $u->setStatus_id($row['status_id']);
+    $u->setSetor_id($row['setor_id']);
     $u->setConservacao_id($row['conservacao_id']);
     
     return $u;
@@ -49,6 +50,8 @@ class TemplateProduto{
     }
     return $result;
   }
+  
+ 
   
   static function getById($template_id){
     $sql = "SELECT * FROM siap.template_produto where template_id = ?";

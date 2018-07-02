@@ -27,6 +27,18 @@ class Aquisicao {
         }
         return $result;
     }
+    
+    static function getAllById($id) {
+      $sql = "select * from aquisicao where aquisicao_id = ? union all select * from aquisicao where aquisicao_id <> ? order by nome";
+      $stmt = DBSiap::getSiap()->prepare($sql);
+      $stmt->execute(array($id, $id));
+      $rows = $stmt->fetchAll();
+      $result = array();
+      foreach ($rows as $row) {
+          array_push($result, self::bundle($row));
+      }
+      return $result;
+    }
 
     static function getById($aquisicao_id) {
         $sql = "select * from aquisicao where aquisicao_id = ?";

@@ -26,6 +26,29 @@ class EConservacao {
     return $result;
   }
   
+  static function getAllById($id) {
+    $sql = "select * from conservacao where conservacao_id = ? union all select * from conservacao where conservacao_id <> ? order by nome";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array($id, $id));
+    $rows = $stmt->fetchAll();
+    $result = array();
+    foreach ($rows as $row) {
+        array_push($result, self::bundle($row));
+    }
+    return $result;
+  }
+  
+  static function getById($id) {
+    $sql = "select * from conservacao where conservacao_id = ?";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array($id));
+    $row = $stmt->fetch();
+    if($row == null){
+      return false;
+    }
+    return self::bundle($row);
+  }
+  
   static function create($conservacao) {
         $sql = "INSERT INTO conservacao (nome) VALUES (?)";
 

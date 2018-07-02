@@ -17,17 +17,29 @@ class Fabricante {
     }
 
     static function getAll() {
-        $sql = "select * from fabricante order by nome";
-        $stmt = DBSiap::getSiap()->prepare($sql);
-        $stmt->execute(array());
-        $rows = $stmt->fetchAll();
-        $result = array();
-        foreach ($rows as $row) {
-            array_push($result, self::bundle($row));
-        }
-        return $result;
+      $sql = "select * from fabricante order by nome";
+      $stmt = DBSiap::getSiap()->prepare($sql);
+      $stmt->execute(array());
+      $rows = $stmt->fetchAll();
+      $result = array();
+      foreach ($rows as $row) {
+          array_push($result, self::bundle($row));
+      }
+      return $result;
     }
-
+    
+    static function getAllById($id) {
+      $sql = "select * from fabricante where fabricante_id = ? union all select * from fabricante where fabricante_id <> ? order by nome";
+      $stmt = DBSiap::getSiap()->prepare($sql);
+      $stmt->execute(array($id, $id));
+      $rows = $stmt->fetchAll();
+      $result = array();
+      foreach ($rows as $row) {
+          array_push($result, self::bundle($row));
+      }
+      return $result;
+    }
+   
     static function getById($fabricante_id) {
         $sql = "select * from fabricante where fabricante_id = ?";
         $stmt = DBSiap::getSiap()->prepare($sql);

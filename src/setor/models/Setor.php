@@ -30,6 +30,18 @@ class Setor{
     return $result;
   }
   
+  static function getAllById($id){
+    $sql = "select * from setor where setor_id = ?  union all  select * from setor  where setor_id <> ? order by nome";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array($id, $id));
+    $rows = $stmt->fetchAll();
+    $result = array();
+    foreach ($rows as $row){
+      array_push($result, self::bundle($row));
+    }
+    return $result;
+  }
+  
   static function getById($setor_id){
     $sql = "select * from setor where setor_id = ?";
     $stmt = DBSiap::getSiap()->prepare($sql);
@@ -45,7 +57,7 @@ class Setor{
     $sql = "INSERT INTO setor (nome, sigla) VALUES (?, ?)";
     
     $stmt = DBSiap::getSiap()->prepare($sql);
-    $stmt->execute(array(strtoupper($nome_setor), strtoupper($sigla)));
+    $stmt->execute(array(strtoupper(tirarAcentos($nome_setor)), strtoupper($sigla)));
   }
           
   function getSetor_id() {

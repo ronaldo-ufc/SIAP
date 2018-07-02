@@ -27,7 +27,19 @@ class Categoria {
         }
         return $result;
     }
-
+    
+    static function getAllById($id) {
+        $sql = "select * from categoria where categoria_id = ? union all select * from categoria where categoria_id <> ? order by nome";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array($id, $id));
+        $rows = $stmt->fetchAll();
+        $result = array();
+        foreach ($rows as $row) {
+            array_push($result, self::bundle($row));
+        }
+        return $result;
+    }
+    
     static function getById($categoria_id) {
         $sql = "select * from categoria where categoria_id = ?";
         $stmt = DBSiap::getSiap()->prepare($sql);
