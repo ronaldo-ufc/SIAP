@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% import "funcoes.html" as msg %}
+{% import "uteis.html" as functions %}
+{% block content %}
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-12">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <ul class="nav navbar-nav">
+            <li ><a href="show"><i class="fas fa-search"></i> Visualizar Ativos</a></li>
+            <li><a href="modelo/novo"><i class="fas fa-box-open"></i> Criar Novo Modelo</a></li>
+          </ul>
+        </div>
+      </nav>
+      {{ msg.message(mensagem)}}
+    </div>
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading"><h4>Criar Ativos a partir de Modelo</h4></div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-12 table-responsive">
+              <table id="tabela" class="table table-striped table-bordered table-condensed">
+                <thead class="bg-primary">
+                  <tr><th >...</th><th class="text-center">Nome</th><th class="text-center">Categoria</th><th class="text-center">Atualizar</th><th class="text-center">Excluir</th></tr>
+                </thead>
+                <tbody>
+                  {% for template in templates %}
+                  <tr>
+                    <th style="width: 55px"><img class="img-ativo-show"  style="background-image: url('../uploads/imagem/{{ ativo.foto}} '); " style="width: 50px;" class="img-thumbnail img-responsive" src="../uploads/imagem/{{template.foto}}">
+                    </th>
+                    <td ><a href="novo/modelo/{{template.template_id}}"> {{template.nome}}</a></td>
+                    <td ><a href="novo/modelo/{{template.template_id}}"> {{template.categoria.nome}}</a></td>
+                    <td style="width: 70px;" class="text-center bg-success"><a href="{{base_url()}}/ativo/atualizar/modelo/{{template.template_id}}"><i class="fas fa-sync-alt"></i></a></td>
+                    <td  style="width: 50px;" class="text-center bg-danger" data-toggle="modal" data-target="#modalExcluir"> <a onclick="btnExcluir(' {{base_url()}}/ativo/main/delete/{{template.template_id}} ')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i></a></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ functions.modalExcluir() }}
+{% endblock %}

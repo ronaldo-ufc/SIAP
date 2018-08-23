@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% import "forms.html" as forms %}
+{% import "uteis.html" as functions %}
+{% import "funcoes.html" as msg %}
+
+{% block content %}
+<div class="col-md-12">
+  {{ forms.error_message(form, mensagem )}}
+  {{ msg.messageErro(mensagemErro)}}
+</div>
+<div class="col-md-12">
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4>Atualizar Modelo</h4></div>
+    <div class="panel-body">
+      <form name="cadastro" action="" method="POST" enctype="multipart/form-data">
+        <input name="foto_bem" type="hidden" value="sem_imagem.jpg">
+        <div class="row">
+          <div class="col-md-2">
+            <figure class="figure">
+              {% if foto %}
+              <img class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/{{foto}}">
+              {% else %}
+              <img class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/sem_imagem.jpg">
+              {% endif %}
+              <figcaption class="figure-caption text-center text-muted">Imagem do Ativo</figcaption>
+            </figure>
+
+          </div>
+          <div class="col-md-10">
+            <div class="row">
+              <!--  <div class="col-md-2">
+                  <div class="form-group">
+                    <label for="patrimonio">Patrimonio</label>
+                    <input class="form-control" id="patrimonio" name="patrimonio" readonly value="{{patrimonio}}"/>
+                  </div>
+                </div>-->
+              {{forms.input(form.nome, 4)}}
+              {{forms.input(form.foto, 6)}}
+            </div>
+            <div class="row">
+              {{forms.input(form.data_atesto, 4)}}
+              {{forms.input(form.nota_fiscal, 4)}}
+              {{forms.input(form.fornecedor, 4)}}
+            </div>
+            <div class="row">
+              {{forms.input(form.categoria, 4, null, functions.btnAddItens('Categoria|categoria', 'Adicionar Tipo de Categoria'))}}
+              {{forms.input(form.marca, 4, null, functions.btnAddItens('Marca|marca', 'Adicionar Marca'))}}
+              {{forms.input(form.modelo, 4, null, functions.btnAddItens('Modelo|modelo', 'Adicionar Modelo'))}}
+            </div>
+            <div class="row">
+              {{forms.input(form.tipo_de_aquisicao, 3, null, functions.btnAddItens('Tipo de Aquisição|tipo_de_aquisicao', 'Adicionar Tipo de Aquisição'))}}
+              {{forms.input(form.status, 3, null, functions.btnAddItens('Status|status', 'Adicionar Tipo de Status'))}}
+              {{forms.input(form.setor, 3, null, functions.btnAddItens('Setor|setor', 'Adicionar Setor'))}}
+              {{forms.input(form.estado_de_conservacao, 3, null, functions.btnAddItens('Estado de Conservação|estado_de_conservacao', 'Adicionar Estado de Conservação'))}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          {{forms.input(form.descricao, 12)}}
+
+        </div>
+        <div class="row">
+          {{forms.input(form.observacao, 12)}}
+        </div>
+        <div class="row">
+          <div class="col-md-1">
+            <div class="form-group">
+              <button  type="submit" class="btn btn-primary">
+                <i class="far fa-save"></i> Salvar
+              </button>
+            </div>
+          </div>
+          <div class="col-md-1">
+            <div class="form-group">
+                <a  data-toggle="modal" data-target="#modalExcluir" onclick="btnExcluir(' {{base_url()}}/ativo/main/delete/{{template_id}} ')" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i> Excluir
+              </a>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{{ functions.modalItens() }}
+{{ functions.modalExcluir() }}
+{% endblock %}
+

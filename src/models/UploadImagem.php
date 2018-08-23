@@ -94,49 +94,51 @@ class UploadImagem{
 //    $tipo = strtolower(end(explode('/', $file['type'])));
     $tipo = pathinfo ($file[ 'name' ], PATHINFO_EXTENSION );
     // Verifica se a imagem enviada é do tipo jpeg, png ou gif
+   
     if (array_search($tipo, $this->tipos) === false) {
     $mensagem = "<font color='#F00'>Envie apenas imagens no formato jpeg, png ou gif!</font>";
-    
-    }
-
-    // Se a imagem temporária não for movida para onde a variável com caminho e nome indica, exibiremos uma mensagem de erro
+      
+    } // Se a imagem temporária não for movida para onde a variável com caminho e nome indica, exibiremos uma mensagem de erro
     else if (!move_uploaded_file($file['tmp_name'], $uploadfile)) {
-    switch($file['error']){
-      case 1:
-      $mensagem = "<font color='#F00'>O tamanho do arquivo é maior que o tamanho permitido.</font>";
-      break;
-      case 2:
-      $mensagem = "<font color='#F00'>O tamanho do arquivo é maior que o tamanho permitido.</font>";
-      break;
-      case 3:
-      $mensagem = "<font color='#F00'>O upload do arquivo foi feito parcialmente.</font>";
-      case 4:
-      $mensagem = "<font color='#F00'>Não foi feito o upload de arquivo.</font>";
-      break;
-    } // -> fim switch
+      switch($file['error']){
+        case 1:
+        $mensagem = "<font color='#F00'>O tamanho do arquivo é maior que o tamanho permitido.</font>";
+        break;
+        case 2:
+        $mensagem = "<font color='#F00'>O tamanho do arquivo é maior que o tamanho permitido.</font>";
+        break;
+        case 3:
+        $mensagem = "<font color='#F00'>O upload do arquivo foi feito parcialmente.</font>";
+        case 4:
+        $mensagem = "<font color='#F00'>Não foi feito o upload de arquivo.</font>";
+        break;
+      } // -> fim switch
 
     // Se a imagem temporária for movida
     } /* -> fim if */ else{
 
-    // Pegamos sua largura e altura originais
-    list($width_orig, $height_orig) = getimagesize($uploadfile);
+      // Pegamos sua largura e altura originais
+      list($width_orig, $height_orig) = getimagesize($uploadfile);
 
-    //Comparamos sua largura e altura originais com as desejadas
-    if($width_orig > $this->width || $height_orig > $this->height){
+      //Comparamos sua largura e altura originais com as desejadas
+      if($width_orig > $this->width || $height_orig > $this->height){
 
-    // Chamamos a função que redimensiona a imagem
-    $this->redimensionar($caminho, $file['name']);
-    } // -> fim if
+      // Chamamos a função que redimensiona a imagem
+      $this->redimensionar($caminho, $file['name']);
+      } // -> fim if
 
-    // Exibiremos uma mensagem de sucesso
-   // $mensagem = "<a href='".$uploadfile."'><font color='#070'>Upload realizado com sucesso!</font><a>";
-    $mensagem = null;
+      // Exibiremos uma mensagem de sucesso
+     // $mensagem = "<a href='".$uploadfile."'><font color='#070'>Upload realizado com sucesso!</font><a>";
+      $mensagem = null;
     } // -> fim else
 
+  
     // Retornamos a mensagem com o erro ou sucesso
-    return $mensagem? $mensagem : $file['name'];
-
+  //  return $mensagem? $mensagem : $file['name'];
+    if ($mensagem){
+      return array($mensagem, null);
+    }
+    return array(null, $file['name']);
   } // -> fim function salvar()
 } // -> fim classe
-?>
 

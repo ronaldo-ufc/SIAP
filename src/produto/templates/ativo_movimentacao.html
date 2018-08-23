@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% import "forms.html" as forms %}
+{% import "funcoes.html" as msg %}
+
+{% block content %}
+
+<div class="col-md-12">
+  {{ msg.message(mensagem)}}
+  {{ msg.messageErro(mensagemErro)}}
+</div>
+<div class="col-md-12">
+
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4>Movimentação do Ativo</h4></div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-3 text-center">
+          <img class="img-thumbnail img-responsive"  src="{{base_url()}}/uploads/imagem/{{ativo.foto}}">
+        </div>
+        <!--<div class="col-md-9 text-left">-->
+        <!--Alteração Feita: A classe do h3 era class="text-muted", mas a img do bem estava em cima do nome, então mudei p/ class="text-center"-->
+        <div class="col-md-9 text-left">
+          <h3 class="pat">Patrimônio: {{ativo.patrimonio}} / <small>{{ativo.nome}}</small></h3>
+          <p class="desc text-justify text-muted">DESCRIÇÂO: {{ativo.descricao}}</p>
+          <p class="text-primary">SETOR: <strong>{{ativo.setor.nome}}</strong></p>
+        </div>
+        <!--</div>-->
+
+      </div>
+      <br />
+      <br />
+      <form name="cadastro" action="" method="POST" enctype="multipart/form-data">
+        <div class="row">
+          <div class="form-group col-md-3">
+            <label for="setor">Setor (Destino)</label>
+            <select required class="form-control" id="setor" name="setor">
+              {% for _setor in setores %}
+              <option value="{{_setor.setor_id}}"> {{_setor.nome}} </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="setor">Data da Movimentação</label>
+            <input class="form-control" type="date" name="movimentacao_data" id="movimentacao_data" value="{{"now"|date("Y-m-d")}}">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="setor">Documento</label>
+            <input  class="form-control" type="file" name="documento" id="documento">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label for="observacao" class="control-label">Observação</label>
+            <textarea id="observacao" class="form-control" name="observacao"> </textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <div class="form-group">
+              <button  type="submit" class="btn btn-primary">
+                <i class="far fa-save"></i> Salvar
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+<div class="col-md-12">
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4>Histórico de Movimentações</h4></div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="form-group col-md-12 table-responsive">
+          <table class="table table-hover table-striped table-condensed table-bordered">
+            <thead>
+              <tr class="bg-primary">
+                <th>Setor</th><th>Data</th><th>Documento</th><th>Observação</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for movimentacao in movimentacoes %}
+              <tr>
+                <td title="Responsável pelo Setor: {{movimentacao.setorResponsavel.getResponsavel.nome}}">{{movimentacao.setorResponsavel.getSetor.nome}}</td>
+                <td>{{movimentacao.movimentacao_data|date('d/m/Y')}}</td>
+                <td><a target="_blank" href="{{ base_url() }}/uploads/documentos/{{movimentacao.documento}}">{{movimentacao.documento}}</a></td>
+                <td>{{movimentacao.observacao}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+

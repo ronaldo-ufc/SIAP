@@ -9,3 +9,15 @@
 </div>
 {% endif %}
 {%- endmacro %}
+
+{% macro messageErro(mensagemErro) %}
+{% if mensagemErro %}
+<div class="alert alert-danger alert-dismissable">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+
+  {{ mensagemErro|raw }}
+
+
+</div>
+{% endif %}
+{%- endmacro %}

@@ -60,6 +60,8 @@ $app->post('/salvar/item', function($request, $response, $args){
               
     case 'estado_de_conservacao': $msg = siap\cadastro\models\EConservacao::create($postParam['nome']);
       break;
+    case 'categoria': $msg = siap\cadastro\models\Categoria::create($postParam['nome']);
+      break;
   }
   return ($msg[2])? $msg[2] : "Item :".$postParam['nome']." foi adicionado com sucesso.";
 });
@@ -92,6 +94,11 @@ $app->get('/receber/item/{item}', function($request, $response, $args){
     case 'estado_de_conservacao': $objeto = siap\cadastro\models\EConservacao::getAll();
                       foreach($objeto as $val){
                         array_push($item, array($val->getConservacao_id(), $val->getnome()));
+                      }
+                      break;
+    case 'categoria': $objeto = siap\cadastro\models\Categoria::getAll();
+                      foreach($objeto as $val){
+                        array_push($item, array($val->getCategoria_id(), $val->getnome()));
                       }
                       break;
   }

@@ -30,17 +30,24 @@ class AtivosForm extends Form {
         $aquisicao_id = $val["tipo_de_aquisicao"];
         $status_id = $val["status"];
         $setor_id = $val["setor"];
+        $categoria_id = $val['categoria'];
         $conservacao_id = $val["estado_de_conservacao"];
-        $template_id = $val["template_id"];
-        $nome = $val["nome"];
       }
+      
+        
     #Caso o usuário esteja cadastrando um ativo sem modelo
     #pega todos os objetos sem a necessidade de um id específico  
         
     $data_atesto = $data_atesto?$data_atesto:date('Y-m-d');
+
     $setores = Setor::getAllById($setor_id);
     if (!$setores){
+       
       $setores = Setor::getAll();
+    }
+    $categorias = \siap\cadastro\models\Categoria::getAllById($categoria_id);
+    if(!$categorias){
+      $categorias = \siap\cadastro\models\Categoria::getAll();
     }
     $fabricantes = Fabricante::getAllById($fabricante_id);
     if(!$fabricantes){
@@ -96,6 +103,12 @@ class AtivosForm extends Form {
       array_push($setor, array($val->getSetor_Id(), $val->getNome()));
     }
     
+    #Cria o Array para alimenta os select dos Categorias
+    $categoria = [];
+    foreach($categorias as $val){
+      array_push($categoria, array($val->getCategoria_Id(), $val->getNome()));
+    }
+    
     $this->patrimonio = new StringField(["validators" => [new InputRequired("Número do patrimônio é obrigatório")]
     ]);
     
@@ -122,15 +135,19 @@ class AtivosForm extends Form {
     $this->foto = new FileField(["value" => $foto
     ]);
     
-    $this->fabricante = new SelectField(["choices" =>  $fabricante,
+    $this->marca = new SelectField(["choices" =>  $fabricante,
                                     "onclick" => ['modeloSelect()'],
-                                    "validators" => [new InputRequired("Campo Fabricante é obrigatório")]
+                                    "validators" => [new InputRequired("Campo Marca é obrigatório")]
+    ]);
+    
+    $this->categoria = new SelectField(["choices" =>  $categoria,
+                                    "validators" => [new InputRequired("Campo categoria é obrigatória")]
     ]);
     
     $this->setor = new SelectField(["choices" =>  $setor,
-                                    "validators" => [new InputRequired("Campo setor é obrigatório")]
+                                "validators" => [new InputRequired("Campo setor é obrigatório")]
     ]);
-    
+   
     $this->modelo = new SelectField(["choices" => $modelo,
                                     "validators" => [new InputRequired("Campo modelo é obrigatório")]
     ]);
@@ -182,7 +199,7 @@ class AtivosForm extends Form {
   }
 
   function getFabricante() {
-    return $this->fabricante->data;
+    return $this->marca->data;
   }
 
   function getModelo() {
@@ -207,6 +224,10 @@ class AtivosForm extends Form {
   
   function getConservacao() {
     return $this->estado_de_conservacao->data;
+  }
+  
+  function getCategoria() {
+    return $this->categoria->data;
   }
   
 }

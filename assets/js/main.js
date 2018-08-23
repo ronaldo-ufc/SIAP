@@ -64,3 +64,4 @@ function supportsHTML5Storage() {
         return false;
     }
 }
+

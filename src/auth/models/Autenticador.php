@@ -32,7 +32,6 @@ abstract class Autenticador {
     public abstract function getUsuario();
     public abstract function getUsuarioRol();
     public abstract function confereSenhas($senha);
-    public abstract function getSenha();
 }
 
 
@@ -80,17 +79,6 @@ class AutenticadorEmMemoria extends Autenticador {
  
         if ($this->logado()) {
             return $sess->get('pwd') == md5($senha);
-            
-        }
-        else {
-            return false;
-        }
-    }
-    public function getSenha() {
-        $sess = new Sessao();
- 
-        if ($this->logado()) {
-            return $sess->get('pwd');
             
         }
         else {

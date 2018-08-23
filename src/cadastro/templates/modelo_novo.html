@@ -9,13 +9,13 @@
     </div>
     <div class="col-md-10 col-md-offset-1">
       <div class="panel panel-default">
-        <div class="panel-heading"><h4>Cadastrar Novo Modelo - Fabricante: {{fabricante.getNome}}</h4></div>
+        <div class="panel-heading"><h4>Cadastrar Novo Modelo - Marca: {{fabricante.getNome}}</h4></div>
         <div class="panel-body">
           <form name="pesquisa" action="" method="POST">
             <div class="row">
               <div class="col-md-4">
-                <label for="modelo" class="control-label">Nome</label>
-                <input name="modelo" type="text" class="form-control" id="modelo" required>
+                <label for="modelo_novo" class="control-label">Nome</label>
+                <input name="modelo_novo" type="text" class="form-control" id="modelo_novo" required>
               </div>
               <div class="col-md-2">
                 <div class="form-group"><br>
@@ -30,16 +30,16 @@
       </div>
       <div class="panel panel-default">
         <div class="panel-heading">Modelos Associados</div>
-        <div class="panel-body">
-          <table class="table table-striped table-bordered table-condensed">
+        <div class="panel-body table-responsive">
+          <table id="tabela" class="table table-condensed table-hover table-striped">
             <thead class="bg-primary">
-              <tr><td class="text-center">Nome</td><td class="text-center">Excluir</td></tr>
+              <tr><td>Nome</td><td class="text-center">Excluir</td></tr>
             </thead>
             <tbody>
               {% for modelo in modelos %}
               <tr>
-                <td class="text-center">{{modelo.getNome}}</td>
-                <td class="col-lg-1 bg-danger"><p class="text-center"><a href="delete/{{modelo.getModelo_id}}/{{modelo.getFabricante_id}}"><i class="far fa-trash-alt"></i></a></p></td>
+                <td>{{modelo.getNome}}</td>
+                <td class="col-md-1 bg-danger"><p class="text-center"><a href="delete/{{modelo.getModelo_id}}/{{modelo.getFabricante_id}}"><i class="far fa-trash-alt"></i></a></p></td>
               </tr>
               {% endfor %}
             </tbody>

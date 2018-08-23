@@ -23,6 +23,7 @@ $app->group('/usuario', function() use($app)
 
 $app->group('/setor', function() use($app) 
 {
+
   require_once(__DIR__ . '/setor/routes.php');
   
 })->add($auth);
@@ -35,6 +36,7 @@ $app->group('/services', function() use($app)
 
 $app->group('/cadastro', function() use($app) 
 {
+
   require_once(__DIR__ . '/cadastro/routes.php');
   
 })->add($auth);
@@ -47,6 +49,7 @@ $app->group('/home', function() use($app)
 
 $app->group('/ativo', function() use($app) 
 {
+ 
   require_once(__DIR__ . '/produto/routes.php');
   
 })->add($auth);

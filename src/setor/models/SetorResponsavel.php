@@ -9,8 +9,8 @@ class SetorResponsavel{
   private $responsavel_id;
   private $data_inicio;
   private $data_fim;
-  private static $setor = null;
-  private static $responsavel = null;
+  private static $setor;
+  private static $responsavel;
   
   private function bundle($row){
     $u = new SetorResponsavel();
@@ -18,13 +18,15 @@ class SetorResponsavel{
     $u->setResponsavel_id($row['responsavel_id']);
     $u->setData_inicio($row['data_inicio']);
     $u->setData_fim($row['data_fim']);
-    $u->setResponsavel($row['responsavel_id']);
-    $u->setSetor($row['setor_id']);
+    
+    $u->setResponsavel(Usuario::getByLogin($row['responsavel_id']));
+    
+    $u->setSetor(Setor::getById($row['setor_id']));
     return $u;
   }
   
   static function getAll(){
-    $sql = "select * from setor_responsavel where data_fim >= now() ";
+    $sql = "select * from setor_responsavel where data_fim >= current_date ";
     $stmt = DBSiap::getSiap()->prepare($sql);
     $stmt->execute(array());
     $rows = $stmt->fetchAll();
@@ -59,6 +61,29 @@ class SetorResponsavel{
     $stmt->execute(array($setor, $responsavel, $inicio));
     return $stmt->errorInfo();
   }
+  
+  static function getResponsavelBySetorAndData($setor, $data){
+    $sql = "select * from setor_responsavel where setor_id = ? and (? <= data_fim and ? >= data_inicio)";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array($setor, $data, $data));
+    $row = $stmt->fetch();
+    if ($row == null){
+      return false;
+    }
+    return self::bundle($row);
+  }
+  
+  static function getCurrentResponsavelBySetor($setor){
+    $sql = "select * from setor_responsavel where setor_id = ? and (now() <= data_fim and now() > data_inicio )";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array($setor));
+    $row = $stmt->fetch();
+    if ($row == null){
+      return false;
+    }
+    return self::bundle($row);
+  }
+  
   function getSetor_id() {
     return $this->setor_id;
   }
@@ -101,17 +126,17 @@ class SetorResponsavel{
   }
 
   function setSetor($setor) {
-    if ($this->setor == null) {
-      $this->setor = Setor::getById($setor);
-    }
+    
+      $this->setor = $setor;
+    
   }
 
   function setResponsavel($responsavel) {
-    if ($this->responsavel == null){
-      $this->responsavel = Usuario::getByLogin($responsavel);
-    }
+   
+      $this->responsavel = $responsavel;
     
   }
+  
 
 }
 

@@ -26,11 +26,18 @@ class TemplateProdutoForm extends Form {
     $aquisicoes = Aquisicao::getAll();
     $_status = Status::getAll();
     $econservacao = EConservacao::getAll();
+    $categorias = \siap\cadastro\models\Categoria::getAll();
     
      #Cria o Array para alimentar os select dos Estados de Conservação
     $conservacao = [];
     foreach($econservacao as $val){
       array_push($conservacao, array($val->getConservacao_id(), $val->getNome()));
+    }
+    
+     #Cria o Array para alimentar os select da categoria
+    $categoria = [];
+    foreach($categorias as $val){
+      array_push($categoria, array($val->getCategoria_id(), $val->getNome()));
     }
     
      #Cria o Array para alimentar os select dos Status
@@ -84,13 +91,17 @@ class TemplateProdutoForm extends Form {
     $this->foto = new FileField([
     ]);
     
-    $this->fabricante = new SelectField(["choices" =>  $fabricante,
+    $this->marca = new SelectField(["choices" =>  $fabricante,
                                     "onclick" => ['modeloSelect()'],
                                     "validators" => [new InputRequired("Campo Fabricante é obrigatório")]
     ]);
     
     $this->setor = new SelectField(["choices" =>  $setor,
                                     "validators" => [new InputRequired("Campo setor é obrigatório")]
+    ]);
+    
+    $this->categoria = new SelectField(["choices" =>  $categoria,
+                                    "validators" => [new InputRequired("Campo categoria é obrigatória")]
     ]);
     
     $this->modelo = new SelectField(["onclick" => ['teste()'],
@@ -164,4 +175,7 @@ class TemplateProdutoForm extends Form {
     return $this->estado_de_conservacao->data;
   }
   
+  function getCategoria() {
+    return $this->categoria->data;
+  }
 }

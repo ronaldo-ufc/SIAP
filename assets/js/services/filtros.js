@@ -1,4 +1,3 @@
-var fabricante = {'Dell': '1', 'Brasint':2};
 
 function menuSelect() {
     
@@ -76,6 +75,27 @@ $(document).on("click", "#btnAdicionar", function () {
     $("#titulo").val(id);
 });
 
-function array(){
-    console.log(fabricante);
+function btnExcluir(url){
+    $('#btn_modal_excluir').attr({
+       'href': url
+    });
+}
+
+function btnReabrir(url){
+    $('#btn_modal_reabrir').attr({
+       'href': url
+    });
+}
+
+function btnRemover(patrimonio){
+    $('#input_hidden').attr({
+       'value': patrimonio
+    });
+}
+
+function patrimonioRemover(){
+    
+    var pat = document.getElementById('input_hidden').value;
+    document.getElementById(pat).remove();
+    console.log(pat);
 }

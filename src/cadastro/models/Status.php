@@ -39,7 +39,7 @@ class Status {
   }
   
   static function getAllById($id) {
-    $sql = "select * from status where status_id = ? union all select * from status where status_id = ? order by nome";
+    $sql = "select * from status where status_id = ? union all select * from status where status_id <> ? order by nome";
     $stmt = DBSiap::getSiap()->prepare($sql);
     $stmt->execute(array($id, $id));
     $rows = $stmt->fetchAll();

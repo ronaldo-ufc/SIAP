@@ -38,4 +38,5 @@ $container['flash'] = function () {
 //};
 
 $container['upload_directory_imagem'] = '/var/www/html/siap/uploads/imagem/';
+$container['upload_directory_documento'] = '/var/www/html/siap/uploads/documentos/';
 

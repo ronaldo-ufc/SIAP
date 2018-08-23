@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% import "funcoes.html" as msg %}
+{% import "uteis.html" as functions %}
+{% block content %}
+<div class="col-md-12">
+  {{ msg.message( mensagem )}}
+</div>
+<div class="col-md-12">
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4>Ativos Excluídos</h4></div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12 table-responsive">
+          <table id="tabela" class="table table-striped table-bordered table-condensed">
+            <thead class="bg-primary">
+              <tr><th >...</th><th >Patrimônio</th><th >Nome</th><th >Categoria</th><th >Modelo</th><th >Data de Atesto</th><th >Status</th><th >Est. Conservação</th><th >Setor</th><th >Cadastro</th>
+                <th class="text-center">Reabrir</th></tr>
+            </thead>
+            <tbody>
+              {% for ativo in ativos_reabertura %}
+
+              <tr>
+                <th style="width: 55px"><img style="width: 50px;" class="img-thumbnail img-responsive" src="../uploads/imagem/{{ativo.foto}}">
+                </th>
+                <td >{{ativo.patrimonio}}</td>
+                <td >{{ativo.nome}}</a></td>
+                <td > {{ativo.categoria.nome}}</a></td>
+                <td title="{{ativo.fabricante.nome}}">{{ativo.modelo.nome}}</td>
+                <td >{{ativo.data_atesto|date("m/d/Y")}}</td>
+                <td >{{ativo.status.nome}}</td>
+                <td >{{ativo.conservacao.nome}}</td>
+                <td >{{ativo.setor.nome}}</td>
+                <td >{{ativo.cadastro|date("m/d/Y")}}</td>
+                <td  style="width: 50px;" class="text-center bg-success" data-toggle="modal" data-target="#modalReabertura"> <a onclick="btnReabrir(' reabertura/delete/{{ativo.patrimonio}} ')"  id="btnReabrir" style="cursor: pointer;"> <i class="far fas fa-sync-alt"></i></a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ functions.modalReabertura() }}
+{% endblock %}

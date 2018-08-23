@@ -71,13 +71,14 @@ class SetorResponsavelForm extends Form {
   }
   public function validaChoqueDePeriodo(){
     $setor = \siap\setor\models\SetorResponsavel::getLastBySetor($this->getSetor());
-    $hoje = $setor?$setor->getData_fim():date('Y-m-d');
-    if (strtotime($this->data_inicio->data) <= (strtotime($hoje))){
-      $this->errors = 'danger';
-       return ('Existe um Responsável Atual para o Setor Informado. Não Informar Datas Retroativas a Data de Hoje');
-    }else{
-      $this->errors = null;
+    
+    if ($setor){
+      if (strtotime($this->data_inicio->data) < (strtotime($setor->getData_fim()))){
+        $this->errors = 'danger';
+        return ('Existe um Responsável Atual para o Setor Informado.');
+      }
     }
+    $this->errors = null;
     return false;
   }
 }

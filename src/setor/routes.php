@@ -44,6 +44,7 @@ $app->map(['GET', 'POST'], '/responsavel', function($request, $response, $args){
       }
     }
   }else{
+   
     $messages = $this->flash->getMessages();
     #Verificando se tem mensagem de erro
     if($messages){

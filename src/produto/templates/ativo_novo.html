@@ -1,35 +1,53 @@
 {% extends "base.html" %}
 {% import "forms.html" as forms %}
 {% import "uteis.html" as functions %}
+{% import "funcoes.html" as msg %}
 
 {% block content %}
 <div class="col-md-12">
-  {{ forms.error_message(form, mensagem)}}
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav">
+        <li ><a href="{{base_url()}}/ativo/show"><i class="fas fa-search"></i> Visualizar Ativos</a></li>
+        <li><a href="{{base_url()}}/ativo/main"><i class="fas fa-box-open"></i> Ir para Modelos</a></li>
+      </ul>
+    </div>
+  </nav>
+  {{ msg.message(mensagem)}}
+  {{ msg.messageErro(mensagemErro)}}
 </div>
 <div class="col-md-12">
   <div class="panel panel-default">
     <div class="panel-heading"><h4>Adicionar Bem</h4></div>
     <div class="panel-body">
       <form name="cadastro" action="" method="POST" enctype="multipart/form-data">
-<input name="foto_bem" type="hidden" value="{{foto}}">
-    <div class="row">
-      <div class="col-md-2">
-        <figure class="figure">
-          <img class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/{{foto}}">
+        <input name="foto_bem" type="hidden" value="sem_imagem.jpg">
+        <div class="row">
+          <div class="col-md-2">
+            <figure class="figure">
+              {% if foto %}
+              <img class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/{{foto}}">
+              {% else %}
+              <img class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/sem_imagem.jpg">
+              {% endif %}
               <figcaption class="figure-caption text-center text-muted">Imagem do Ativo</figcaption>
             </figure>
+
           </div>
           <div class="col-md-10">
             <div class="row">
               {{forms.input(form.patrimonio, 2)}}
               {{forms.input(form.nome, 4)}}
-              {{forms.input(form.data_atesto, 2)}}
-              {{forms.input(form.foto, 4)}}
+              {{forms.input(form.foto, 6)}}
             </div>
             <div class="row">
-              {{forms.input(form.nota_fiscal, 2)}}
-              {{forms.input(form.fornecedor, 3)}}
-              {{forms.input(form.fabricante, 3, null, functions.btnAddItens('Fabricante|fabricante', 'Adicionar Tipo de Status'))}}
+              {{forms.input(form.data_atesto, 4)}}
+              {{forms.input(form.nota_fiscal, 4)}}
+              {{forms.input(form.fornecedor, 4)}}
+            </div>
+            <div class="row">
+              {{forms.input(form.categoria, 4, null, functions.btnAddItens('Categoria|categoria', 'Adicionar Tipo de Categoria'))}}
+              {{forms.input(form.marca, 4, null, functions.btnAddItens('Marca|marca', 'Adicionar Marca'))}}
               {{forms.input(form.modelo, 4, null, functions.btnAddItens('Modelo|modelo', 'Adicionar Modelo'))}}
             </div>
             <div class="row">

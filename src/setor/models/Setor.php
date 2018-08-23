@@ -7,7 +7,8 @@ class Setor{
   private $nome;
   private $ativo;
   private $sigla;
-  private $setor_responsavel;
+  private $responsavel;
+  
   
   private function bundle($row){
     $u = new Setor();
@@ -15,6 +16,7 @@ class Setor{
     $u->setNome($row['nome']);
     $u->setAtivo($row['ativo']);
     $u->setSigla($row['sigla']);
+      
     return $u;
   }
   
@@ -59,15 +61,13 @@ class Setor{
     $stmt = DBSiap::getSiap()->prepare($sql);
     $stmt->execute(array(strtoupper(tirarAcentos($nome_setor)), strtoupper($sigla)));
   }
-          
+  
+           
   function getSetor_id() {
     return $this->setor_id;
   }
 
-  function getSetor_responsavel() {
-    return $this->setor_responsavel;
-  }
-
+          
   function setSetor_id($setor_id) {
     $this->setor_id = $setor_id;
   }
@@ -87,11 +87,7 @@ class Setor{
     $this->ativo = $ativo;
   }
 
-    
-  function setSetor_responsavel($setor_responsavel) {
-    $this->setor_responsavel = $setor_responsavel;
-  }
-
+ 
   function getSigla() {
     return $this->sigla;
   }
@@ -99,6 +95,14 @@ class Setor{
   function setSigla($sigla) {
     $this->sigla = $sigla;
   }
+  public function getResponsavel() {
+    return $this->responsavel;
+  }
+
+  public function setResponsavel($responsavel) {
+    $this->responsavel = $responsavel;
+  }
+
 
 
 }

@@ -79,14 +79,21 @@ $app->map(['GET', 'POST'], '/modelo/{fabricante_id}', function($request, $respon
     $fabricante_id = $args['fabricante_id'];
     if ($request->isPost()) {
         $postParam = $request->getParams();
+         var_dump($postParam);
         if ($postParam) {
-            $modelo = postParam['modelo'];
-            Modelo::create($modelo,$fabricante_id);
-            $mensagem = "Operação realizada com sucesso!";
-            $form->errors = 'success';
+            $modelo = $postParam['modelo_novo'];
+           
+            $msg = Modelo::create($modelo,$fabricante_id);
+            if($msg[2]){
+                $mensagem = $msg[2];
+                $form->errors = 'danger';
+            }
+            else {
+                $mensagem = "Operação realizada com sucesso!";
+                $form->errors = 'success';
+            }
         }
     }else{
-        $fabricante = Fabricante::getById($fabricante_id);
         $messages = $this->flash->getMessages();
        
         #Verificando se tem mensagem de erro
@@ -98,6 +105,7 @@ $app->map(['GET', 'POST'], '/modelo/{fabricante_id}', function($request, $respon
         }
         
     }
+    $fabricante = Fabricante::getById($fabricante_id);
     $modelos = Modelo::getByFabricante($fabricante_id);
     return $this->renderer->render($response, 'modelo_novo.html', array('modelos' => $modelos, 'mensagem' => $mensagem, 'fabricante' => $fabricante));
 })->setName('ModeloNovo');

@@ -31,16 +31,16 @@
       </div>
       <div class="panel panel-default">
           <div class="panel-heading">Estados de Conservação</div>
-        <div class="panel-body">
-          <table class="table table-striped table-bordered table-condensed">
+        <div class="panel-body table-responsive">
+          <table id="tabela" class="table table-condensed table-hover table-striped">
             <thead class="bg-primary">
-              <tr><td class="text-center">Nome</td><td class="text-center">Excluir</td></tr>
+              <tr><td>Nome</td><td>Excluir</td></tr>
             </thead>
             <tbody>
               {% for conservacao in conservacoes %}
               <tr>
-                  <td class="text-center">{{conservacao.getNome}}</td>
-                  <td class="text-center bg-danger"><a href="conservacao/delete/{{conservacao.getConservacao_id}}"><i class="far fa-trash-alt"></i> </a></td>
+                  <td>{{conservacao.getNome}}</td>
+                  <td class="text-center bg-danger col-md-1"><a href="conservacao/delete/{{conservacao.getConservacao_id}}"><i class="far fa-trash-alt"></i> </a></td>
               </tr>
               {% endfor %}
             </tbody>
