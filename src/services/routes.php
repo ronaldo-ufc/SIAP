@@ -43,10 +43,10 @@ $app->map(['GET', 'POST'], '/modelos/{fabricante_id}', function($request, $respo
 $app->post('/salvar/item', function($request, $response, $args){
   $postParam = $request->getParams();
   switch ($postParam['item']){
-    case 'fabricante': $msg = siap\cadastro\models\Fabricante::create($postParam['nome']);
+    case 'marca': $msg = siap\cadastro\models\Fabricante::create($postParam['nome']);
       break;
               
-    case 'modelo': $msg = Modelo::create($postParam['nome'], $postParam['fabricante']);
+    case 'modelo': $msg = Modelo::create($postParam['nome'], $postParam['marca']);
       break;
               
     case 'tipo_de_aquisicao': $msg = siap\cadastro\models\Aquisicao::create($postParam['nome']);
@@ -71,7 +71,7 @@ $app->get('/receber/item/{item}', function($request, $response, $args){
   $item = [];
     
   switch ($args['item']){
-    case 'fabricante': $objeto = siap\cadastro\models\Fabricante::getAll();
+    case 'marca': $objeto = siap\cadastro\models\Fabricante::getAll();
                       foreach($objeto as $val){
                         array_push($item, array($val->getFabricante_id(), $val->getnome()));
                       }

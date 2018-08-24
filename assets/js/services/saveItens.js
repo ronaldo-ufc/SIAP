@@ -16,8 +16,8 @@ $(document).on("click", "#btnSairModalItens", function () {
 $(document).on("click", "#btnSalvarItens", function () {
     var item = $("#item").val();
     var valor = $("#nome_item").val();
-    var fab = $("#fabricante").val();
-    $.post("http://10.5.5.10/siap/services/salvar/item", "item="+item+"&nome="+valor+"&fabricante="+fab, function( data ) {
+    var fab = $("#marca").val();
+    $.post("http://10.5.5.10/siap/services/salvar/item", "item="+item+"&nome="+valor+"&marca="+fab, function( data ) {
         $("#alerta").show();
         $("#mensagem").html(data);
         atualizaSelect(item);

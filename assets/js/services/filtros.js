@@ -49,7 +49,7 @@ function subMenuSelect() {
 
 function modeloSelect() {
     
-    var e = document.getElementById("fabricante");
+    var e = document.getElementById("marca");
     var itemSelecionado = e.options[e.selectedIndex].value;
 
     var url = 'http://10.5.5.10/siap/services/modelos/'+itemSelecionado;

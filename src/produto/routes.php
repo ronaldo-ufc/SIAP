@@ -112,7 +112,7 @@ $app->map(['GET', 'POST'], '/novo/branco', function($request, $response, $args) 
         if($form->getPatrimonio() != ''){
             //Verificando se foi digitado o NOME do patrimonio
             if($form->getNome() != ''){
-            $msg = Ativos::create($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getFabricante(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $args['modelo_id'], $aut->getUsuario(), $form->getCategoria());
+            $msg = Ativos::create($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $args['modelo_id'], $aut->getUsuario(), $form->getCategoria());
             if ($msg[2]) {
                 $mensagemErro = $msg[2];
                 
@@ -150,7 +150,7 @@ $app->map(['GET', 'POST'], '/novo/modelo/{modelo_id}', function($request, $respo
                         "fornecedor" => $template->getFornecedor(),
                         "descricao" => $template->getDescricao(),
                         "observacao" => $template->getObservacao(),
-                        "fabricante" => $template->getFabricante_id(),
+                        "marca" => $template->getFabricante_id(),
                         "modelo" => $template->getModelo_id(),
                         "tipo_de_aquisicao" => $template->getAquisicao_id(),
                         "status" => $template->getStatus_id(),
@@ -197,7 +197,7 @@ $app->map(['GET', 'POST'], '/novo/modelo/{modelo_id}', function($request, $respo
         if($form->getPatrimonio() != ''){
             //Verificando se foi digitado o NOME do patrimonio
             if($form->getNome() != ''){
-            $msg = Ativos::create($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getFabricante(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $args['modelo_id'], $aut->getUsuario(), $form->getCategoria());
+            $msg = Ativos::create($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $args['modelo_id'], $aut->getUsuario(), $form->getCategoria());
             if ($msg[2]) {
                 $mensagemErro = $msg[2];
                 
@@ -276,7 +276,7 @@ $app->map(['GET', 'POST'], '/modelo/novo', function($request, $response, $args) 
           }
         }
         if($form->getNome() != ''){
-            $msg = TemplateProduto::create($form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getFabricante(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $form->getCategoria());
+            $msg = TemplateProduto::create($form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $form->getCategoria());
             if ($msg[2]) {
                 $mensagemErro = $msg[2];
                 
@@ -309,7 +309,7 @@ $app->map(['GET', 'POST'], '/atualizar/modelo/{modelo_id}', function($request, $
                         "fornecedor" => $modelo->getFornecedor(),
                         "descricao" => $modelo->getDescricao(),
                         "observacao" => $modelo->getObservacao(),
-                        "fabricante" => $modelo->getFabricante_id(),
+                        "marca" => $modelo->getFabricante_id(),
                         "modelo" => $modelo->getModelo_id(),
                         "tipo_de_aquisicao" => $modelo->getAquisicao_id(),
                         "status" => $modelo->getStatus_id(),
@@ -348,7 +348,7 @@ $app->map(['GET', 'POST'], '/atualizar/modelo/{modelo_id}', function($request, $
         }
         //Verificando se foi digitado o NOME do patrimonio
         if($form->getNome() != ''){
-            $msg = TemplateProduto::update($modelo->getTemplate_id(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getFabricante(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getConservacao(), $form->getCategoria(), $form->getSetor());
+            $msg = TemplateProduto::update($modelo->getTemplate_id(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getConservacao(), $form->getCategoria(), $form->getSetor());
             if ($msg[2]) {
                 $mensagemErro = $msg[2];
             }
@@ -387,7 +387,7 @@ $app->map(['GET', 'POST'], '/atualizar/{patrimonio_id}', function($request, $res
                         "fornecedor" => $ativo->getFornecedor(),
                         "descricao" => $ativo->getDescricao(),
                         "observacao" => $ativo->getObservacao(),
-                        "fabricante" => $ativo->getFabricante_id(),
+                        "marca" => $ativo->getFabricante_id(),
                         "modelo" => $ativo->getModelo_id(),
                         "tipo_de_aquisicao" => $ativo->getAquisicao_id(),
                         "status" => $ativo->getStatus_id(),
@@ -431,7 +431,7 @@ $app->map(['GET', 'POST'], '/atualizar/{patrimonio_id}', function($request, $res
         }
         //Verificando se foi digitado o NOME do patrimonio
         if($form->getNome() != ''){
-        $msg = Ativos::update($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getFabricante(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getConservacao(), $aut->getUsuario(), $form->getCategoria());
+        $msg = Ativos::update($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getConservacao(), $aut->getUsuario(), $form->getCategoria());
         if ($msg[2]) {
             $mensagemErro = $msg[2];
 

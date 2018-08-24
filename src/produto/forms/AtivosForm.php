@@ -25,7 +25,7 @@ class AtivosForm extends Form {
       foreach($options as $val){
         $data_atesto = $val['data_atesto'];
         $foto = $val['foto'];
-        $fabricante_id = $val["fabricante"];
+        $marca_id = $val["marca"];
         $modelo_id = $val['modelo'];
         $aquisicao_id = $val["tipo_de_aquisicao"];
         $status_id = $val["status"];
@@ -49,9 +49,9 @@ class AtivosForm extends Form {
     if(!$categorias){
       $categorias = \siap\cadastro\models\Categoria::getAll();
     }
-    $fabricantes = Fabricante::getAllById($fabricante_id);
-    if(!$fabricantes){
-      $fabricantes = Fabricante::getAll();
+    $marcas = Fabricante::getAllById($marca_id);
+    if(!$marcas){
+      $marcas = Fabricante::getAll();
     }
     $aquisicoes = Aquisicao::getAllById($aquisicao_id);
     if(!$aquisicoes){
@@ -92,9 +92,9 @@ class AtivosForm extends Form {
     }
     
     #Cria o Array para alimentar os select dos fabricantes
-    $fabricante = [];
-    foreach($fabricantes as $val){
-      array_push($fabricante, array($val->getFabricante_id(), $val->getNome()));
+    $marca = [];
+    foreach($marcas as $val){
+      array_push($marca, array($val->getFabricante_id(), $val->getNome()));
     }
         
     #Cria o Array para alimenta os select dos setores
@@ -135,7 +135,7 @@ class AtivosForm extends Form {
     $this->foto = new FileField(["value" => $foto
     ]);
     
-    $this->marca = new SelectField(["choices" =>  $fabricante,
+    $this->marca = new SelectField(["choices" =>  $marca,
                                     "onclick" => ['modeloSelect()'],
                                     "validators" => [new InputRequired("Campo Marca é obrigatório")]
     ]);
@@ -198,7 +198,7 @@ class AtivosForm extends Form {
     return $this->observacao->data;
   }
 
-  function getFabricante() {
+  function getMarca() {
     return $this->marca->data;
   }
 

@@ -21,7 +21,7 @@ class TemplateProdutoForm extends Form {
   public function __construct(array $options = []) {
     parent::__construct($options);
     $setores = Setor::getAll();
-    $fabricantes = Fabricante::getAll();
+    $marcas = Fabricante::getAll();
     
     $aquisicoes = Aquisicao::getAll();
     $_status = Status::getAll();
@@ -59,9 +59,9 @@ class TemplateProdutoForm extends Form {
 //    }
     
     #Cria o Array para alimentar os select dos fabricantes
-    $fabricante = [];
-    foreach($fabricantes as $val){
-      array_push($fabricante, array($val->getFabricante_id(), $val->getNome()));
+    $marca = [];
+    foreach($marcas as $val){
+      array_push($marca, array($val->getFabricante_id(), $val->getNome()));
     }
         
     #Cria o Array para alimenta os select dos setores
@@ -91,7 +91,7 @@ class TemplateProdutoForm extends Form {
     $this->foto = new FileField([
     ]);
     
-    $this->marca = new SelectField(["choices" =>  $fabricante,
+    $this->marca = new SelectField(["choices" =>  $marca,
                                     "onclick" => ['modeloSelect()'],
                                     "validators" => [new InputRequired("Campo Fabricante é obrigatório")]
     ]);
@@ -147,8 +147,8 @@ class TemplateProdutoForm extends Form {
     return $this->observacao->data;
   }
 
-  function getFabricante() {
-    return $this->fabricante->data;
+  function getMarca() {
+    return $this->marca->data;
   }
 
   function getModelo() {
