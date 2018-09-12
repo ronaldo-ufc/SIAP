@@ -301,7 +301,7 @@ $app->map(['GET', 'POST'], '/atualizar/modelo/{modelo_id}', function($request, $
     $mensagemErro = NULL;
     if ($request->isGet()) {
         $foto = $modelo->getFoto();
-        $form = TemplateProdutoForm::create(["formdata" => $_GET, "data" => [ //AtivosForm::create(["formdata" => $_GET, "data" => [
+        $form = TemplateProdutoForm::create(["formdata" => $_GET, "data" => [ //AtivosForm::create(["formdata" => $_GET, "data" => [ 
                         "nome" => $modelo->getNome(),
                         "foto" => $foto,
                         "data_atesto" => $modelo->getData_atesto(),
