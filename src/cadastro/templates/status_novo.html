@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% import "forms.html" as forms %}
+{% import "funcoes.html" as msg %}
+{% import "uteis.html" as functions %}
 
 {% block content %}
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
-      {{ forms.error_message(form, mensagem)}}
+    <div class="col-md-10 col-md-offset-1">
+      {{ msg.message(mensagem)}}
+      {{msg.messageErro(mensagemErro)}}
+       <!--{{ forms.error_message(form, mensagem)}}-->
     </div>
     <div class="col-md-10 col-md-offset-1">
 
@@ -40,7 +44,7 @@
               {% for status in statusT %}
               <tr>
                   <td>{{status.getNome}}</td>
-                  <td class="text-center bg-danger col-md-1"><a href="status/delete/{{status.getStatus_id}}"><i class="far fa-trash-alt"></i> </a></td>
+                  <td style="width: 50px;" class="text-center bg-danger" data-toggle="modal" data-target="#modalExcluir"><a onclick="btnExcluir(' status/delete/{{status.getStatus_id}} ', 'Excluir status' , 'Deseja realmente excluir o status?')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i> </a></td>
               </tr>
               {% endfor %}
             </tbody>
@@ -50,4 +54,5 @@
     </div>
   </div>
 </div>
+{{ functions.modalExcluir() }}
 {% endblock %}

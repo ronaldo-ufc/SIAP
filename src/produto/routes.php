@@ -9,18 +9,47 @@ use siap\produto\forms\AtivosForm;
 use siap\produto\models\Ativos;
 use siap\produto\models\Movimentacao;
 use siap\produto\models\AtivosReabertura;
+use Dompdf\Dompdf;
 
 require_once(__DIR__ . '/router_temp.php');
+// include autoloader
+require_once 'models/dompdf/autoload.inc.php';
 
 
 //AUXILIAR, VAI SER USADO DPS DOS TESTES.
 $app->map(['GET', 'POST'], '/show', function($request, $response, $args) {
+    $data = array();
+    $data['nome'] = $_GET["nome"];
+    $data['categoria'] = $_GET["categoria"];
+    $data['modelo'] = $_GET["modelo"];
+    $data['dataAtesto'] = $_GET["dataAtesto"];
+    $data['status'] = $_GET["status"];
+    $data['conservacao'] = $_GET["conservacao"];
+    $data['setor'] = $_GET["setor"];
+    $data['fornecedor'] = $_GET["fornecedor"];
+    $data['notaFiscal'] = $_GET["notaFiscal"];
+    $data['empenho'] = $_GET['empenho'];
+    $data['descricao'] = $_GET['descricao'];
+//    var_dump($data);
     $messages = $this->flash->getMessages();
-    $ativos = Ativos::getAll();
+    //Rota virou get, filtros todos na url
+//    $ativos = Ativos::getAll();
+    $ativos = Ativos::Filtrar($data['nome'], $data['categoria'], $data['modelo'],
+                $data['dataAtesto'], $data['status'], $data['conservacao'], $data['setor'],
+                $data['fornecedor'],$data['notaFiscal'],$data['empenho'],$data['descricao']);
+    foreach ($data as &$value) {
+        if($value == "" || $value == "n"){ 
+//            var_dump("HSauhsuahsuah");
+            unset($value);
+        }
+    }
+//    var_dump($data);
     if ($request->isPost()) {
-        $ativos = Ativos::Filtrar($_POST["nome"], $_POST["categoria"], $_POST["modelo"],
-                $_POST["dataAtesto"], $_POST["status"], $_POST["conservacao"], $_POST["setor"],
-                $_POST["fornecedor"],$_POST["notaFiscal"],$_POST['descricao']);
+        $filtros = array();
+        
+//        $ativos = Ativos::Filtrar($_POST["nome"], $_POST["categoria"], $_POST["modelo"],
+//                $_POST["dataAtesto"], $_POST["status"], $_POST["conservacao"], $_POST["setor"],
+//                $_POST["fornecedor"],$_POST["notaFiscal"],$_POST['empenho'],$_POST['descricao']);
     }
 
     #Verificando se tem mensagem de erro
@@ -48,7 +77,7 @@ $app->map(['GET', 'POST'], '/main', function($request, $response, $args) {
     $template = TemplateProduto::getAll();
 
     return $this->renderer->render($response, 'ativo_main.html', array('templates' => $template, 'mensagem' => $mensagem));
-})->setName('AtivosMain');
+})->setName('Ativos.Main');
 
 
 //
@@ -112,7 +141,7 @@ $app->map(['GET', 'POST'], '/novo/branco', function($request, $response, $args) 
         if($form->getPatrimonio() != ''){
             //Verificando se foi digitado o NOME do patrimonio
             if($form->getNome() != ''){
-            $msg = Ativos::create($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $args['modelo_id'], $aut->getUsuario(), $form->getCategoria());
+            $msg = Ativos::create($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $args['modelo_id'], $aut->getUsuario(), $form->getCategoria(), $form->getEmpenho());
             if ($msg[2]) {
                 $mensagemErro = $msg[2];
                 
@@ -157,7 +186,8 @@ $app->map(['GET', 'POST'], '/novo/modelo/{modelo_id}', function($request, $respo
                         "setor" => $template->getSetor_id(),
                         "estado_de_conservacao" => $template->getConservacao_id(),
                         "template_id" => $args['modelo_id'],
-                        "categoria" => $template->getCategoria_id()
+                        "categoria" => $template->getCategoria_id(),
+                        "empenho" => $template->getEmpenho()
         ]]);
     } else {
         #Caso seja POst, ou seja, o usuário está salvando o bem 
@@ -197,7 +227,7 @@ $app->map(['GET', 'POST'], '/novo/modelo/{modelo_id}', function($request, $respo
         if($form->getPatrimonio() != ''){
             //Verificando se foi digitado o NOME do patrimonio
             if($form->getNome() != ''){
-            $msg = Ativos::create($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $args['modelo_id'], $aut->getUsuario(), $form->getCategoria());
+            $msg = Ativos::create($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $args['modelo_id'], $aut->getUsuario(), $form->getCategoria(), $form->getEmpenho());
             if ($msg[2]) {
                 $mensagemErro = $msg[2];
                 
@@ -276,7 +306,7 @@ $app->map(['GET', 'POST'], '/modelo/novo', function($request, $response, $args) 
           }
         }
         if($form->getNome() != ''){
-            $msg = TemplateProduto::create($form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $form->getCategoria());
+            $msg = TemplateProduto::create($form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $form->getCategoria(), $form->getEmpenho());
             if ($msg[2]) {
                 $mensagemErro = $msg[2];
                 
@@ -315,7 +345,8 @@ $app->map(['GET', 'POST'], '/atualizar/modelo/{modelo_id}', function($request, $
                         "status" => $modelo->getStatus_id(),
                         "estado_de_conservacao" => $modelo->getConservacao_id(),
                         "setor" => $modelo->getSetor_id(),
-                        "categoria" => $modelo->getCategoria_id()
+                        "categoria" => $modelo->getCategoria_id(),
+                        "empenho" => $modelo->getEmpenho()
         ]]);
     } else {
         #Caso seja POST ou seja o usuário está salvando o modelo 
@@ -348,7 +379,8 @@ $app->map(['GET', 'POST'], '/atualizar/modelo/{modelo_id}', function($request, $
         }
         //Verificando se foi digitado o NOME do patrimonio
         if($form->getNome() != ''){
-            $msg = TemplateProduto::update($modelo->getTemplate_id(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getConservacao(), $form->getCategoria(), $form->getSetor());
+            $model = ($form->getModelo() == NULL)? $modelo->getModelo_id() : $form->getModelo();
+            $msg = TemplateProduto::update($modelo->getTemplate_id(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $model, $form->getAquisicao(), $form->getStatus(), $form->getConservacao(), $form->getCategoria(), $form->getSetor(), $form->getEmpenho());
             if ($msg[2]) {
                 $mensagemErro = $msg[2];
             }
@@ -393,7 +425,8 @@ $app->map(['GET', 'POST'], '/atualizar/{patrimonio_id}', function($request, $res
                         "status" => $ativo->getStatus_id(),
                         "estado_de_conservacao" => $ativo->getConservacao_id(),
                         "template_id" => $args['modelo_id'],
-                        "categoria" => $ativo->getCategoria_id()
+                        "categoria" => $ativo->getCategoria_id(),
+                        "empenho" => $ativo->getEmpenho()
         ]]);
     } else {
         #Caso seja POST ou seja o usuário está salvando o bem 
@@ -431,7 +464,7 @@ $app->map(['GET', 'POST'], '/atualizar/{patrimonio_id}', function($request, $res
         }
         //Verificando se foi digitado o NOME do patrimonio
         if($form->getNome() != ''){
-        $msg = Ativos::update($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getConservacao(), $aut->getUsuario(), $form->getCategoria());
+        $msg = Ativos::update($ativo->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getConservacao(), $aut->getUsuario(), $form->getCategoria(), $form->getEmpenho());
         if ($msg[2]) {
             $mensagemErro = $msg[2];
 
@@ -444,7 +477,7 @@ $app->map(['GET', 'POST'], '/atualizar/{patrimonio_id}', function($request, $res
             }
     }
 
-    return $this->renderer->render($response, 'ativo_atualizacao.html', array('form' => $form, 'mensagem' => $mensagem, 'foto' => $foto, 'setor_nome' => $ativo->getSetor()->getNome(), 'mensagemErro' => $mensagemErro));
+    return $this->renderer->render($response, 'ativo_atualizacao.html', array('form' => $form, 'mensagem' => $mensagem, 'foto' => $foto, 'setor_nome' => $ativo->getSetor()->getNome(), 'mensagem' => $mensagem , 'mensagemErro' => $mensagemErro, 'patrimonio' => $args['patrimonio_id']));
 })->setName('AtivoAtualizacao');
 
 // **********************************************************************************************
@@ -508,16 +541,18 @@ $app->get('/reabertura/delete/{patrimonio}', function($request, $response, $args
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-$app->get('/main/delete/{template_id}', function($request, $response, $args) {
+$app->get('/main/delete/{template_id}', function($request, $response, $args) use ($app) {
+    $mensagem = NULL;
+    $mensagemErro = NULL;
     if ($request->isGet()) {
         $msg = TemplateProduto::delete($args['template_id']);
-
         if ($msg[2]) {
-            $this->flash->addMessage('danger', $msg[2]);
+            $mensagemErro = $msg[2];
         } else {
-            $this->flash->addMessage('success', 'Registro excluido com sucesso');
+            $mensagem = 'Registro excluido com sucesso';
         }
     }
+//    $app->response->redirect($app->urlFor('Ativos.Main', array('mensagem' => $mensagem, 'mensagemErro' => $mensagemErro)));
     return $response->withStatus(301)->withHeader('Location', '../../main');
 })->setName('TemplateDelete');
 
@@ -572,3 +607,94 @@ $app->map(['GET', 'POST'], '/mov/grupo[/{params:.*}]', function($request, $respo
     return $this->renderer->render($response, 'ativo_movimentacao_grupo.html', array('ativos' => $lista, 'setores' => $setores, 'mensagem' => $mensagem, 'mensagemErro' => $mensagemErro));
 })->setName('Mov.Grupo');
 
+$app->map(['GET', 'POST'], '/pdf', function($request, $response, $args) {
+    
+    $dompdf = new DOMPDF();
+    //lendo o arquivo HTML correspondente
+    $data = date("d-m-Y");
+    $hora = date('H:i:s');
+    
+    $dompdf->set_option('defaultFont', 'Times New Roman');
+    $header = '<body><div style="text-align: center;  border-style: solid; border-width: 1px; padding: 10px 2px 10px 2px;">
+        <img style="max-width: 100px; max-height: 100px; margin-left: 20px;" src="assets/img/brasao_ufc.png" align="left">
+        <p><b>UNIVERSIDADE FEDERAL DO CEARÁ<br />CAMPUS DE CRATEÚS<br />SISTEMA DE ALMOXARIFADO E PATRIMÔNIO - SIAP</b><br />
+            EMITIDO EM '.$data.' '.$hora.'</p>'
+            .'</div><br />';
+    
+    $html = '<div class="container" style="border:2px solid #f0f0f0; border-radius:10px;font-family:sans-serif;">'
+            .'<div class="panel panel-default">'
+            . '<div class="panel-heading" style="width:100%;display:block;background:#f0f0f0;padding:5px 10px;">Filtros</div>'
+            . '<div class="panel-body" style="padding:10px; font-size:12px;">'
+            . '<span><b> | Modelo: </b>SEM MODELO</span>'
+            . '<span><b> | Modelo: </b>SEM MODELO</span>'
+            . '<span><b> | Modelo: </b>SEM MODELO</span>'
+            . '<span><b> | Modelo: </b>SEM MODELO</span>'
+            . '</div>'
+            .'</div>'
+            . '</div><br />';
+    
+    
+    
+    
+    $tabel = '<div class="container" style="border:2px solid #f0f0f0; border-radius:10px;font-family:sans-serif;">'
+            .'<div class="panel panel-default">'
+            . '<div class="panel-heading" style="width:100%;display:block;background:#f0f0f0;padding:5px 10px;">Resultados</div>'
+            . '<div class="panel-body" style="padding:10px;">'
+            . '<table class="relatorio" style="font-size:12px;">
+                        <thead class="bg-primary">
+                            <tr><th >Patrimônio</th><th >Nome</th><th >Categoria</th><th >Modelo</th><th >Data de Atesto</th><th >Status</th><th >Est. Conservação</th><th >Setor</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for ativo in ativos %}
+
+                            <tr style="border-bottom:2px solid #f0f0f0;">
+                                <td>0000000</td>
+                                <td>CADEIRA SECRETARIA OPERACIONAL_1</td>
+                                <td>CADEIRA GIRATORIA</td>
+                                <td>SEM MODELO</td>
+                                <td>21/08/2018</td>
+                                <td>EM USO</td>
+                                <td>NOVO</td>
+                                <td>ADM</td>
+                            </tr>
+                            <tr style="border-bottom:1px #f0f0f0;">
+                                <td>0000000</td>
+                                <td>CADEIRA SECRETARIA OPERACIONAL_1</td>
+                                <td>CADEIRA GIRATORIA</td>
+                                <td>SEM MODELO</td>
+                                <td>21/08/2018</td>
+                                <td>EM USO</td>
+                                <td>NOVO</td>
+                                <td>ADM</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr><th >Patrimônio</th><th >Nome</th><th >Categoria</th><th >Modelo</th><th >Data de Atesto</th><th >Status</th><th >Est. Conservação</th><th >Setor</th></tr>
+                        </tfoot>
+                    </table>'
+            . '</div>'
+            .'</div>'
+            . '</div><br /></body>';
+    
+//    $footer = '<div style="width:100%; height:80px; position:absolute; bottom:0; float:left;">'
+//            . '<div class="container" style="width:100%; border-color:blue; text-align:center;">'
+//            . '<div style="text-align: left; display: inline-block;">XXXX</div>'
+//            . '<div style="text-align: center; display: inline-block;">SIAP | Patrimônio – (88) 3691-9707 | UFC Campus de Crateús – crateus.ufc.br</div>'
+//            . '<div style="text-align: right; display: inline-block;">'.$data.' '.$hora.'</div>'
+//            . '</div>'
+//            . '</div>';
+    $footer = '<footer><p>Posted by: Hege Refsnes</p><p>Contact information: <a href="mailto:someone@example.com">someone@example.com</a>.</p></footer>';
+
+    $header .= $html;
+    $header .= $tabel;
+    $header .= $footer;
+    
+//    $dompdf->load_html_file($html);
+//    $dompdf->setPaper('A4','landscape');
+//    $dompdf->render();
+//    $dompdf->stream("Relatório_SIAP.pdf", array("Attachment" => FALSE));
+    
+ 
+    return $this->renderer->render($response, 'gerar_pdf.html', array('dompdf'=>$dompdf,'array' => array("Attachment" => FALSE), 'header' => $header));
+})->setName('Pdf');

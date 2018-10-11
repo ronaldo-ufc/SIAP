@@ -44,6 +44,7 @@ class AtivosReabertura {
     private $usuario;
     private $categoria;
     private $usuario_del;
+    private $empenho;
 
     private function bundle($row) {
         $u = new AtivosReabertura();
@@ -65,6 +66,7 @@ class AtivosReabertura {
         $u->setUsuario_id($row['usuario_id']);
         $u->setCategoria_id($row['categoria_id']);
         $u->setUsuario_del($row['usuario_del']);
+        $u->setEmpenho($row['empenho']);
 
         #Montando os objetos
         $u->setFabricante(\siap\cadastro\models\Fabricante::getById($row['fabricante_id']));
@@ -325,5 +327,14 @@ class AtivosReabertura {
     function setUsuario_del($usuario_del) {
         $this->usuario_del = $usuario_del;
     }
+    function getEmpenho() {
+        return $this->empenho;
+    }
+
+    function setEmpenho($empenho) {
+        $this->empenho = $empenho;
+    }
+
+
 
 }

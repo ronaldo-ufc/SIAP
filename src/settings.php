@@ -13,7 +13,8 @@ return [
                 __DIR__ . '/produto/templates/',
                 __DIR__ . '/cadastro/templates/',
                 __DIR__ . '/setor/templates/',
-                __DIR__ . '/auth/templates/'
+                __DIR__ . '/auth/templates/',
+                __DIR__ . '/relatorios/templates'
             ),
         ],
 

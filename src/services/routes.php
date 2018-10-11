@@ -55,7 +55,7 @@ $app->post('/salvar/item', function($request, $response, $args){
     case 'status': $msg = siap\cadastro\models\Status::create($postParam['nome']);
       break;
               
-    case 'setor': $msg = siap\setor\models\Setor::create($postParam['nome']);
+    case 'setor': $msg = siap\setor\models\Setor::create($postParam['nome'],$postParam['sigla']);
       break;
               
     case 'estado_de_conservacao': $msg = siap\cadastro\models\EConservacao::create($postParam['nome']);

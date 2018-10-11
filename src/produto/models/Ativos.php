@@ -48,6 +48,7 @@ class Ativos {
     private $template;
     private $usuario;
     private $categoria;
+    private $empenho;
     //private $responsavel;
 
     private function bundle($row) {
@@ -69,6 +70,7 @@ class Ativos {
         $u->setTemplate_id($row['template_id']);
         $u->setUsuario_id($row['usuario_id']);
         $u->setCategoria_id($row['categoria_id']);
+        $u->setEmpenho($row['empenho']);
         //$u->setResponsavel_id(1);
 
         #Montando os objetos
@@ -84,7 +86,7 @@ class Ativos {
         return $u;
     }
 
-    static function create($patrimonio, $nome, $data_atesto, $nota_fiscal, $fornecedor, $descricao, $observacao, $foto, $fabricante_id, $modelo_id, $aquisicao_id, $status_id, $setor_id, $conservacao_id, $template_id, $usuario, $categoria_id) {
+    static function create($patrimonio, $nome, $data_atesto, $nota_fiscal, $fornecedor, $descricao, $observacao, $foto, $fabricante_id, $modelo_id, $aquisicao_id, $status_id, $setor_id, $conservacao_id, $template_id, $usuario, $categoria_id,$empenho) {
         #Verifica se tem um ativo já foi deletado
         if (self::temAtivoDeletado($patrimonio)) {
             return array('Erro', 'info', 'Existe um ativo excluído com esse número de patrimônio. Recupere o ativo no menu de recupeção de ativo!');
@@ -109,8 +111,9 @@ class Ativos {
                 . "conservacao_id, "
                 . "template_id, "
                 . "usuario_id, "
-                . "categoria_id)"
-                . " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                . "categoria_id,"
+                . "empenho)"
+                . " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         $stmt = DBSiap::getSiap()->prepare($sql);
         $stmt->execute(array($patrimonio,
@@ -129,13 +132,18 @@ class Ativos {
             $conservacao_id,
             $template_id,
             $usuario,
-            $categoria_id
+            $categoria_id,
+            strtoupper(tirarAcentos($empenho))
         ));
         return $stmt->errorInfo();
     }
 
-    static function update($patrimonio, $nome, $data_atesto, $nota_fiscal, $fornecedor, $descricao, $observacao, $foto, $fabricante_id, $modelo_id, $aquisicao_id, $status_id, $conservacao_id, $usuario, $categoria_id) {
-
+    static function update($patrimonio, $nome, $data_atesto, $nota_fiscal, $fornecedor, $descricao, $observacao, $foto, $fabricante_id, $modelo_id, $aquisicao_id, $status_id, $conservacao_id, $usuario, $categoria_id,$empenho) {
+        #Verifica se o tombamento está cadastrado.
+        if (self::getById($patrimonio) == NULL) {
+            return array('Erro', 'info', 'Não existe um ativo cadastrado com esse número de patrimônio.');
+        }
+        
         $sql = "UPDATE siap.ativo SET "
                 . "nome = ?,  "
                 . "data_atesto = ?,  "
@@ -150,7 +158,8 @@ class Ativos {
                 . "status_id  = ?,  "
                 . "conservacao_id = ?, "
                 . "usuario_id  = ?, "
-                . "categoria_id  = ? "
+                . "categoria_id  = ?, "
+                . "empenho  = ? "
                 . " WHERE patrimonio = ? ";
         
 //        $sql = Ativos::injectionCaracteres($sql);
@@ -170,6 +179,7 @@ class Ativos {
             $conservacao_id,
             $usuario,
             $categoria_id,
+            strtoupper(tirarAcentos($empenho)),
             $patrimonio
         ));
         return $stmt->errorInfo();
@@ -188,7 +198,7 @@ class Ativos {
     }
 
     private function logAtivo($patrimonio, $usuario) {
-        $sql = "UPADTE siap.ativo_del SET usuario_del = ? WHERE patrimonio = ?";
+        $sql = "UPDATE siap.ativo_del SET usuario_del = ? WHERE patrimonio = ?";
 
         $stmt = DBSiap::getSiap()->prepare($sql);
         $stmt->execute(array($usuario, $patrimonio));
@@ -238,7 +248,7 @@ class Ativos {
         }
         return self::bundle($row);
     }
-    static function Filtrar($nome,$categoria,$modelo,$atesto,$status,$conservacao,$setor,$fornecedor,$nota_fiscal,$descricao){
+    static function Filtrar($nome,$categoria,$modelo,$atesto,$status,$conservacao,$setor,$fornecedor,$nota_fiscal,$empenho,$descricao){
         $sql = "SELECT * from siap.ativo where true ";
         if($nome){
             $nome = strtoupper(tirarAcentos($nome));
@@ -265,6 +275,10 @@ class Ativos {
         }
         if($nota_fiscal){
             $sql = $sql."AND ativo.nota_fiscal = '$nota_fiscal' ";
+        }
+        if($empenho){
+            $empenho = strtoupper(tirarAcentos($empenho));
+            $sql = $sql."AND ativo.empenho = '$empenho' ";
         }
         if($descricao){
             $descricao = strtoupper(tirarAcentos($descricao));
@@ -299,6 +313,19 @@ class Ativos {
         }
         return $result;
     }
+    
+    static function getAllBySetor($setor_id) {
+        $sql = "select * from siap.ativo where setor_id = ? order by cadastro desc";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array($setor_id));
+        $rows = $stmt->fetchAll();
+        $result = array();
+        foreach ($rows as $row) {
+            array_push($result, self::bundle($row));
+        }
+        return $result;
+    }
+    
 
     public function getPatrimonio() {
         return $this->patrimonio;
@@ -506,6 +533,13 @@ class Ativos {
 
     public function setResponsavel_id($responsavel_id) {
         $this->responsavel_id = $responsavel_id;
+    }
+    function getEmpenho() {
+        return $this->empenho;
+    }
+
+    function setEmpenho($empenho) {
+        $this->empenho = $empenho;
     }
 
 }

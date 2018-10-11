@@ -1,40 +1,40 @@
 <?php
+
 header('Content-Type: text/html; charset=UTF-8');
 
 function validaCPF($cpf = null) {
- 
+
     // Verifica se um número foi informado
-    if(empty($cpf)) {
+    if (empty($cpf)) {
         return false;
     }
- 
+
     // Elimina possivel mascara
     //$cpf = ereg_replace('[^0-9]', '', $cpf);
     //$cpf = str_pad($cpf, 11, '0', STR_PAD_LEFT);
-     
     // Verifica se o numero de digitos informados é igual a 11 
     if (strlen($cpf) != 11) {
         return false;
     }
     // Verifica se nenhuma das sequências invalidas abaixo 
     // foi digitada. Caso afirmativo, retorna falso
-    else if ($cpf == '00000000000' || 
-        $cpf == '11111111111' || 
-        $cpf == '22222222222' || 
-        $cpf == '33333333333' || 
-        $cpf == '44444444444' || 
-        $cpf == '55555555555' || 
-        $cpf == '66666666666' || 
-        $cpf == '77777777777' || 
-        $cpf == '88888888888' || 
-        $cpf == '99999999999') {
+    else if ($cpf == '00000000000' ||
+            $cpf == '11111111111' ||
+            $cpf == '22222222222' ||
+            $cpf == '33333333333' ||
+            $cpf == '44444444444' ||
+            $cpf == '55555555555' ||
+            $cpf == '66666666666' ||
+            $cpf == '77777777777' ||
+            $cpf == '88888888888' ||
+            $cpf == '99999999999') {
         return false;
-     // Calcula os digitos verificadores para verificar se o
-     // CPF é válido
-     } else {   
-         
+        // Calcula os digitos verificadores para verificar se o
+        // CPF é válido
+    } else {
+
         for ($t = 9; $t < 11; $t++) {
-             
+
             for ($d = 0, $c = 0; $c < $t; $c++) {
                 $d += $cpf{$c} * (($t + 1) - $c);
             }
@@ -43,73 +43,70 @@ function validaCPF($cpf = null) {
                 return false;
             }
         }
- 
+
         return true;
     }
 }
 
-function formataCPF($nbr_cpf){
-  $parte_um     = substr($nbr_cpf, 0, 3);
-  $parte_dois   = substr($nbr_cpf, 3, 3);
-  $parte_tres   = substr($nbr_cpf, 6, 3);
-  $parte_quatro = substr($nbr_cpf, 9, 2);
+function formataCPF($nbr_cpf) {
+    $parte_um = substr($nbr_cpf, 0, 3);
+    $parte_dois = substr($nbr_cpf, 3, 3);
+    $parte_tres = substr($nbr_cpf, 6, 3);
+    $parte_quatro = substr($nbr_cpf, 9, 2);
 
-  return $parte_um.".".$parte_dois.".".$parte_tres."-".$parte_quatro;
+    return $parte_um . "." . $parte_dois . "." . $parte_tres . "-" . $parte_quatro;
 }
 
-function desFormataCPF($valor){
-  $valor = trim($valor);
-  $valor = str_replace(".", "", $valor);
-  $valor = str_replace(",", "", $valor);
-  $valor = str_replace("-", "", $valor);
-  $valor = str_replace("/", "", $valor);
-  return $valor;
+function desFormataCPF($valor) {
+    $valor = trim($valor);
+    $valor = str_replace(".", "", $valor);
+    $valor = str_replace(",", "", $valor);
+    $valor = str_replace("-", "", $valor);
+    $valor = str_replace("/", "", $valor);
+    return $valor;
 }
 
-function desFormataCelular($valor){
-  $valor = trim($valor);
-  $valor = str_replace("(", "", $valor);
-  $valor = str_replace(")", "", $valor);
-  $valor = str_replace(" ", "", $valor);
-  $valor = str_replace("-", "", $valor);
-  return $valor;
+function desFormataCelular($valor) {
+    $valor = trim($valor);
+    $valor = str_replace("(", "", $valor);
+    $valor = str_replace(")", "", $valor);
+    $valor = str_replace(" ", "", $valor);
+    $valor = str_replace("-", "", $valor);
+    return $valor;
 }
 
-function formatDate($data){
-  $_data = split('-', $data);
-  return $_data[2]."/".$_data[1]."/".$_data[0];
+function formatDate($data) {
+    $_data = split('-', $data);
+    return $_data[2] . "/" . $_data[1] . "/" . $_data[0];
 }
 
-function formatHora($hora){
-  $_var = explode(":", $hora);
-  return $_var[0].":".$_var[1];
+function formatHora($hora) {
+    $_var = explode(":", $hora);
+    return $_var[0] . ":" . $_var[1];
 }
 
-function retiraElementoArray($arr, $_var){
-  
-  $newArr = array();
+function retiraElementoArray($arr, $_var) {
 
-  foreach($arr as $value)
-  {
-    if( $value != $_var )
-    {
-      array_push($newArr, $value);
+    $newArr = array();
+
+    foreach ($arr as $value) {
+        if ($value != $_var) {
+            array_push($newArr, $value);
+        }
     }
-  }
-  return $newArr;
+    return $newArr;
 }
 
-function formatCelular ($tipo)
-{
-    $string  = ereg_replace("[^0-9]", "", $string);
-    
-    $string = '(' . substr($tipo, 0, 2) . ') ' . substr($tipo, 2, 5) 
-             . '-' . substr($tipo, 7);
-       
+function formatCelular($tipo) {
+    $string = ereg_replace("[^0-9]", "", $string);
+
+    $string = '(' . substr($tipo, 0, 2) . ') ' . substr($tipo, 2, 5)
+            . '-' . substr($tipo, 7);
+
     return $string;
 }
 
-function enviaEmail($nome, $email, $assunto, $msg_,$remetente) {
+function enviaEmail($nome, $email, $assunto, $msg_, $remetente) {
     //$msg = "*** Email enviado pelo site *** <br/>" . "Email: " . $email . "<br />" . "Mensagem: " . $msg_;
 
 
@@ -138,7 +135,6 @@ function enviaEmail($nome, $email, $assunto, $msg_,$remetente) {
     $Mailer->Password = 'cc@ufc!_';
 //      $Mailer->Username = 'sigcenaoresponda@gmail.com';
 //      $Mailer->Password = 'cc@ufc!_';
-
 //E-mail remetente (deve ser o mesmo de quem fez a autenticação)
     $Mailer->From = 'encontrosuniversitarioscrateus@gmail.com';
 
@@ -158,16 +154,14 @@ function enviaEmail($nome, $email, $assunto, $msg_,$remetente) {
     $Mailer->AddAddress($email);
 
     return $Mailer->Send();
-
 }
 
-
-
-function criaLinkRecuperacao($login){
+function criaLinkRecuperacao($login) {
     $dia = date('Y-m-d H:m:s');
-    return md5($login.$dia);
+    return md5($login . $dia);
 }
-function montaEmailRedefinicao($codigo_autenticacao,$pessoa){
+
+function montaEmailRedefinicao($codigo_autenticacao, $pessoa) {
     $url = 'http://www.crateus.ufc.br/sigce/recuperar/redefinicao/' . $codigo_autenticacao;
     $assunto = 'Redefinição de Senha';
     $assunto = '=?UTF-8?B?' . base64_encode($assunto) . '?=';
@@ -176,11 +170,9 @@ function montaEmailRedefinicao($codigo_autenticacao,$pessoa){
     $nome = $pessoa->getNome();
     $mensagem = montaMensagem($nome, $url);
     return enviaEmail($nome, $pessoa->getEmail(), $assunto, $mensagem, $remetente);
-   
 }
 
-function titleCase($string, $delimiters = array(" ", "-", ".", "'", "O'", "Mc"), $exceptions = array("de", "da", "dos", "das", "do", "I", "II", "III", "IV", "V", "VI"))
-{
+function titleCase($string, $delimiters = array(" ", "-", ".", "'", "O'", "Mc"), $exceptions = array("de", "da", "dos", "das", "do", "I", "II", "III", "IV", "V", "VI")) {
     /*
      * Exceptions in lower case are words you don't want converted
      * Exceptions all in upper case are any words you don't want converted to title case
@@ -205,12 +197,12 @@ function titleCase($string, $delimiters = array(" ", "-", ".", "'", "O'", "Mc"),
             array_push($newwords, $word);
         }
         $string = join($delimiter, $newwords);
-   }//foreach
-   return $string;
+    }//foreach
+    return $string;
 }
 
-function tirarAcentos($string){
-    return preg_replace(array("/(á|à|ã|â|ä)/","/(Á|À|Ã|Â|Ä)/","/(é|è|ê|ë)/","/(É|È|Ê|Ë)/","/(í|ì|î|ï)/","/(Í|Ì|Î|Ï)/","/(ó|ò|õ|ô|ö)/","/(Ó|Ò|Õ|Ô|Ö)/","/(ú|ù|û|ü)/","/(Ú|Ù|Û|Ü)/","/(ñ)/","/(Ñ)/", "/(Ç)/", "/(ç)/"),explode(" ","a A e E i I o O u U n N C c"),$string);
+function tirarAcentos($string) {
+    return preg_replace(array("/(á|à|ã|â|ä)/", "/(Á|À|Ã|Â|Ä)/", "/(é|è|ê|ë)/", "/(É|È|Ê|Ë)/", "/(í|ì|î|ï)/", "/(Í|Ì|Î|Ï)/", "/(ó|ò|õ|ô|ö)/", "/(Ó|Ò|Õ|Ô|Ö)/", "/(ú|ù|û|ü)/", "/(Ú|Ù|Û|Ü)/", "/(ñ)/", "/(Ñ)/", "/(Ç)/", "/(ç)/"), explode(" ", "a A e E i I o O u U n N C c"), $string);
 }
 
 /**
@@ -220,19 +212,18 @@ function tirarAcentos($string){
  * @param string $directory directory to which the file is moved
  * @return string filename of moved file
  */
-function moveUploadedFile($directory, $uploadedFile)
-{
-  $imagem = array("pdf", "jpeg", "jpg", "png"); 
-  $extension = strtolower(pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION));
-  if (in_array($extension, $imagem)) {
-    $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
-    $filename = sprintf('%s.%0.8s', $basename, $extension);
+function moveUploadedFile($directory, $uploadedFile) {
+    $imagem = array("pdf", "jpeg", "jpg", "png");
+    $extension = strtolower(pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION));
+    if (in_array($extension, $imagem)) {
+        $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
+        $filename = sprintf('%s.%0.8s', $basename, $extension);
 
-    $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+        $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
 
-    return $filename;
-  }
-  return null;
+        return $filename;
+    }
+    return null;
 }
 
 /**
@@ -242,25 +233,24 @@ function moveUploadedFile($directory, $uploadedFile)
  * @param string $directory directory to which the file is moved
  * @return string filename of moved file
  */
-function moveUploadedImage($directory, $uploadedFile)
-{
-  $imagem = array("jpg", "jpeg", "png"); 
-  $extension = strtolower(pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION));
-  if (in_array($extension, $imagem)) {
-    $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
-    $filename = sprintf('%s.%0.8s', $basename, $extension);
+function moveUploadedImage($directory, $uploadedFile) {
+    $imagem = array("jpg", "jpeg", "png");
+    $extension = strtolower(pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION));
+    if (in_array($extension, $imagem)) {
+        $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
+        $filename = sprintf('%s.%0.8s', $basename, $extension);
 
-    $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
-   
-    return $filename;
-  }
-  return null;
+        $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+
+        return $filename;
+    }
+    return null;
 }
 
-function getMensagemByCodigo($codigo, $txt = NULL){ 
-    switch ($codigo){
+function getMensagemByCodigo($codigo, $txt = NULL) {
+    switch ($codigo) {
         case 1:
-            return '<div class="alert alert-danger"><p class="text-center">Não encontramos nenhum usuário com o Login: <strong>'.$txt.'</strong>. Favor inserir um Login válido.<p class="text-center"></div>';
+            return '<div class="alert alert-danger"><p class="text-center">Não encontramos nenhum usuário com o Login: <strong>' . $txt . '</strong>. Favor inserir um Login válido.<p class="text-center"></div>';
             break;
         case 2:
             return '<div class="alert alert-success"><p class="text-center">Operação Realizada com Sucesso.</p></div>';
@@ -269,7 +259,7 @@ function getMensagemByCodigo($codigo, $txt = NULL){
             return '<div class="alert alert-danger"><p class="text-center">No período desta movimentação não existe um Agente Setorial responsável pelo setor. Cadastre primeiro o Agente Setorial para o setor.<p class="text-center"></div>';
             break;
         case 4:
-            return '<div class="alert alert-info"><p class="text-center"><strong>'.$txt.'</strong></p></div>';
+            return '<div class="alert alert-info"><p class="text-center"><strong>' . $txt . '</strong></p></div>';
             break;
         case 5:
             return '<div class="alert alert-danger"><p class="text-center"><strong>As senhas digitadas nos campos não conferem.</strong></p></div>';
@@ -278,13 +268,13 @@ function getMensagemByCodigo($codigo, $txt = NULL){
             return '<div class="alert alert-success"><p class="text-center"><strong>Senha alterada com sucesso. <a href="/sigce">Clique aqui</a> para ser redirecionado ao Login</strong></p></div>';
             break;
         case 7:
-            return '<div class="alert alert-danger"><strong>'.$txt.'</strong></div>';
+            return '<div class="alert alert-danger"><strong>' . $txt . '</strong></div>';
             break;
         case 8:
-            return '<div class="alert alert-warning"><strong>'.$txt.'</strong></div>';
+            return '<div class="alert alert-warning"><strong>' . $txt . '</strong></div>';
             break;
         case 9:
-            return '<div class="alert alert-success"><strong>'.$txt.'</strong></div>';
+            return '<div class="alert alert-success"><strong>' . $txt . '</strong></div>';
             break;
         case 10:
             return '<div class="alert alert-success"><p class="text-center"><strong>E-mail cadastrado com sucesso. <a href="/sigce/recuperar/senha">Clique aqui</a> para ser redirecionado para a Redefinição de Senha</strong></p></div>';
@@ -296,4 +286,43 @@ function getMensagemByCodigo($codigo, $txt = NULL){
             return '<div class="alert alert-danger"><p class="text-center"><strong>Não foi possível excluir essa programação.</p></div>';
             break;
     }
+}
+
+//Retorna a quantidade de elementos na lista passada como parâmetro
+function retornaTamanhoLista($lista) {
+    return sizeof($lista);
+}
+
+//Retorna uma lista com patrimonios que pertencem a dada categoria
+function categoriaFiltro($ativos, $categoria_id) {
+    $result = array();
+    foreach ($ativos as $ativo) {
+        if ($ativo->getCategoria_id() == $categoria_id) {
+            array_push($result, $ativo);
+        }
+    }
+    return $result;
+}
+
+//Retorna uma lista com patrimonios que pertencem a dado setor
+function setorFiltro($ativos, $setor_id) {
+    $result = array();
+    foreach ($ativos as $ativo) {
+        if ($ativo->getSetor_id() == $setor_id) {
+            array_push($result, $ativo);
+        }
+    }
+    return $result;
+}
+
+
+//Retorna uma lista com patrimonios que pertencem a dado setor e categoria
+function categoriaSetorFiltro($ativos, $categoria_id, $setor_id){
+    $result = array();
+    foreach ($ativos as $ativo){
+        if($ativo->getCategoria_id() == $categoria_id and $ativo->getSetor_id() == $setor_id){
+            array_push($result, $ativo);
+        }
+    }
+    return $result;
 }

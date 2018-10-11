@@ -4,11 +4,11 @@
 {% import "funcoes.html" as msg %}
 
 {% block content %}
-<div class="col-md-12">
+<div class="container">
   {{ msg.message( mensagem )}}
   {{ msg.messageErro(mensagemErro)}}
 </div>
-<div class="col-md-12">
+<div class="container">
   <div class="panel panel-default">
     <div class="panel-heading"><h4>Atualizar Modelo</h4></div>
     <div class="panel-body">
@@ -28,30 +28,25 @@
           </div>
           <div class="col-md-10">
             <div class="row">
-              <!--  <div class="col-md-2">
-                  <div class="form-group">
-                    <label for="patrimonio">Patrimonio</label>
-                    <input class="form-control" id="patrimonio" name="patrimonio" readonly value="{{patrimonio}}"/>
-                  </div>
-                </div>-->
+              {{forms.input(form.empenho, 2)}}
               {{forms.input(form.nome, 4)}}
-              {{forms.input(form.foto, 6)}}
+              {{forms.input(form.nota_fiscal, 2)}}
+              {{forms.input(form.foto, 4)}}
             </div>
             <div class="row">
-              {{forms.input(form.data_atesto, 4)}}
-              {{forms.input(form.nota_fiscal, 4)}}
-              {{forms.input(form.fornecedor, 4)}}
+              {{forms.input(form.data_atesto, 3)}}
+              {{forms.input(form.tipo_de_aquisicao, 4, null, functions.btnAddItens('Tipo de Aquisição|tipo_de_aquisicao', 'Adicionar Tipo de Aquisição'))}}
+              {{forms.input(form.estado_de_conservacao, 5, null, functions.btnAddItens('Estado de Conservação|estado_de_conservacao', 'Adicionar Estado de Conservação'))}}
             </div>
             <div class="row">
-              {{forms.input(form.categoria, 4, null, functions.btnAddItens('Categoria|categoria', 'Adicionar Tipo de Categoria'))}}
-              {{forms.input(form.marca, 4, null, functions.btnAddItens('Marca|marca', 'Adicionar Marca'))}}
-              {{forms.input(form.modelo, 4, null, functions.btnAddItens('Modelo|modelo', 'Adicionar Modelo'))}}
-            </div>
-            <div class="row">
-              {{forms.input(form.tipo_de_aquisicao, 3, null, functions.btnAddItens('Tipo de Aquisição|tipo_de_aquisicao', 'Adicionar Tipo de Aquisição'))}}
+              {{forms.input(form.fornecedor, 3)}}
               {{forms.input(form.status, 3, null, functions.btnAddItens('Status|status', 'Adicionar Tipo de Status'))}}
-              {{forms.input(form.setor, 3, null, functions.btnAddItens('Setor|setor', 'Adicionar Setor'))}}
-              {{forms.input(form.estado_de_conservacao, 3, null, functions.btnAddItens('Estado de Conservação|estado_de_conservacao', 'Adicionar Estado de Conservação'))}}
+              {{forms.input(form.categoria, 6, null, functions.btnAddItens('Categoria|categoria', 'Adicionar Tipo de Categoria'))}}
+            </div>
+            <div class="row">
+              {{forms.input(form.marca, 3, null, functions.btnAddItens('Marca|marca', 'Adicionar Marca'))}}
+              {{forms.input(form.modelo, 4, null, functions.btnAddItens('Modelo|modelo', 'Adicionar Modelo'))}}
+              {{forms.input(form.setor, 5, null, functions.btnAddItens('Setor|setor', 'Adicionar Setor'))}}
             </div>
           </div>
         </div>
@@ -73,7 +68,7 @@
           </div>
           <div class="col-md-1">
             <div class="form-group">
-                <a  data-toggle="modal" data-target="#modalExcluir" onclick="btnExcluir(' {{base_url()}}/ativo/main/delete/{{template_id}} ')" class="btn btn-danger">
+                <a  data-toggle="modal" data-target="#modalExcluir" onclick="btnExcluir(' {{base_url()}}/ativo/main/delete/{{template.template_id}} ', 'Excluir modelo', 'Deseja realmente excluir o modelo?')" class="btn btn-danger">
                 <i class="far fa-trash-alt"></i> Excluir
               </a>
             </div>

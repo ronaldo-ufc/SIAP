@@ -1,0 +1,9 @@
+/*Definido cor das linhas pares*/
+.relatorio tr:nth-child(even) {
+	background: #FFF
+}
+ 
+/*Definindo cor das Linhas impáres*/
+.relatorio tr:nth-child(odd) {
+	background: #EEE
+}

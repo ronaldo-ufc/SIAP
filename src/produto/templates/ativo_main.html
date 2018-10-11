@@ -34,7 +34,7 @@
                     <td ><a href="novo/modelo/{{template.template_id}}"> {{template.nome}}</a></td>
                     <td ><a href="novo/modelo/{{template.template_id}}"> {{template.categoria.nome}}</a></td>
                     <td style="width: 70px;" class="text-center bg-success"><a href="{{base_url()}}/ativo/atualizar/modelo/{{template.template_id}}"><i class="fas fa-sync-alt"></i></a></td>
-                    <td  style="width: 50px;" class="text-center bg-danger" data-toggle="modal" data-target="#modalExcluir"> <a onclick="btnExcluir(' {{base_url()}}/ativo/main/delete/{{template.template_id}} ')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i></a></td>
+                    <td  style="width: 50px;" class="text-center bg-danger" data-toggle="modal" data-target="#modalExcluir"> <a onclick="btnExcluir(' {{base_url()}}/ativo/main/delete/{{template.template_id}} ', 'Excluir modelo', 'Deseja realmente excluir o modelo?')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i></a></td>
                   </tr>
                   {% endfor %}
                 </tbody>

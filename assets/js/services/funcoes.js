@@ -72,6 +72,13 @@ $(document).on("click", "#btnAdicionar", function () {
     var id = str[1];
     $("#titulo").html(titulo);
     $("#titulo").val(id);
+    if(titulo == 'Setor'){
+        document.getElementById('sigla').removeAttribute('hidden');
+        document.getElementById('sigla_item').setAttribute('type','text');
+    }else{
+        document.getElementById('sigla').setAttribute('hidden','');
+        document.getElementById('sigla_item').setAttribute('type','hidden');
+    }
 });
 
 function aumenta(obj){

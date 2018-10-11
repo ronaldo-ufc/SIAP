@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 {% import "funcoes.html" as msg %}
+{% import "uteis.html" as functions %}
 
 {% block content %}
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-10 col-md-offset-1">
       {{ msg.message(mensagem)}}
+      {{msg.messageErro(mensagemErro)}}
+      <!--{{ forms.error_message(form, mensagem)}}-->
     </div>
     <div class="col-md-10 col-md-offset-1">
       <div class="panel panel-default">
@@ -39,7 +42,7 @@
               {% for modelo in modelos %}
               <tr>
                 <td>{{modelo.getNome}}</td>
-                <td class="col-md-1 bg-danger"><p class="text-center"><a href="delete/{{modelo.getModelo_id}}/{{modelo.getFabricante_id}}"><i class="far fa-trash-alt"></i></a></p></td>
+                <td style="width: 50px;" class="text-center bg-danger" data-toggle="modal" data-target="#modalExcluir"><a onclick="btnExcluir(' delete/{{modelo.getModelo_id}}/{{modelo.getFabricante_id}} ', 'Excluir modelo' , 'Deseja realmente excluir o modelo?')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i> </a></td>
               </tr>
               {% endfor %}
             </tbody>
@@ -49,4 +52,5 @@
     </div>
   </div>
 </div>
+{{ functions.modalExcluir() }}
 {% endblock %}

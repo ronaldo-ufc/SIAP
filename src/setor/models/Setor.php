@@ -44,6 +44,18 @@ class Setor{
     return $result;
   }
   
+  static function getAllSetorId(){
+    $sql = "SELECT setor_id FROM public.setor ORDER BY setor_id";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array());
+    $rows = $stmt->fetchAll();
+    $result = array();
+    foreach ($rows as $row){
+      array_push($result, self::bundle($row));
+    }
+    return $result;
+  }
+  
   static function getById($setor_id){
     $sql = "select * from setor where setor_id = ?";
     $stmt = DBSiap::getSiap()->prepare($sql);
@@ -106,4 +118,3 @@ class Setor{
 
 
 }
-

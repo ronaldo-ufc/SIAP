@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% import "forms.html" as forms %}
+{% import "uteis.html" as functions %}
+{% import "funcoes.html" as msg %}
 
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            {{ forms.error_message(form, mensagem)}}
+        <div class="col-md-10 col-md-offset-1">
+            {{ msg.message( mensagem )}}
+            {{ msg.messageErro( mensagemErro )}}
+            <!--{{ forms.error_message(form, mensagem)}}-->
         </div>
         <div class="col-md-10 col-md-offset-1">
 
@@ -46,7 +50,7 @@
                             <tr id="trItens">
                                 <td>{{fabricante.getNome}}</td>
                                 <td class="col-lg-1 bg-success"> <p class="text-center"><a href="modelo/{{fabricante.getFabricante_id}}"><i class="fas fa-cog"></i></a></p></td>
-                                <td class="col-lg-1 bg-danger"><p class="text-center"><a href="fabricante/delete/{{fabricante.getFabricante_id}}"><i class="far fa-trash-alt"></i> </a></p></td>
+                                <td style="width: 50px;" class="text-center bg-danger" data-toggle="modal" data-target="#modalExcluir"><a onclick="btnExcluir(' fabricante/delete/{{fabricante.getFabricante_id}} ', 'Excluir marca' , 'Deseja realmente excluir a marca?')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i> </a></td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -56,52 +60,5 @@
         </div>
     </div>
 </div>
-
-<!--<script type="text/javascript">
-    function key() {
-        var c = document.getElementById("txtBusca").value;
-        console.log(c);
-        $("#trItens td").css("display", "block");
-        $("#trItens td").each(function () {
-            if ($(this).text().indexOf(c) < 0)
-                $(this).css("display", "none");
-        });
-
-
-    }
-</script>-->
-<!--<script>
-//    PEGANDO OS ELEMENTOS SALVOS NA TABELA
-    var tbody = document.getElementById('tbody');
-//    PEGANDO OS ELEMENTOS "FILHOS" DA TALEBA
- 
-    //PEGANDO EVENTO
-    document.getElementById('txtBusca').addEventListener("keyup",function (){
-        var busca = document.getElementById('txtBusca').value.toUpperCase();
-//    PERCORRENDO AS LINHAS DA TABELA
-    for(var i = 0; i < tbody.childNodes.length; i++){
-      var achou = false; 
-//      ACESSANDO O ELEMENTO TR DA LINHA i
-      var tr = tbody.childNodes[i];
-      console.log(tbody.childNodes[i]);
-//      PEGANDO TODOS OS FILHOS DOS TR'S, QUE SÃO OS TD'S
-      
-      var td = tr.childNodes;
-      for(var j = 0; j < td.childNodes.length; j++){
-//          PEGANDO O VALOR DE CADA COLUNA NA LINHA
-          var value = td[j].childNodes[0].nodeValue;
-          if(value.indexOf(busca) >= 0){
-              achou = true;
-          }
-      }
-      if(achou){
-          tr.style.display = "table-row";
-      }else{
-          tr.style.display = "none";
-      }
-    }
-    })
-    
-</script>-->
-
+{{ functions.modalExcluir() }}
 {% endblock %}

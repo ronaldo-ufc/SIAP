@@ -32,6 +32,7 @@ class AtivosForm extends Form {
         $setor_id = $val["setor"];
         $categoria_id = $val['categoria'];
         $conservacao_id = $val["estado_de_conservacao"];
+        $empenho = $val['empenho'];
       }
       
         
@@ -118,6 +119,9 @@ class AtivosForm extends Form {
     
     $this->data_atesto = new DateField(["value" => $data_atesto,
                                       "validators" => [new InputRequired("Data de Atesto é obrigatória")]
+    ]);
+    
+    $this->empenho = new StringField([
     ]);
     
     $this->nota_fiscal = new StringField([
@@ -228,6 +232,10 @@ class AtivosForm extends Form {
   
   function getCategoria() {
     return $this->categoria->data;
+  }
+  
+  function getEmpenho() {
+    return $this->empenho->data;
   }
   
 }

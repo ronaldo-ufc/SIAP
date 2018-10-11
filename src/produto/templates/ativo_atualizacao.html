@@ -4,11 +4,12 @@
 {% import "funcoes.html" as msg %}
 
 {% block content %}
-<div class="col-md-12">
-  {{ forms.error_message(form, mensagem )}}
+<div class="container">
+  <!--{{ forms.error_message(form, mensagem )}}-->
+  {{ msg.message(mensagem)}}
   {{ msg.messageErro(mensagemErro)}}
 </div>
-<div class="col-md-12">
+<div class="container">
   <div class="panel panel-default">
     <div class="panel-heading"><h4>Atualizar Bem</h4></div>
     <div class="panel-body">
@@ -24,7 +25,6 @@
               {% endif %}
               <figcaption class="figure-caption text-center text-muted">Imagem do Ativo</figcaption>
             </figure>
-
           </div>
           <div class="col-md-10">
             <div class="row">
@@ -36,28 +36,30 @@
                 </div>-->
               {{forms.input(form.patrimonio, 2, 'readOnly')}}
               {{forms.input(form.nome, 4)}}
-              {{forms.input(form.foto, 6)}}
+              {{forms.input(form.empenho, 2)}}
+              {{forms.input(form.foto, 4)}}
             </div>
             <div class="row">
-              {{forms.input(form.data_atesto, 4)}}
-              {{forms.input(form.nota_fiscal, 4)}}
-              {{forms.input(form.fornecedor, 4)}}
-            </div>
-            <div class="row">
+              {{forms.input(form.data_atesto, 3)}}
+              {{forms.input(form.fornecedor, 3)}}
+              {{forms.input(form.nota_fiscal, 2)}}
               {{forms.input(form.categoria, 4, null, functions.btnAddItens('Categoria|categoria', 'Adicionar Tipo de Categoria'))}}
-              {{forms.input(form.marca, 4, null, functions.btnAddItens('Marca|marca', 'Adicionar Marca'))}}
-              {{forms.input(form.modelo, 4, null, functions.btnAddItens('Modelo|modelo', 'Adicionar Modelo'))}}
             </div>
             <div class="row">
-              {{forms.input(form.tipo_de_aquisicao, 3, null, functions.btnAddItens('Tipo de Aquisição|tipo_de_aquisicao', 'Adicionar Tipo de Aquisição'))}}
-              {{forms.input(form.status, 3, null, functions.btnAddItens('Status|status', 'Adicionar Tipo de Status'))}}
-              <div class="col-md-3">
+              {{forms.input(form.status, 2, null, functions.btnAddItens('Status|status', 'Adicionar Tipo de Status'))}}
+              {{forms.input(form.estado_de_conservacao, 3, null, functions.btnAddItens('Estado de Conservação|estado_de_conservacao', 'Adicionar Estado de Conservação'))}}
+              {{forms.input(form.tipo_de_aquisicao, 3, null, functions.btnAddItens('Tipo de Aquisição|tipo_de_aquisicao', 'Adicionar Tipo de Aquisição'))}} 
+              <div class="col-md-4">
                 <div class="form-group">
                   <label for="setor">Setor</label>
                   <input class="form-control" id="setor_nome" name="setor_nome" readonly value="{{setor_nome}}"/>
                 </div>
               </div>
-              {{forms.input(form.estado_de_conservacao, 3, null, functions.btnAddItens('Estado de Conservação|estado_de_conservacao', 'Adicionar Estado de Conservação'))}}
+            </div>
+            <div class="row">
+              {{forms.input(form.marca, 6, null, functions.btnAddItens('Marca|marca', 'Adicionar Marca'))}}
+              {{forms.input(form.modelo, 6, null, functions.btnAddItens('Modelo|modelo', 'Adicionar Modelo'))}}
+              
             </div>
           </div>
         </div>
@@ -80,9 +82,10 @@
           </div>
           <div class="col-md-1">
             <div class="form-group">
-              <a  data-toggle="modal" data-target="#modalExcluir" onclick="btnExcluir('../delete/{{patrimonio}} ')" class="btn btn-danger">
+              <a  data-toggle="modal" data-target="#modalExcluir" onclick="btnExcluir(' {{base_url()}}/ativo/delete/{{patrimonio}} ', 'Excluir bem', 'Deseja realmente excluir o bem?')" class="btn btn-danger">
                 <i class="far fa-trash-alt"></i> Excluir
               </a>
+                 <!--<a onclick="btnExcluir(' {{base_url()}}/ativo/delete/{{ativo.patrimonio}} ', 'Deseja realmente excluir o bem?')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i></a>-->
             </div>
           </div>
         </div>

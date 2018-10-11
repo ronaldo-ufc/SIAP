@@ -22,6 +22,7 @@ class TemplateProdutoForm extends Form {
     parent::__construct($options);
     $setores = Setor::getAll();
     $marcas = Fabricante::getAll();
+    $empenho = $val['empenho'];
     
     $aquisicoes = Aquisicao::getAll();
     $_status = Status::getAll();
@@ -74,6 +75,9 @@ class TemplateProdutoForm extends Form {
     ]);
     
     $this->data_atesto = new DateField([
+    ]);
+    
+    $this->empenho = new StringField([
     ]);
     
     $this->nota_fiscal = new StringField([
@@ -177,5 +181,9 @@ class TemplateProdutoForm extends Form {
   
   function getCategoria() {
     return $this->categoria->data;
+  }
+  
+  function getEmpenho() {
+    return $this->empenho->data;
   }
 }

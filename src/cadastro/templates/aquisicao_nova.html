@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% import "forms.html" as forms %}
+{% import "uteis.html" as functions %}
+{% import "funcoes.html" as msg %}
 
 {% block content %}
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
-      {{ forms.error_message(form, mensagem)}}
+    <div class="col-md-10 col-md-offset-1">
+      {{ msg.message( mensagem )}}
+      {{ msg.messageErro( mensagemErro )}}
+      <!--{{ forms.error_message(form, mensagem)}}-->
     </div>
     <div class="col-md-10 col-md-offset-1">
 
@@ -40,7 +44,7 @@
               {% for aquisicao in aquisicoes %}
               <tr>
                   <td>{{aquisicao.getNome}}</td>
-                  <td class="text-center bg-danger col-md-1"><a href="aquisicao/delete/{{aquisicao.getAquisicao_id}}"><i class="far fa-trash-alt"></i> </a></td>
+                  <td style="width: 50px;" class="text-center bg-danger" data-toggle="modal" data-target="#modalExcluir"><a onclick="btnExcluir(' aquisicao/delete/{{aquisicao.getAquisicao_id}} ', 'Excluir forma de aquisição' , 'Deseja realmente excluir a forma de aquisição?')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i> </a></td>
               </tr>
               {% endfor %}
             </tbody>
@@ -50,4 +54,5 @@
     </div>
   </div>
 </div>
+{{ functions.modalExcluir() }}
 {% endblock %}

@@ -5,11 +5,11 @@
 
 {% block content %}
 
-<div class="col-md-12">
+<div class="container">
   {{ msg.message(mensagem)}}
   {{ msg.messageErro(mensagemErro)}}
 </div>
-<div class="col-md-12">
+<div class="container">
 
   <div class="panel panel-default">
     <div class="panel-heading"><h4>Modelagem de Produtos (Templates)</h4></div>
@@ -26,31 +26,30 @@
               {% endif %}
               <figcaption class="figure-caption text-center text-muted">Imagem do Ativo</figcaption>
             </figure>
-
           </div>
           <div class="col-md-10">
-
-            {{forms.input(form.nome, 4)}}
-            {{forms.input(form.categoria, 4,null, functions.btnAddItens('Categoria|categoria', 'Adicionar Tipo de Categorias'))}}
-            {{forms.input(form.foto, 4)}}
-
-            {{forms.input(form.data_atesto, 3)}}
-            {{forms.input(form.nota_fiscal, 2)}}
-            {{forms.input(form.fornecedor, 2)}}
-            {{forms.input(form.marca, 2, null, functions.btnAddItens('Marca|marca', 'Adicionar Marca'))}}
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="modelo">Modelo</label>{{functions.btnAddItens('Modelo|modelo', 'Adicionar Modelo')}}
-                <select required class="form-control" id="modelo" name="modelo">  </select>
-              </div>
-            </div>
-
-
-            {{forms.input(form.tipo_de_aquisicao, 3, null, functions.btnAddItens('Tipo de Aquisição|tipo_de_aquisicao', 'Adicionar Tipo de Aquisição'))}}
-            {{forms.input(form.status, 3, null, functions.btnAddItens('Status|status', 'Adicionar Tipo de Status'))}}
-            {{forms.input(form.setor, 3, null, functions.btnAddItens('Setor|setor', 'Adicionar Setor'))}}
-            {{forms.input(form.estado_de_conservacao, 3, null, functions.btnAddItens('Estado de Conservação|estado_de_conservacao', 'Adicionar Estado de Conservação'))}}
+              <div class="row">
+              {{forms.input(form.empenho, 2)}}
+              {{forms.input(form.nome, 4)}}
+              {{forms.input(form.nota_fiscal, 2)}}
+              {{forms.input(form.foto, 4)}}
           </div>
+            <div class="row">
+              {{forms.input(form.data_atesto, 3)}}
+              {{forms.input(form.tipo_de_aquisicao, 4, null, functions.btnAddItens('Tipo de Aquisição|tipo_de_aquisicao', 'Adicionar Tipo de Aquisição'))}}
+              {{forms.input(form.estado_de_conservacao, 5, null, functions.btnAddItens('Estado de Conservação|estado_de_conservacao', 'Adicionar Estado de Conservação'))}}
+            </div>
+              <div class="row">
+              {{forms.input(form.fornecedor, 3)}}
+              {{forms.input(form.status, 3, null, functions.btnAddItens('Status|status', 'Adicionar Tipo de Status'))}}
+              {{forms.input(form.categoria, 6, null, functions.btnAddItens('Categoria|categoria', 'Adicionar Tipo de Categoria'))}}
+              </div>
+              <div class="row">
+                {{forms.input(form.marca, 3, null, functions.btnAddItens('Marca|marca', 'Adicionar Marca'))}}
+                {{forms.input(form.modelo, 4, null, functions.btnAddItens('Modelo|modelo', 'Adicionar Modelo'))}}
+                {{forms.input(form.setor, 5, null, functions.btnAddItens('Setor|setor', 'Adicionar Setor'))}}
+              </div>
+        </div>
         </div>
         <div class="row">
           {{forms.input(form.descricao, 12)}}
@@ -72,7 +71,7 @@
 
       </form>
     </div>
-  </div>
+  
 </div>
 
 {{ functions.modalItens() }}

@@ -53,3 +53,10 @@ $app->group('/ativo', function() use($app)
   require_once(__DIR__ . '/produto/routes.php');
   
 })->add($auth);
+
+$app->group('/relatorios', function() use($app) 
+{
+ 
+  require_once(__DIR__ . '/relatorios/routes.php');
+  
+})->add($auth);

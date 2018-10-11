@@ -25,6 +25,7 @@ class TemplateProduto {
     private $fabricante;
     private $modelo;
     private $setor;
+    private $empenho;
 
     private function bundle($row) {
         $u = new TemplateProduto();
@@ -47,6 +48,7 @@ class TemplateProduto {
         $u->setFabricante(\siap\cadastro\models\Fabricante::getById($row['fabricante_id']));
         $u->setModelo(\siap\cadastro\models\Modelo::getById($row['modelo_id']));
         $u->setSetor(\siap\setor\models\Setor::getById($row['setor_id']));
+        $u->setEmpenho($row['empenho']);
         return $u;
     }
 
@@ -75,7 +77,7 @@ class TemplateProduto {
         return self::bundle($row);
     }
 
-    static function create($nome, $data_atesto, $nota_fiscal, $fornecedor, $descricao, $observacao, $foto, $fabricante_id, $modelo_id, $aquisicao_id, $status_id, $setor_id, $conservacao_id, $categoria_id) {
+    static function create($nome, $data_atesto, $nota_fiscal, $fornecedor, $descricao, $observacao, $foto, $fabricante_id, $modelo_id, $aquisicao_id, $status_id, $setor_id, $conservacao_id, $categoria_id,$empenho) {
         $sql = "INSERT INTO siap.template_produto (nome ,  "
                 . "data_atesto,  "
                 . "nota_fiscal ,  "
@@ -89,8 +91,9 @@ class TemplateProduto {
                 . "status_id ,  "
                 . "setor_id ,  "
                 . "conservacao_id, "
-                . "categoria_id) "
-                . " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                . "categoria_id, "
+                . "empenho) "
+                . " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         $stmt = DBSiap::getSiap()->prepare($sql);
         $stmt->execute(array(strtoupper(tirarAcentos($nome)),
@@ -106,13 +109,14 @@ class TemplateProduto {
             $status_id,
             $setor_id,
             $conservacao_id,
-            $categoria_id
+            $categoria_id,
+            $empenho
         ));
         return $stmt->errorInfo();
     }
     
     
-    static function update($template_id, $nome, $data_atesto, $nota_fiscal, $fornecedor, $descricao, $observacao, $foto, $fabricante_id, $modelo_id, $aquisicao_id, $status_id, $conservacao_id, $categoria_id, $setor_id) {
+    static function update($template_id, $nome, $data_atesto, $nota_fiscal, $fornecedor, $descricao, $observacao, $foto, $fabricante_id, $modelo_id, $aquisicao_id, $status_id, $conservacao_id, $categoria_id, $setor_id,$empenho) {
 
         $sql = "UPDATE siap.template_produto SET "
                 . "nome = ?,  "
@@ -128,7 +132,8 @@ class TemplateProduto {
                 . "status_id  = ?,  "
                 . "conservacao_id = ?, "
                 . "setor_id = ?, "
-                . "categoria_id  = ? "
+                . "categoria_id  = ?, "
+                . "empenho  = ? "
                 . " WHERE template_id = ? ";
         
 //        $sql = Ativos::injectionCaracteres($sql);
@@ -148,7 +153,9 @@ class TemplateProduto {
             $conservacao_id,
             $setor_id,
             $categoria_id,
+            $empenho,
             $template_id
+            
         ));
         return $stmt->errorInfo();
     }
@@ -312,7 +319,13 @@ class TemplateProduto {
     function setSetor($setor) {
         $this->setor = $setor;
     }
+    
+    function getEmpenho() {
+        return $this->empenho;
+    }
 
-
+    function setEmpenho($empenho) {
+        $this->empenho = $empenho;
+    }
 
 }

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% import "funcoes.html" as msg %}
+{% import "uteis.html" as functions %}
+{% block content %}
+
+<div class="col-md-12">
+    <input type="hidden" id="nomeFiltro" class="form-control" name="nomeFiltro" >
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4>Filtros</h4></div>
+        <div class="panel-body">
+            <form id="formFiltro" method="post" action="">
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label for="nome">Nome</label>
+                        <input type="text" id="nome" class="form-control" name="nome" >
+                    </div>
+                    
+                    <div class="form-group col-md-2">
+                        <label for="status">Status</label>
+                        <select required class="form-control" id="status" name="status">
+                            <option value="n">  </option>
+                            {% for _status in status %}
+                            <option value="{{_status.status_id}}"> {{_status.nome}} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label for="modelo">Modelo</label>
+                        <select required class="form-control" id="modelo" name="modelo">
+                            <option value="n">  </option>
+                            {% for _modelo in modelos %}
+                            <option value="{{_modelo.modelo_id}}"> {{_modelo.nome}} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label for="empenho">Empenho</label>
+                        <input type="text" id="empenho" class="form-control" name="empenho" >
+                    </div>
+                    
+                    <div class="form-group col-md-2">
+                        <label for="notaFiscal">Nota Fiscal</label>
+                        <input type="text" id="notaFiscal" class="form-control" name="notaFiscal" >
+                    </div>
+                    
+                    <div class="form-group col-md-2">
+                        <label for="conservacao">Estado de Conservação</label>
+                        <select required class="form-control" id="conservacao" name="conservacao">
+                            <option value="n">  </option>
+                            {% for _conservacao in conservacoes %}
+                            <option value="{{_conservacao.conservacao_id}}"> {{_conservacao.nome}} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label for="setor">Setor</label>
+                        <select required class="form-control" id="setor" name="setor">
+                            <option value="n">  </option>
+                            {% for _setor in setores %}
+                            <option value="{{_setor.setor_id}}"> {{_setor.nome}} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label for="dataAtesto">Data de Atesto</label>
+                        <input class="form-control" type="date" name="dataAtesto" id="dataAtesto" value="">
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label for="fornecedor">Fornecedor</label>
+                        <input type="text" id="fornecedor" class="form-control" name="fornecedor" >
+                    </div>
+                </div>
+
+                <div class="row">
+                    
+                    <div class="form-group col-md-3">
+                        <label for="categoria">Categoria</label>
+                        <select required class="form-control" id="categoria" name="categoria">
+                            <option value="n">  </option>
+                            {% for _categoria in categorias %}
+                            <option value="{{_categoria.categoria_id}}"> {{_categoria.nome}} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group col-md-4">
+                        <label for="descricao">Descrição</label>
+                        <input type="text" id="descricao" class="form-control" name="descricao" >
+                    </div>
+                    
+                </div>
+                <div class="text-center"> <input type="submit" id="gerarRel" class="btn btn-primary" name="gerarRel" value="Gerar Relatório" ></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{{ functions.modalExcluir() }}
+{% endblock %}

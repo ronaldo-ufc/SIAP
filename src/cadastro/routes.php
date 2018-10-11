@@ -11,7 +11,9 @@ use siap\cadastro\models\EConservacao;
 
 ## ----------------------------------- ADICIONAR/REMOVER CATEGORIAS ------------------------------------------------------------------#
 $app->map(['GET', 'POST'], '/categoria', function($request, $response, $args) {
-
+    if(!empty($_SESSION['errors'])){
+        echo $_SESSION['errors'];
+    }
     if ($request->isPost()) {
         $postParam = $request->getParams();
         if ($postParam) {
@@ -21,36 +23,42 @@ $app->map(['GET', 'POST'], '/categoria', function($request, $response, $args) {
         }
     }
     $categorias = Categoria::getAll();
-    return $this->renderer->render($response, 'categoria_nova.html', array('categorias' => $categorias, 'mensagem' => $mensagem));
+    return $this->renderer->render($response, 'categoria_nova.html', array('categorias' => $categorias, 'mensagem' => $mensagem, 'mensagemErro' => $mensagemErro));
 })->setName('CategoriaNova');
 
 
 $app->get('/categoria/delete/{categoria_id}', function($request, $response, $args) {
+    $mensagem = NULL;
+    $mensagemErro = NULL;
     if ($request->isGet()) {
         $msg = Categoria::delete($args['categoria_id']);
-
         if ($msg[2]) {
-            $this->flash->addMessage('danger', $msg[2]);
+            $mensagemErro = $msg[2];
         } else {
-            $this->flash->addMessage('success', 'Registro excluido com sucesso');
+            $mensagem = 'Registro excluido com sucesso';
         }
     }
-    return $response->withStatus(301)->withHeader('Location', '../../categoria');
+    return $response->withStatus(301)->withHeader('Location', '../../categoria',array('mensagem' => $mensagem, 'mensagemErro' => $mensagemErro));
 })->setName('CategoriaDelete');
 ## -------------------------------------------------------------------------------------------------------------------------------------------#
 ## ------------------------------------------------ ADICIONAR/REMOVER FABRICANTES ------------------------------------------------------------#
 $app->map(['GET', 'POST'], '/fabricante', function($request, $response, $args) {
-
+    $mensagem = NULL;
+    $mensagemErro = NULL;
     if ($request->isPost()) {
         $postParam = $request->getParams();
         if ($postParam) {
             $fabricante = $postParam['fabricante'];
-            Fabricante::create($fabricante);
-            $mensagem = "Operação realizada com sucesso!";
+            $msg = Fabricante::create($fabricante);
+            if($msg[2]){
+                $mensagemErro = msg[2];
+            }else{
+                $mensagem = "Operação realizada com sucesso!";
+            }
         }
     }
     $fabricantes = Fabricante::getAll();
-    return $this->renderer->render($response, 'fabricante_novo.html', array('fabricantes' => $fabricantes, 'mensagem' => $mensagem));
+    return $this->renderer->render($response, 'fabricante_novo.html', array('fabricantes' => $fabricantes, 'mensagem' => $mensagem,'mensagemErro' => $mensagemErro));
 })->setName('FabricanteNovo');
 
 $app->get('/fabricante/key/{str}', function($request, $response, $args) {
@@ -76,21 +84,22 @@ $app->get('/fabricante/delete/{fabricante_id}', function($request, $response, $a
 ## ---------------------------------------------------------------------------------------------------------------------------------------#
 ## ------------------------------------------------ ADICIONAR/REMOVER MODELOS ------------------------------------------------------------#
 $app->map(['GET', 'POST'], '/modelo/{fabricante_id}', function($request, $response, $args) {
+    $mensagem = NULL;
+    $mensagemErro = NULL;
     $fabricante_id = $args['fabricante_id'];
     if ($request->isPost()) {
         $postParam = $request->getParams();
-         var_dump($postParam);
         if ($postParam) {
             $modelo = $postParam['modelo_novo'];
            
             $msg = Modelo::create($modelo,$fabricante_id);
             if($msg[2]){
-                $mensagem = $msg[2];
-                $form->errors = 'danger';
+                $mensagemErro = $msg[2];
+//                $form->errors = 'danger';
             }
             else {
                 $mensagem = "Operação realizada com sucesso!";
-                $form->errors = 'success';
+//                $form->errors = 'success';
             }
         }
     }else{
@@ -107,7 +116,7 @@ $app->map(['GET', 'POST'], '/modelo/{fabricante_id}', function($request, $respon
     }
     $fabricante = Fabricante::getById($fabricante_id);
     $modelos = Modelo::getByFabricante($fabricante_id);
-    return $this->renderer->render($response, 'modelo_novo.html', array('modelos' => $modelos, 'mensagem' => $mensagem, 'fabricante' => $fabricante));
+    return $this->renderer->render($response, 'modelo_novo.html', array('modelos' => $modelos, 'mensagem' => $mensagem, 'fabricante' => $fabricante, 'mensagemErro' => $mensagemErro));
 })->setName('ModeloNovo');
 
 $app->get('/modelo/delete/{modelo_id}/{fabricante_id}', function($request, $response, $args) {
@@ -157,17 +166,23 @@ $app->get('/aquisicao/delete/{aquisicao_id}', function($request, $response, $arg
 
 ## ------------------------------------------------ ADICIONAR/REMOVER STATUS ------------------------------------------------------------#
 $app->map(['GET', 'POST'], '/status', function($request, $response, $args) {
-
+    $mensagem = NULL;
+    $mensagemErro = NULL;
     if ($request->isPost()) {
         $postParam = $request->getParams();
         if ($postParam) {
             $status = $postParam['status'];
-            Status::create($status);
-            $mensagem = "Operação realizada com sucesso!";
+            $msg = Status::create($status);
+            if($msg[2]){
+                $mensagemErro = msg[2];
+            }
+            else {
+                $mensagem = "Operação realizada com sucesso!";
+            }
         }
     }
     $statusT = Status::getAll();
-    return $this->renderer->render($response, 'status_novo.html', array('statusT' => $statusT, 'mensagem' => $mensagem));
+    return $this->renderer->render($response, 'status_novo.html', array('statusT' => $statusT, 'mensagem' => $mensagem, 'mensagemErro' => $mensagemErro));
 })->setName('StatusNovo');
 
 
@@ -187,17 +202,23 @@ $app->get('/status/delete/{status_id}', function($request, $response, $args) {
 
 ## ------------------------------------------------ ADICIONAR/REMOVER ESTAD. CONSERVAÇÃO ------------------------------------------------------------#
 $app->map(['GET', 'POST'], '/conservacao', function($request, $response, $args) {
-
+    $mensagem = NULL;
+    $mensagemErro = NULL;
     if ($request->isPost()) {
         $postParam = $request->getParams();
         if ($postParam) {
             $conservacao = $postParam['conservacao'];
-            EConservacao::create($conservacao);
-            $mensagem = "Operação realizada com sucesso!";
+            $msg = EConservacao::create($conservacao);
+            if($msg[2]){
+                $mensagemErro = msg[2];
+            }
+            else{
+                $mensagem = "Operação realizada com sucesso!";
+            }
         }
     }
     $conservacoes = EConservacao::getAll();
-    return $this->renderer->render($response, 'conservacao_nova.html', array('conservacoes' => $conservacoes, 'mensagem' => $mensagem));
+    return $this->renderer->render($response, 'conservacao_nova.html', array('conservacoes' => $conservacoes, 'mensagem' => $mensagem, 'mensagemErro' => $mensagemErro));
 })->setName('ConservacaoNovo');
 
 
