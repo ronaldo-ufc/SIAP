@@ -38,7 +38,25 @@ $(document).ready(function () {
                 last: "Última página"
             }
         }
-});
+    });
+    var tabelaAtivos = $('#tabelaItens').DataTable({
+        "lengthMenu": [[50, 25, 20, 15, 10, 5, -1], [50, 25, 20, 15, 10, 5, "TUDO"]],
+//        "bSort": false,
+        "language": {
+            "lengthMenu": "Mostrando _MENU_ registros por página",
+            "zeroRecords": "Nenhum registro encontrado",
+            "info": "Total _MAX_ registros - Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "Nenhum registro disponível",
+            "infoFiltered": "(Filtrado de _MAX_ registros no total)",
+            "search": "Pesquisa",
+            "paginate": {
+                first: "Primeira página",
+                previous: "Anterior",
+                next: "Próximo",
+                last: "Última página"
+            }
+        }
+    });
 });
 
 function notify(icon,title,mensagem){
@@ -89,5 +107,27 @@ function verificarCheckBox() {
     else{
         //window.location.href = "http://"+location.hostname+"/siap/ativo/show";
         alert('Para realizar uma movimentação em lote, é necessário selecionar 2 ou mais bens.');
+    }
+}
+
+function verificarCheckBoxRelatorio() {
+    var checkbox = $('input:checkbox[name^=patrimonios]:checked');
+    if(checkbox.length == 1) {
+        window.location.href = "http://"+location.hostname+"/siap/relatorios/setor/movimentacao/"+checkbox.val();
+    }
+    else if(checkbox.length > 1){
+        let url = "http://"+location.hostname+"/siap/relatorios/setor/mov/grupo/";
+        for (var i=0;i<checkbox.length;i++){
+            if(i == checkbox.length-1){
+                url = url+checkbox[i].value;
+            }
+            else{
+                url = url+checkbox[i].value+"/";
+            }
+    }
+        window.location.href = url;
+    }
+    else{
+        alert('Para gerar um relatório em conjunto é necessário selecionar 2 ou mais bens.');
     }
 }

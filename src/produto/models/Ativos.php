@@ -238,15 +238,15 @@ class Ativos {
     }
 
     static function getById($patrimonio_id) {
-        $sql = "SELECT * FROM siap.ativo where patrimonio = ?";
+      $sql = "SELECT * FROM siap.ativo where patrimonio = ?";
 
-        $stmt = DBSiap::getSiap()->prepare($sql);
-        $stmt->execute(array($patrimonio_id));
-        $row = $stmt->fetch();
-        if ($row == null) {
-            return FALSE;
-        }
-        return self::bundle($row);
+      $stmt = DBSiap::getSiap()->prepare($sql);
+      $stmt->execute(array($patrimonio_id));
+      $row = $stmt->fetch();
+      if ($row == null) {
+          return FALSE;
+      }
+      return self::bundle($row);
     }
     static function Filtrar($nome,$categoria,$modelo,$atesto,$status,$conservacao,$setor,$fornecedor,$nota_fiscal,$empenho,$descricao){
         $sql = "SELECT * from siap.ativo where true ";
@@ -287,6 +287,7 @@ class Ativos {
         if($setor != "n"){
             $sql = $sql."AND ativo.setor_id = '$setor' ";
         }
+        $sql = $sql." ORDER BY data_atesto desc";
        
         $stmt = DBSiap::getSiap()->prepare($sql);
         $stmt->execute(array());
@@ -295,7 +296,11 @@ class Ativos {
         foreach ($rows as $row) {
             array_push($result, self::bundle($row));
         }
-        return $result;
+        if (sizeof($result) == 0) {
+            return false;
+        } else {
+            return $result;
+        }
     }
     
 //    static function injectionCaracteres($str){
@@ -312,6 +317,22 @@ class Ativos {
             array_push($result, self::bundle($row));
         }
         return $result;
+    }
+    
+    static function getAllEmpenho() {
+        $sql = "select DISTINCT empenho from siap.ativo where empenho != ''";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array());
+        $rows = $stmt->fetchAll();
+        $result = array();
+        foreach ($rows as $row) {
+            foreach ($row as $ro) {
+                array_push($result, $ro);
+            }
+        }
+        //TIRANDO OS VALORES DUPLICADOS
+        $resultado = array_unique($result, SORT_REGULAR);
+        return $resultado;
     }
     
     static function getAllBySetor($setor_id) {

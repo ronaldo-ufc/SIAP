@@ -1,3 +1,16 @@
+<style>
+    .box{
+        width: 20px;
+        height: 20px;
+        background: url('{{ base_url() }}/assets/img/conf.png') no-repeat;
+        background-size: contain;
+    }
+/*    .engrenagens{
+    position: absolute;
+    top:45%;
+    left:3%;
+    }*/
+</style>
 <nav class="navbar navbar-default navbar-fixed-top">
   <div id="barra-brasil" class="no-print">
     <a href="http://brasil.gov.br" style="background:#7F7F7F; height: 20px; padding:4px 0 4px 10px; display: block; font-family:sans,sans-serif; text-decoration:none; color:white; ">Portal do Governo Brasileiro</a>
@@ -34,7 +47,10 @@
         {% endfor %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="{{ base_url() }}/assets/img/conf.png">
+              <div class="engrenagens">
+                  <div class="box"></div>
+              </div>
+              <!--<img src="{{ base_url() }}/assets/img/conf.png">-->
           </a>
           <ul class="dropdown-menu">
             <li> <a href="{{ base_url() }}/home/usuario/dados">Meus dados</a> </li>

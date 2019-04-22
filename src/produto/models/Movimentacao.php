@@ -21,13 +21,12 @@ class Movimentacao {
     private $patrimonio;
     private $setor_id;
     private $movimentacao_data;
-    private $setor_origem_id;
     private $documento;
     private $observacao;
     private $data;
     private $usuario;
     private $setor;
-    private $setor_origem;
+    private $mov_entrada; //Dizer se a movimentação é de ENTRADA(True) ou SAÍDA(FALSE)
 
     private function bundle($row) {
         $u = new Movimentacao();
@@ -35,12 +34,11 @@ class Movimentacao {
         $u->setPatrimonio($row['patrimonio']);
         $u->setSetor_id($row['setor_id']);
         $u->setMovimentacao_data($row['movimentacao_data']);
-        $u->setSetor_origem_id($row['setor_origem_id']);
+        $u->setMov_entrada($row['mov_entrada']);
         $u->setDocumento($row['documento']);
         $u->setObservacao($row['observacao']);
         $u->setData($row['data']);
         $u->setUsuario($row['usuario']);
-        $u->setSetor_origem(\siap\setor\models\Setor::getById($row['setor_origem_id']));
         $u->setSetor(\siap\setor\models\Setor::getById($row['setor_id']));
 
         // $u->setSetor(\siap\setor\models\Setor::getById($row['setor_id']));
@@ -55,6 +53,7 @@ class Movimentacao {
         if (!Ativos::verificaResponsabelPeloSetor($setor_id, $movimentacao_data)) {
             return array('Erro', 'info', 'No período desta movimentação não existe um Agente Setorial responsável pelo setor. Cadastre primeiro o Agente Setorial para o setor');
         }
+        $msg = self::mov_saida($patrimonio, $usuario, $movimentacao_data);
         $sql = "select siap.geramovimentacao (?, ?, ?, ?, ?, ?)";
         $stmt = DBSiap::getSiap()->prepare($sql);
 
@@ -63,9 +62,22 @@ class Movimentacao {
         return $stmt->errorInfo();
     }
 
+    static function getAll() {
+
+        $sql = "SELECT * FROM siap.movimentacao order by movimentacao_id desc";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array());
+        $rows = $stmt->fetchAll();
+        $result = array();
+        foreach ($rows as $row) {
+            array_push($result, self::bundle($row));
+        }
+        return $result;
+    }
+
     static function getAllByPatrimonio($patrimonio) {
 
-        $sql = "SELECT * FROM siap.movimentacao WHERE patrimonio = ? order by movimentacao_data desc";
+        $sql = "SELECT * FROM siap.movimentacao WHERE patrimonio = ? order by movimentacao_id desc";
         $stmt = DBSiap::getSiap()->prepare($sql);
         $stmt->execute(array($patrimonio));
         $rows = $stmt->fetchAll();
@@ -74,6 +86,60 @@ class Movimentacao {
             array_push($result, self::bundle($row));
         }
         return $result;
+    }
+    
+    static function getAllByPatrimonioEntradaOrderById($patrimonio) {
+
+        $sql = "SELECT * FROM siap.movimentacao WHERE patrimonio = ? AND mov_entrada = TRUE order by movimentacao_id asc";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array($patrimonio));
+        $rows = $stmt->fetchAll();
+        $result = array();
+        foreach ($rows as $row) {
+            array_push($result, self::bundle($row));
+        }
+        return $result;
+    }
+
+    static function getRecentByPatrimonio($patrimonio) {
+
+        $sql = "SELECT * FROM siap.movimentacao WHERE patrimonio = ? AND mov_entrada = TRUE order by movimentacao_id desc";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array($patrimonio));
+        $rows = $stmt->fetch();
+        return self::bundle($rows);
+    }
+
+    private function mov_saida($patrimonio, $usuario, $movimentacao_data) {
+        //Pegando os dados da última movimentação de entrada (Setor atual do objeto e etc.)
+        $mov = self::getRecentByPatrimonio($patrimonio);
+        //Criando a movimentação de saída para o setor.
+        $sql = "INSERT INTO siap.movimentacao (patrimonio, setor_id, movimentacao_data, documento, observacao, usuario, mov_entrada) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array($mov->getPatrimonio(), $mov->getSetor_id(), $movimentacao_data, 'Sem documento', 'Movimentação de Saída', $usuario, 'FALSE'));
+        return $stmt->errorInfo();
+    }
+
+    static function getMovData_ini($movimentacao_data) {
+        $sql = "SELECT * FROM siap.movimentacao WHERE movimentacao_data >= ? order by movimentacao_id desc";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array($movimentacao_data));
+        return $stmt->errorInfo();
+    }
+
+    static function getMovData_fim($movimentacao_data) {
+        $sql = "SELECT * FROM siap.movimentacao WHERE movimentacao_data <= ? order by movimentacao_id desc";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array($movimentacao_data));
+        return $stmt->errorInfo();
+    }
+
+    static function getMovData_range($data_ini, $data_fim) {
+
+        $sql = "select * FROM siap.movimentacao WHERE (movimentacao_data BETWEEN ? AND ?) order by movimentacao_id desc";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array($data_ini, $data_fim));
+        return $stmt->errorInfo();
     }
 
     public function getMovimentacao_id() {
@@ -148,28 +214,20 @@ class Movimentacao {
         $this->usuario = $usuario;
     }
 
-    function getSetor_origem_id() {
-        return $this->setor_origem_id;
-    }
-
     function getSetor() {
         return $this->setor;
-    }
-
-    function getSetor_origem() {
-        return $this->setor_origem;
-    }
-
-    function setSetor_origem_id($setor_origem_id) {
-        $this->setor_origem_id = $setor_origem_id;
     }
 
     function setSetor($setor) {
         $this->setor = $setor;
     }
 
-    function setSetor_origem($setor_origem) {
-        $this->setor_origem = $setor_origem;
+    function getMov_entrada() {
+        return $this->mov_entrada;
+    }
+
+    function setMov_entrada($mov_entrada) {
+        $this->mov_entrada = $mov_entrada;
     }
 
 }

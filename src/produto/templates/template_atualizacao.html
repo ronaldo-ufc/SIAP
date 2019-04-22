@@ -68,8 +68,8 @@
           </div>
           <div class="col-md-1">
             <div class="form-group">
-                <a  data-toggle="modal" data-target="#modalExcluir" onclick="btnExcluir(' {{base_url()}}/ativo/main/delete/{{template.template_id}} ', 'Excluir modelo', 'Deseja realmente excluir o modelo?')" class="btn btn-danger">
-                <i class="far fa-trash-alt"></i> Excluir
+                <a  data-toggle="modal" data-target="#modalCancelar" onclick="btnCancelar(' {{base_url()}}/ativo/main ', 'Cancelar atualização', 'Deseja realmente cancelar a atualização do modelo ?<br />Todas as alterações serão perdidas')" class="btn btn-danger">
+                <i class="fas fa-times"></i> Cancelar
               </a>
             </div>
           </div>
@@ -80,6 +80,6 @@
 </div>
 
 {{ functions.modalItens() }}
-{{ functions.modalExcluir() }}
+{{ functions.modalCancelar() }}
 {% endblock %}
 

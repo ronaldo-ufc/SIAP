@@ -1,0 +1,25 @@
+<hr>
+<input type="hidden" name="produto" value="{{produto.produto_codigo}}">
+<div class="row">
+  <div class="col-md-3">
+    <label for="c_ufc" class="control-label">Código UFC</label>
+    <input disabled name="c_ufc" type="text" class="form-control" id="c_ufc" value="{{produto.codigo_ufc}}">
+  </div>
+  <div class="col-md-6">
+    <label for="nome" class="control-label">Produto</label>
+    <input disabled name="nome" type="text" class="form-control" id="nome" value="{{produto.nome}}">
+  </div>
+  <div class="col-md-1">
+    <label for="unidade" class="control-label">Unidade</label>
+    <input disabled name="unidade" type="text" class="form-control" id="unidade" value="{{produto.unidade.nome}}">
+  </div>
+  <div class="col-md-1">
+    <label for="quantidade" class="control-label">Quantidade</label>
+    <input name="quantidade" type="number" class="form-control" id="quantidade" required>
+  </div>
+  <div class="col-md-1">
+    <label for="btn" class="control-label"></label>
+    <input type="submit" class="btn btn-success" value="Adicionar">
+  </div>
+</div>
+

@@ -67,6 +67,26 @@ class Setor{
     return self::bundle($row);
   }
   
+  static function verificaAtualResponsavel($setor_id){
+    $sql = "select * from setor where setor_id = ?";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array($setor_id));
+    $row = $stmt->fetch();
+    if ($row == null){
+      return null;
+    }
+    return self::bundle($row);
+  }
+  
+  static function verificaResponsabelPeloSetor($setor_id, $data) {
+        $responsavel = \siap\setor\models\SetorResponsavel::getResponsavelBySetorAndData($setor_id, $data);
+        if ($responsavel) {
+            return true;
+        }
+        return false;
+    }
+  
+  
   static function create($nome_setor, $sigla){
     $sql = "INSERT INTO setor (nome, sigla) VALUES (?, ?)";
     

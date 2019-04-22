@@ -82,8 +82,12 @@
           </div>
           <div class="col-md-1">
             <div class="form-group">
-              <a  data-toggle="modal" data-target="#modalExcluir" onclick="btnExcluir(' {{base_url()}}/ativo/delete/{{patrimonio}} ', 'Excluir bem', 'Deseja realmente excluir o bem?')" class="btn btn-danger">
+<!--              <a  data-toggle="modal" data-target="#modalExcluir" onclick="btnExcluir(' {{base_url()}}/ativo/delete/{{patrimonio}} ', 'Excluir bem', 'Deseja realmente excluir o bem?')" class="btn btn-danger">
                 <i class="far fa-trash-alt"></i> Excluir
+              </a>-->
+                
+                <a  data-toggle="modal" data-target="#modalCancelar" onclick="btnCancelar(' {{base_url()}}/ativo/show?nome=&categoria=n&modelo=n&conservacao=n&setor=n&dataAtesto=&fornecedor=&notaFiscal=&status=n&empenho=&descricao= ', 'Cancelar atualização', 'Deseja realmente cancelar a atualização do bem?<br />Todas as alterações serão perdidas')" class="btn btn-danger">
+                <i class="fas fa-times"></i> Cancelar
               </a>
                  <!--<a onclick="btnExcluir(' {{base_url()}}/ativo/delete/{{ativo.patrimonio}} ', 'Deseja realmente excluir o bem?')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i></a>-->
             </div>
@@ -96,5 +100,6 @@
 
 {{ functions.modalItens() }}
 {{ functions.modalExcluir() }}
+{{ functions.modalCancelar() }}
 {% endblock %}
 

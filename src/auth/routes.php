@@ -5,6 +5,10 @@ use siap\auth\models\Autenticador;
 
 $app->map(['GET', 'POST'], '/login', function ($request, $response, $args) {
     $form = LoginForm::create(["formdata" => $_POST]);
+//Forçando o servidor a mostrar as mensagens de erro e Warming
+//    ini_set('display_errors', 1);
+//    ini_set('display_startup_erros', 1);
+//    error_reporting(E_ALL);
     if($request->isGet()){
       $messages = $this->flash->getMessages();
       #Verificando se tem mensagem de erro
@@ -21,7 +25,7 @@ $app->map(['GET', 'POST'], '/login', function ($request, $response, $args) {
         # apenas um objeto de autenticação
         # e esconder a classe real de autenticação
         $aut = Autenticador::instanciar();
-
+//        
         # efetua o processo de autenticação
         if ($aut->logar($form->getLogin(), $form->getSenha())) {
           # redireciona o usuário para dentro do sistema

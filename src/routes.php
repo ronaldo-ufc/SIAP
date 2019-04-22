@@ -60,3 +60,10 @@ $app->group('/relatorios', function() use($app)
   require_once(__DIR__ . '/relatorios/routes.php');
   
 })->add($auth);
+
+$app->group('/materiais', function() use($app) 
+{
+ 
+  require_once(__DIR__ . '/material/routes.php');
+  
+})->add($auth);

@@ -4,7 +4,7 @@ function menuSelect() {
     var e = document.getElementById("privilegio");
     var itemSelecionado = e.options[e.selectedIndex].value;
 
-    var url = 'http://'+location.hostname+'/siap_teste/services/menu/'+itemSelecionado;
+    var url = 'http://'+location.hostname+'/siap/services/menu/'+itemSelecionado;
     
     $.getJSON(url, function (data)  {
             
@@ -27,7 +27,7 @@ function subMenuSelect() {
     
     console.log('Privilegio '+privilegio);
     console.log(menu);
-    var url = 'http://'+location.hostname+'/siap_teste/services/submenu/'+privilegio+'/'+menu;
+    var url = 'http://'+location.hostname+'/siap/services/submenu/'+privilegio+'/'+menu;
     
     $.getJSON(url, function (data)  {
             
@@ -52,7 +52,7 @@ function modeloSelect() {
     var e = document.getElementById("marca");
     var itemSelecionado = e.options[e.selectedIndex].value;
 
-    var url = 'http://'+location.hostname+'/siap_teste/services/modelos/'+itemSelecionado;
+    var url = 'http://'+location.hostname+'/siap/services/modelos/'+itemSelecionado;
 
     $.getJSON(url, function (data)  {
 
@@ -64,42 +64,4 @@ function modeloSelect() {
       $('#modelo').html(option_menu);
     });
                               
-}
-
-$(document).on("click", "#btnAdicionar", function () {
-    var info = $(this).attr('data-id');
-    var str = info.split('|');
-    var titulo = str[0];
-    var id = str[1];
-    $("#titulo").html(titulo);
-    $("#titulo").val(id);
-});
-
-function btnExcluir(url,titulo,mensagem){
-    $('#btn_modal_excluir').attr({
-       'href': url
-    });
-    $('#modalLabelExcluir').empty();
-    $('#mensagemModal').empty();
-    $('#modalLabelExcluir').append(titulo);
-    $('#mensagemModal').append(mensagem);
-}
-
-function btnReabrir(url){
-    $('#btn_modal_reabrir').attr({
-       'href': url
-    });
-}
-
-function btnRemover(patrimonio){
-    $('#input_hidden').attr({
-       'value': patrimonio
-    });
-}
-
-function patrimonioRemover(){
-    
-    var pat = document.getElementById('input_hidden').value;
-    document.getElementById(pat).remove();
-//    console.log(pat);
 }

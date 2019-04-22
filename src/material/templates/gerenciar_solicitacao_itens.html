@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% import "forms.html" as forms %}
+{% import "uteis.html" as functions %}
+{% import "funcoes.html" as msg %}
+
+{% block content %}
+<div class="col-md-12">
+  <!--{{ forms.error_message(form, mensagem )}}-->
+  {{ msg.messagem(classe, texto)}}
+</div>
+<div class="col-md-12">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav">
+        <li><a href="../gerenciar"><i class="fas fa-tasks"></i> Gerenciamento de Solicitações</a></li>
+      </ul>
+    </div>
+  </nav>
+</div>
+<div class="col-md-12">
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4>Requisição de Materiais</h4></div>
+    <div class="panel-body">
+      <div class="bg-layout">
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4">
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <span class="text-muted">Número da Solicitação: {{requisicao.numero}}</span>
+          </div>
+          <div class="col-md-6">
+            <span class="text-muted">Estoque: UFC CRATEUS</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <span class="text-muted">Setor: {{setor_nome}}</span>
+          </div>
+          <div class="col-md-3">
+            <span class="text-muted">Usuário: {{requisicao.usuario.nome}}</span>
+          </div>
+          <div class="col-md-3">
+            <span class="text-muted">Status: {{requisicao.statusnome}} </span>
+          </div>
+        </div>
+      </div><hr>
+      <form action="" method="POST">
+        <input type="hidden" name="destino" value="{{requisicao.setor_destino}}">
+        <input type="hidden" name="solicitante" value="{{requisicao.usuario.login}}"
+               <div class="row">
+          <div class="col-md-12">
+            <h6>Itens solicitado</h6>
+
+            <table id="tabela" class="table table-bordered table-condensed table-hover table-striped">
+              <thead>
+                <tr class="bg-primary">
+                  <th>Cód UFC</th>
+                  <th>Produto</th>
+                  <th>Qde Sol.</th>
+                  <th>Atendida</th>
+                  <th>Estoque</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in itens %}
+                <tr class="{{item.produto.getCorClassQuantidadeMinima}}" title="{{item.produto_codigo}}">
+                  <td class="col-md-1">{{item.produto.codigo_ufc}}</td>
+                  <td >{{item.produto.nome}}</td>
+                  <td class="col-md-1 text-right">{{item.quantidade}}</td>
+
+                  <td class="col-md-1 text-center bg-success text-right">
+                    <input class="form-control" min="0" max="{{item.produto.quantidade}}" type="number" name="quantidade[{{item.produto_codigo}}]" value="{{item.atendida}}"</td>
+                  <td class="col-md-1 text-right">{{item.produto.quantidade}}</td>
+                  <td class="col-md-1 text-right">{{item.statusNome}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% if (requisicao.status == 'E') %}
+        <div class="row">
+          <div class="col-md-2 col-md-offset-5">
+            <button type="submit" class="btn btn-success" value="Salvar">
+              <i class="fas fa-check"> Aprovar</i>
+            </button>
+          </div>
+        </div>
+        {% endif %}
+        <br>
+      </form>
+    </div>
+  </div>
+</div>
+
+{{ functions.modalEntrada() }}
+<script type="text/javascript">
+
+
+</script>
+{% endblock %}
+
+

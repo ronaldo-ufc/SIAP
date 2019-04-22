@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% import "forms.html" as forms %}
+{% import "uteis.html" as functions %}
+{% import "funcoes.html" as msg %}
+
+{% block content %}
+<div class="col-md-12">
+  <!--{{ forms.error_message(form, mensagem )}}-->
+  {{ msg.message(mensagem)}}
+  {{ msg.messageErro(mensagemErro)}}
+</div>
+<div class="col-md-12">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav">
+        <li><a href="../solicitacoes"><i class="fas fa-tasks"></i> Solicitacoes</a></li>
+      </ul>
+    </div>
+  </nav>
+</div>
+<div class="col-md-12">
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4>Cadastro de Solicitações</h4></div>
+    <div class="panel-body">
+      <form name="cadastro" action="" method="POST">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-1">
+                <label for="c_ufc" class="control-label">Código UFC</label>
+                <input name="c_ufc" type="text" class="form-control" id="c_ufc">
+              </div>
+              <div class="col-md-1">
+                <label for="c_barras" class="control-label">Cód. Barras</label>
+                <input name="c_barras" type="text" class="form-control" id="c_barras">
+              </div>
+              <div class="col-md-5">
+                <label for="nome" class="control-label">Descrição</label>
+                <input name="nome" type="text" class="form-control" id="nome" required>
+              </div>
+              <div class="col-md-1">
+                <label for="quantidade_minima" class="control-label">Qtde Mín</label>
+                <input name="quantidade_minima" type="text" class="form-control" id="quantidade_minima" required>
+              </div>
+              <div class="col-md-2">
+                <label for="unidade" class="control-label">Unidade</label>
+                <select name="unidade" class="form-control" id="unidade" required>
+                  <option value="1">UNIDADE</option>
+                  {% for unidade in unidades  %}
+                  <option value="{{unidade.unidade_codigo}}">{{unidade.nome}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="grupo" class="control-label">Grupo</label>
+                <select name="grupo" class="form-control" id="grupo" required>
+                  {% for grupo in grupos  %}
+                  <option value="{{grupo.grupo_codigo}}">{{grupo.nome}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group green-border-focus">
+                  <label for="observacao">Observação</label>
+                  <textarea class="form-control" id="observacao" name="observacao" rows="4"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group"><br>
+                  <button  type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Salvar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{{ functions.modalItens() }}
+{{ functions.modalExcluir() }}
+{{ functions.modalCancelar() }}
+{% endblock %}
+

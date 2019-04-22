@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% import "funcoes.html" as msg %}
+{% import "uteis.html" as functions %}
+{% block content %}
+
+<div class="col-md-12">
+    {{ msg.messageErro( mensagemErro )}}
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4>Bens por Responsável</h4></div>
+        <div class="panel-body">
+            <form id="formFiltro" method="post" action="">
+                <div class="row">
+                    <div style="margin-left: 40%;">
+                        <div class="form-group col-md-2">
+                            <label for="dataInicio">Data Início</label>
+                            <input class="form-control" type="date" name="dataInicio" id="dataInicio" value="">
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <label for="dataFim">Data Fim</label>
+                            <input class="form-control" type="date" name="dataFim" id="dataFim" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center"> <input type="submit" id="gerarRel" class="btn btn-primary" name="gerarRel" value="Gerar Relatório" ></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{{ functions.modalExcluir() }}
+{% endblock %}

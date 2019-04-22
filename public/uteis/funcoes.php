@@ -1,6 +1,12 @@
 <?php
 
 header('Content-Type: text/html; charset=UTF-8');
+function getMensagem($messages){
+  
+  #Verificando se tem mensagem de erro
+  return array(key($messages), $messages[key($messages)][0]);
+  
+}
 
 function validaCPF($cpf = null) {
 
@@ -304,12 +310,24 @@ function categoriaFiltro($ativos, $categoria_id) {
     return $result;
 }
 
+
 //Retorna uma lista com patrimonios que pertencem a dado setor
 function setorFiltro($ativos, $setor_id) {
     $result = array();
     foreach ($ativos as $ativo) {
         if ($ativo->getSetor_id() == $setor_id) {
             array_push($result, $ativo);
+        }
+    }
+    return $result;
+}
+
+//Retorna uma lista com movimentações que pertencem a dado setor
+function movFiltro($movimentacoes, $setor_id) {
+    $result = array();
+    foreach ($movimentacoes as $mov) {
+        if ($mov->getSetor_id() == $setor_id) {
+            array_push($result, $mov);
         }
     }
     return $result;
@@ -325,4 +343,61 @@ function categoriaSetorFiltro($ativos, $categoria_id, $setor_id){
         }
     }
     return $result;
+}
+
+//Retorna uma lista com todas as movimentações de entrada
+function movEntradaFiltro($movimentacoes){
+    $result = array();
+    foreach ($movimentacoes as $mov){
+        if($mov->getMov_entrada() == TRUE){
+            array_push($result, $mov);
+        }
+    }
+    return $result;
+}
+
+//Retorna uma lista com todas as movimentações de saída
+function movSaidaFiltro($movimentacoes){
+    $result = array();
+    foreach ($movimentacoes as $mov){
+        if($mov->getMov_entrada() == FALSE){
+            array_push($result, $mov);
+        }
+    }
+    return $result;
+}
+
+//Retorna uma lista com todos os bens com um determinado número de empenho
+function bensPorEmpenho($bens,$empenho){
+    $result = array();
+    foreach ($bens as $bem){
+        if($bem->getEmpenho() == $empenho){
+            array_push($result, $bem);
+        }
+    }
+    return $result;
+}
+
+//Retorna uma data no formato DD-MM-AAAA
+function formData($data){
+// Quebra o texto nos "-" e transforma cada pedaço numa matriz
+    $divisor = explode("-", $data);
+
+// Inverte os pedaços
+    $reverso = array_reverse($divisor);
+
+// Junta novamente a matriz em texto
+    $result = implode("-", $reverso); // Junta com -
+    return $result;
+}
+
+
+//Retorna o responsável pelo setor dentre uma lista de responsáveis
+function responsavelPorSetor($setor_id,$responsaveis){
+    foreach ($responsaveis as $responsavel){
+        if($responsavel->getSetor_id() == $setor_id){
+            return $responsavel;
+        }
+    }
+    return NULL;
 }

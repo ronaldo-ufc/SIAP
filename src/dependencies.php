@@ -1,4 +1,5 @@
 <?php
+define('COD_ALMOXARIFADO', 22);
 
 $container = $app->getContainer();
 
@@ -25,7 +26,8 @@ $container['logger'] = function ($c) {
 
 // Register provider
 $container['flash'] = function () {
-    return new \Slim\Flash\Messages();
+  session_start();
+  return new \Slim\Flash\Messages();
 };
 //Override the default Not Found Handler
 //$container['notFoundHandler'] = function ($c) {

@@ -33,7 +33,7 @@ class Menu
   public static function getPaiByPrivilegio($privilegio) {
     $sql = "select m.* from siap.menu m
             inner join siap.privilegio_menu p on m.menu_codigo = p.menu_codigo 
-            where p.privilegio_codigo = ? and p.privilegio_habilitado = 'S' and menu_pai is null";
+            where p.privilegio_codigo = ? and p.privilegio_habilitado = 'S' and menu_pai is null order by ordem";
 
     $stmt = DBSiap::getSiap()->prepare($sql);
     $stmt->execute(array($privilegio));
@@ -66,7 +66,7 @@ class Menu
   public static function getFilhosByPaiAndPrivilegio($menu_pai, $privilegio) {
     $sql = "select m.* from siap.menu m
             inner join siap.privilegio_menu p on m.menu_codigo = p.menu_codigo 
-            where p.privilegio_codigo = ? and p.privilegio_habilitado = 'S' and m.menu_pai = ?";
+            where p.privilegio_codigo = ? and p.privilegio_habilitado = 'S' and m.menu_pai = ? order by ordem";
 
     $stmt = DBSiap::getSiap()->prepare($sql);
     $stmt->execute(array($privilegio, $menu_pai));

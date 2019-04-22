@@ -1,70 +1,3 @@
-//function menuSelect() {
-//    
-//    var e = document.getElementById("privilegio");
-//    var itemSelecionado = e.options[e.selectedIndex].value;
-//
-//    var url = 'http://10.5.5.10/siap/services/menu/'+itemSelecionado;
-//    
-//    $.getJSON(url, function (data)  {
-//            
-//      var option_menu = '<option value="">Selecione um menu... </option>';
-//     
-//      $.each(data, function (i, val) {
-//          option_menu +=  '<option value="' + val[0] + '">' + val[1]+ '</option>';
-//      });    
-//      $('#menu').html(option_menu);
-//    });
-//                              
-//}
-//
-//function subMenuSelect() {
-//    var e = document.getElementById("privilegio");
-//    var privilegio = e.options[e.selectedIndex].value;
-//    
-//    var f = document.getElementById("menu");
-//    var menu = f.options[f.selectedIndex].value;
-//    
-//    console.log('Privilegio '+privilegio);
-//    console.log(menu);
-//    var url = 'http://10.5.5.10/siap/services/submenu/'+privilegio+'/'+menu;
-//    
-//    $.getJSON(url, function (data)  {
-//            
-//      var option_menu;
-//     
-//      $.each(data, function (i, val) {
-//        var c = "";
-//        if (val[2] === 'S'){
-//            c = "checked";
-//        }
-//          option_menu +=  '<tr class="text-center"><td><input '+c+' name="chk[]" value="'+ val[0] +'" type="checkbox"> </td> <td>'+val[1]+'</td></tr>';
-//      });
-//      
-//      
-//      $('#submenu').html(option_menu);
-//    });
-//                              
-//}
-//
-//function modeloSelect() {
-//    
-//    var e = document.getElementById("fabricante");
-//    var itemSelecionado = e.options[e.selectedIndex].value;
-//
-//    var url = 'http://10.5.5.10/siap/services/modelos/'+itemSelecionado;
-//
-//    $.getJSON(url, function (data)  {
-//
-//      var option_menu = '<option value="">Selecione um modelo... </option>';
-//
-//      $.each(data, function (i, val) {
-//          option_menu +=  '<option value="' + val[0] + '">' + val[1]+ '</option>';
-//      });    
-//      $('#modelo').html(option_menu);
-//    });
-//                              
-//}
-
 $(document).on("click", "#btnAdicionar", function () {
     var info = $(this).attr('data-id');
     var str = info.split('|');
@@ -81,6 +14,15 @@ $(document).on("click", "#btnAdicionar", function () {
     }
 });
 
+$(document).on("click", "#btnEntrada", function () {
+    var codigo = $(this).attr('data-id');
+    var str = codigo.split('|');
+    var titulo = str[0];
+    var id = str[1];
+    $("#titulo").html(titulo);
+    $("#item").val(id);
+});
+
 function aumenta(obj){
     obj.height=obj.height*1000;
     obj.width=obj.width*1000;
@@ -90,4 +32,113 @@ function diminui(obj){
 	obj.height=obj.height/2;
 	obj.width=obj.width/2;
 }
+
+$(document).on("click", "#btnAdicionar", function () {
+    var info = $(this).attr('data-id');
+    var str = info.split('|');
+    var titulo = str[0];
+    var id = str[1];
+    $("#titulo").html(titulo);
+    $("#titulo").val(id);
+});
+
+function btnExcluir(url,titulo,mensagem){
+    $('#btn_modal_excluir').attr({
+       'href': url
+    });
+    $('#modalLabelExcluir').empty();
+    $('#mensagemModal').empty();
+    $('#modalLabelExcluir').append(titulo);
+    $('#mensagemModal').append(mensagem);
+}
+
+function btnCancelar(url,titulo,mensagem){
+    $('#btn_modal_cancelar').attr({
+       'href': url
+    });
+    $('#modalLabelCancelar').empty();
+    $('#mensagemModalCancel').empty();
+    $('#modalLabelCancelar').append(titulo);
+    $('#mensagemModalCancel').append(mensagem);
+}
+
+
+function btnReabrir(url){
+    $('#btn_modal_reabrir').attr({
+       'href': url
+    });
+}
+
+function btnRemover(patrimonio){
+    $('#input_hidden').attr({
+       'value': patrimonio
+    });
+}
+
+function patrimonioRemover(){
+    
+    var pat = document.getElementById('input_hidden').value;
+    document.getElementById(pat).remove();
+//    console.log(pat);
+}
+
+$("#busca_item").keyup(function () {
+    var nomeProduto = $("#busca_item").val();
+    if (nomeProduto.length <= 3) return;
+    $.ajax({
+
+        url: "http://10.5.5.10/siap/materiais/seach/"+nomeProduto,
+        dataType: 'html',
+        data: {produto: nomeProduto},
+        type: "POST",
+
+        beforeSend: function () {
+            $('#carregando').show();
+         
+        },
+        success: function (data) {
+            $('#carregando').hide();
+            $("#resBusca").html(data);
+
+        },
+        error: function (data) {
+             $('#carregando').html(data);
+            
+        }
+
+
+
+    });
+});
+
+function choiceProduto(id){
+    $("#resBusca").html('');
+    $.ajax({
+
+        url: "http://10.5.5.10/siap/materiais/seach/itens/"+id,
+        dataType: 'html',
+        data: {produto: id},
+        type: "POST",
+
+        beforeSend: function () {
+            $('#carregando').show();
+         
+        },
+        success: function (data) {
+            $('#carregando').hide();
+            $("#resChoice").html(data);
+
+        },
+        error: function (data) {
+             $('#carregando').html(data);
+            
+        }
+
+
+
+    });
+    
+}
+
+
 

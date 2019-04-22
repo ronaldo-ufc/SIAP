@@ -62,6 +62,12 @@ $app->post('/salvar/item', function($request, $response, $args){
       break;
     case 'categoria': $msg = siap\cadastro\models\Categoria::create($postParam['nome']);
       break;
+    
+    case 'unidade': $msg = siap\cadastro\models\Unidade::create($postParam['nome']);
+      break;
+    
+    case 'grupo': $msg = siap\cadastro\models\Grupo::create($postParam['nome']);
+      break;
   }
   return ($msg[2])? $msg[2] : "Item :".$postParam['nome']." foi adicionado com sucesso.";
 });

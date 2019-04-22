@@ -14,6 +14,7 @@ class RelatorioTodosSetores {
     }
 
     function start_pdf() {
+        date_default_timezone_set('America/Sao_Paulo');
         $data = date("d-m-Y");
         $hora = date('H:i:s');
 //        $this->getDompdf()->set_option('defaultFont', 'Times New Roman');

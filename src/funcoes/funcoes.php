@@ -1,4 +1,5 @@
 <?php
+namespace siap\funcoes;
 
 function getMensagemByCodigo($codigo, $txt = NULL){ 
     switch ($codigo){
@@ -40,4 +41,6 @@ function getMensagemByCodigo($codigo, $txt = NULL){
             break;
     }
 }
+
+
 
