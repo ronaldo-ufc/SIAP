@@ -1,4 +1,4 @@
-<?php
+<?php 
 namespace siap\material\models;
 use siap\models\DBSiap;
 
@@ -14,10 +14,11 @@ class Estoque {
   
   
   static function saida($requisicao, $produto, $quantidade, $usuario, $solicitante, $origem, $destino){
+  
     $sql = "select * from siap.estoque_saida(?, ?, ?, ?, ?, ?, ?)";
     $stmt = DBSiap::getSiap()->prepare($sql);
     $stmt->execute(array($requisicao, $produto, $quantidade, $usuario, $solicitante, $origem, $destino));
-    echo $stmt->errorInfo(); 
+    return $stmt->errorInfo(); 
   }
 }
 

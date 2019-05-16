@@ -26,10 +26,10 @@ class Grupo {
         return $result;
     }
     
-    static function getAllById($id) {
-        $sql = "select * from grupo where grupo_codigo = ? union all select * from grupo where grupo_codigo <> ? order by nome";
+     static function getAllById($id) {
+        $sql = "select * from grupo order by grupo_codigo = ? desc, nome asc";
         $stmt = DBSiap::getSiap()->prepare($sql);
-        $stmt->execute(array($id, $id));
+        $stmt->execute(array($id));
         $rows = $stmt->fetchAll();
         $result = array();
         foreach ($rows as $row) {
@@ -37,6 +37,7 @@ class Grupo {
         }
         return $result;
     }
+    
     
     static function getById($grupo_codigo) {
         $sql = "select * from grupo where grupo_codigo = ?";

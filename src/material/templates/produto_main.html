@@ -83,14 +83,16 @@
       <form name="cadastro" action="" method="POST">
         <div class="row">
           <div class="col-md-12">
-            <table id="tabela" class="table table-striped table-bordered table-condensed">
+            <table id="tabela" class="table table-hover table-condensed">
               <thead class="bg-primary">
                 <tr>
+                  <th></th>
                   <th>Código UFC</th>
-                  <th>Código Barras</th>
+
                   <th>Descrição</th>
+                  <th class="text-right">Quantidade</th>
                   <th>Unidade</th>
-                  <th>Quantidade</th>
+
                   <th>Grupo</th>
                   <th>Status</th>
                   <th class="text-center">Ações</th>
@@ -98,17 +100,20 @@
               </thead>
               <tbody>
                 {% for produto in produtos %}
-                <tr class="{{produto.getCorClassQuantidadeMinima}}">
+                <tr class="{{produto.getCorClassQuantidadeMinima}}" ondblclick="editarProduto('{{produto.produto_codigo}}')">
+                  <td style="width: 60px"><img class="img-ativo-show"  style="background-image: url(' {{base_url()}}/uploads/imagem/{{produto.imagem}} '); " style="width: 55px;" class="img-thumbnail img-responsive" src="{{base_url()}}/uploads/imagem/{{produto.imagem}}">
+                  </td>
                   <td > {{produto.getCodigo_ufc()}}</td>
-                  <td > {{produto.getCodigo_barras()}}</td>
+
                   <td title="{{produto.observacao}}"> {{produto.nome}}</td>
-                  <td > {{produto.unidade.nome}}</td>
+
                   <td class="text-right" title="Quantidade Mínima: {{produto.quantidade_minima}}"> {{produto.quantidade}}</td>
+                  <td > {{produto.unidade.nome}}</td>
                   <td > {{produto.grupo.nome}}</td>
                   <td > {{produto.statusNome}}</td>
-                  <td class="col-md-1 text-center bg-danger">
+                  <td class="col-md-1 text-center">
                     <a href="editar"> {{functions.btnAddEntrada(produto.nome~'|'~produto.produto_codigo, 'Entrada no estoque')}}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a title="Excluir" onclick="return confirm('Tem certeza que deseja excluir o produto {{produto.nome}} ?')" href="excluir/{{produto.produto_codigo}}"><i class="far fa-trash-alt"></i></a>
+                    <a title="Excluir" onclick="return confirm('Tem certeza que deseja excluir o produto {{produto.nome}} ?')" href="excluir/{{produto.produto_codigo}}"><i style="color: #900000" class="far fa-trash-alt fa-2x"></i></a>
                   </td>
                 </tr>
                 {% endfor %}

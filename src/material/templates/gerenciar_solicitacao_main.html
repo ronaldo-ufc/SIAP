@@ -24,7 +24,7 @@
     <div class="panel-body">
       <div class="collapse" id="collapseFiltro">
         <div class="jumbotron">
-          <form action="" method="POST">
+          <form action="" method="GET">
             <div class="row">
               <div class="col-md-2">
                 <label for="numero" class="control-label">Num. Sol</label>
@@ -62,6 +62,9 @@
                   <th>Número</th>
                   <th>Data</th>
                   <th>Setor</th>
+
+                  <th>Solicitante</th>
+                  <th>Recebimento</th>
                   <th>Status</th>
                   <th class="text-center">Ações</th>
                 </tr>
@@ -72,9 +75,12 @@
                   <td > {{solicitacao.numero}}</td>
                   <td > {{solicitacao.data|date('d/m/Y')}}</td>
                   <td title=""> {{solicitacao.destino.nome}}</td>
+
+                  <td title=""> {{solicitacao.usuario.nome}}</td>
+                  <td title=""> {{solicitacao.recebimento_user.nome}}</td>
                   <td > {{solicitacao.statusnome}}</td>
-                  <td class="col-md-1 text-center bg-danger">
-                    <a title="Ver Itens Solicitados" href="gerenciar/{{solicitacao.requisicao_codigo}}"> <i  class="fas fa-shopping-cart"></i></a> &nbsp;&nbsp;&nbsp;
+                  <td class="col-md-1 text-center">
+                    <a title="Ver Itens Solicitados" href="gerenciar/{{solicitacao.requisicao_codigo}}"> <i  class="fas fa-shopping-cart fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
                     <!--  <a title="Aprovar Solicitação" href="gerenciar/aprovar/{{solicitacao.requisicao_codigo}}"> <i class="fas fa-thumbs-up"></i></a> &nbsp;&nbsp;&nbsp;
                       <a title="Recusar" onclick="return confirm('Tem certeza que deseja recusar a Solicitação {{solicitacao.numero}}?')" href="gerenciar/recusar/{{solicitacao.requisicao_codigo}}"><i class="fas fa-ban"></i></a>
                     -->

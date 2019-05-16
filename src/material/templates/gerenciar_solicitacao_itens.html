@@ -12,6 +12,7 @@
   <nav class="navbar navbar-default">
     <div class="container-fluid">
       <ul class="nav navbar-nav">
+        <li><a href="javascript:history.back()"><i class="fas fa-angle-left"></i> Voltar</a></li>
         <li><a href="../gerenciar"><i class="fas fa-tasks"></i> Gerenciamento de Solicitações</a></li>
       </ul>
     </div>
@@ -27,23 +28,26 @@
 
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-6">
-            <span class="text-muted">Número da Solicitação: {{requisicao.numero}}</span>
+        <div class="row" style="font-size: 1.2em">
+          <div class="col-md-4">
+            <span class="text-info">Número da Solicitação: {{requisicao.numero}}</span>
           </div>
-          <div class="col-md-6">
-            <span class="text-muted">Estoque: UFC CRATEUS</span>
+          <div class="col-md-4">
+            <span class="text-info">Estoque: UFC CRATEUS</span>
+          </div>
+          <div class="col-md-4">
+            <span class="text-info">Status: {{requisicao.statusnome}} </span>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6">
-            <span class="text-muted">Setor: {{setor_nome}}</span>
+          <div class="col-md-4">
+            <span class="text-muted">Setor: {{requisicao.usuario.setornome}}</span>
           </div>
-          <div class="col-md-3">
-            <span class="text-muted">Usuário: {{requisicao.usuario.nome}}</span>
+          <div class="col-md-4">
+            <span class="text-muted">Solicitante: {{requisicao.usuario.nome}}</span>
           </div>
-          <div class="col-md-3">
-            <span class="text-muted">Status: {{requisicao.statusnome}} </span>
+          <div class="col-md-4">
+            <span class="text-muted">Recebido: {{requisicao.recebimento_user.nome}} em <small>{{requisicao.data_recebimento}}</small></span>
           </div>
         </div>
       </div><hr>

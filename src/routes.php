@@ -1,4 +1,5 @@
 <?php
+use siap\imagem\models\m2brimagem;
 
 $app->get('/', function ($request, $response, $args) {
 

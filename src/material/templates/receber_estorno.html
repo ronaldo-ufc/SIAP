@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% import "forms.html" as forms %}
+{% import "uteis.html" as functions %}
+{% import "funcoes.html" as msg %}
+
+{% block content %}
+<div class="col-md-12">
+  <!--{{ forms.error_message(form, mensagem )}}-->
+  {{ msg.messagem(classe, texto)}}
+</div>
+
+
+<div class="col-md-12">
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4>Estorno de Produtos</h4></div>
+    <div class="panel-body">
+      <form name="cadastro" action="" method="POST">
+        <div class="row">
+          <div class="col-md-12">
+            <table id="tabela" class="table table-bordered table-condensed table-hover table-striped">
+              <thead>
+                <tr class="bg-primary">
+                  <th></th>
+                  <th>Requisicao</th>
+                  <th>Setor</th>
+                  <th>Produto</th>
+                  <th>Qtd. Sol.</th>
+                  <th>Qtd. Aten.</th>
+                  <th>Qtd. Estor.</th>
+
+                  <th class="text-center">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in itens %}
+                <tr>
+                  <td style="width: 60px"><img class="img-ativo-show"  style="background-image: url(' {{base_url()}}/uploads/imagem/{{item.produto.imagem}} '); " style="width: 55px;" class="img-thumbnail img-responsive" src="{{base_url()}}/uploads/imagem/{{item.produto.imagem}}">
+                  </td>
+                  <td>{{item.requisicao.numero}}</td>
+                  <td>{{item.requisicao.destino.nome}}</td>
+                  <td>{{item.produto.nome}}</td>
+                  <td class="col-md-1 text-right">{{item.quantidade}}</td>
+                  <td class="col-md-1 text-right">{{item.atendida}}</td>
+                  <td class="col-md-1 text-right">{{item.Quantidade_estornada}}</td>
+
+                  <td class="col-md-1 text-center ">
+                    <a style="display: {{solicitacao.showBtnConfirmarRecebimento}}" onclick="setEstorno({{item.requisicao_codigo}} , {{item.produto_codigo}})" title="Confirmar Recebimento" data-toggle="modal" data-target="#modalConfirmarRecebimento" href="#"> <i style="color: #008000" class="far fa-thumbs-up fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalConfirmarRecebimento" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Confirmação de Recebimento</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ base_url() }}/materiais/estorno" method="POST">
+          <input type="hidden" name="requisicao" id="requisicao">
+          <input type="hidden" name="produto" id="produto">
+          <div class="row">
+            <div class="col-md-12">
+              <label for="login">Login</label>
+              <input name="login" id="login" type="text" class="form-control">
+            </div>
+            <div class="col-md-12">
+              <label for="senha">Senha</label>
+              <input name="senha" id="senha" type="password" class="form-control">
+            </div>
+          </div><br>
+          <div class="row">
+            <div class="col-md-12">
+              <button type="submit"  class="btn btn-success">Confirmar Recebimento </button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ functions.modalEntrada() }}
+{% endblock %}

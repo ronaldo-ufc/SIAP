@@ -21,7 +21,7 @@
     <div class="panel-heading"><h4>Adicionar Bem</h4></div>
     <div class="panel-body">
       <form name="cadastro" action="" method="POST" enctype="multipart/form-data">
-        <input name="foto_bem" type="hidden" value="sem_imagem.jpg">
+        <input name="foto_bem" type="hidden" value="sem_imagem.jpg" id="img_cod">
         <div class="row">
           <div class="col-md-2">
             <figure class="figure">
@@ -76,10 +76,10 @@
               </button>
             </div>
           </div>
-            
-            <div class="col-md-1">
+
+          <div class="col-md-1">
             <div class="form-group">
-                <a  data-toggle="modal" data-target="#modalCancelar" onclick="btnCancelar(' {{base_url()}}/ativo/show?nome=&categoria=n&modelo=n&conservacao=n&setor=n&dataAtesto=&fornecedor=&notaFiscal=&status=n&empenho=&descricao= ', 'Cancelar adição', 'Deseja realmente cancelar a adição do bem?')" class="btn btn-danger">
+              <a  data-toggle="modal" data-target="#modalCancelar" onclick="btnCancelar(' {{base_url()}}/ativo/show?nome = & categoria = n & modelo = n & conservacao = n & setor = n & dataAtesto = & fornecedor = & notaFiscal = & status = n & empenho = & descricao = ', 'Cancelar adição', 'Deseja realmente cancelar a adição do bem?')" class="btn btn-danger">
                 <i class="fas fa-times"></i> Cancelar
               </a>
             </div>

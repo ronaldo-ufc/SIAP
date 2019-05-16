@@ -32,6 +32,18 @@ class Unidade{
     return self::bundle($row);
   }
   
+    static function getAllById($id) {
+    $sql = "select * from unidade order by unidade_codigo = ? desc, nome asc";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array($id));
+    $rows = $stmt->fetchAll();
+    $result = array();
+    foreach ($rows as $row) {
+        array_push($result, self::bundle($row));
+    }
+    return $result;
+    }
+  
   static function getAll() {
     $sql = "select * from unidade order by nome";
     $stmt = DBSiap::getSiap()->prepare($sql);

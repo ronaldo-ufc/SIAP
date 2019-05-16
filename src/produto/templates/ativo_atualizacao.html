@@ -14,7 +14,7 @@
     <div class="panel-heading"><h4>Atualizar Bem</h4></div>
     <div class="panel-body">
       <form name="cadastro" action="" method="POST" enctype="multipart/form-data">
-        <input name="foto_bem" type="hidden" value="sem_imagem.jpg">
+        <input name="foto_bem" type="hidden" value="sem_imagem.jpg" id="img_cod">
         <div class="row">
           <div class="col-md-2">
             <figure class="figure">
@@ -48,7 +48,7 @@
             <div class="row">
               {{forms.input(form.status, 2, null, functions.btnAddItens('Status|status', 'Adicionar Tipo de Status'))}}
               {{forms.input(form.estado_de_conservacao, 3, null, functions.btnAddItens('Estado de Conservação|estado_de_conservacao', 'Adicionar Estado de Conservação'))}}
-              {{forms.input(form.tipo_de_aquisicao, 3, null, functions.btnAddItens('Tipo de Aquisição|tipo_de_aquisicao', 'Adicionar Tipo de Aquisição'))}} 
+              {{forms.input(form.tipo_de_aquisicao, 3, null, functions.btnAddItens('Tipo de Aquisição|tipo_de_aquisicao', 'Adicionar Tipo de Aquisição'))}}
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="setor">Setor</label>
@@ -59,7 +59,7 @@
             <div class="row">
               {{forms.input(form.marca, 6, null, functions.btnAddItens('Marca|marca', 'Adicionar Marca'))}}
               {{forms.input(form.modelo, 6, null, functions.btnAddItens('Modelo|modelo', 'Adicionar Modelo'))}}
-              
+
             </div>
           </div>
         </div>
@@ -82,14 +82,14 @@
           </div>
           <div class="col-md-1">
             <div class="form-group">
-<!--              <a  data-toggle="modal" data-target="#modalExcluir" onclick="btnExcluir(' {{base_url()}}/ativo/delete/{{patrimonio}} ', 'Excluir bem', 'Deseja realmente excluir o bem?')" class="btn btn-danger">
-                <i class="far fa-trash-alt"></i> Excluir
-              </a>-->
-                
-                <a  data-toggle="modal" data-target="#modalCancelar" onclick="btnCancelar(' {{base_url()}}/ativo/show?nome=&categoria=n&modelo=n&conservacao=n&setor=n&dataAtesto=&fornecedor=&notaFiscal=&status=n&empenho=&descricao= ', 'Cancelar atualização', 'Deseja realmente cancelar a atualização do bem?<br />Todas as alterações serão perdidas')" class="btn btn-danger">
+              <!--              <a  data-toggle="modal" data-target="#modalExcluir" onclick="btnExcluir(' {{base_url()}}/ativo/delete/{{patrimonio}} ', 'Excluir bem', 'Deseja realmente excluir o bem?')" class="btn btn-danger">
+                              <i class="far fa-trash-alt"></i> Excluir
+                            </a>-->
+
+              <a  data-toggle="modal" data-target="#modalCancelar" onclick="btnCancelar(' {{base_url()}}/ativo/show?nome = & categoria = n & modelo = n & conservacao = n & setor = n & dataAtesto = & fornecedor = & notaFiscal = & status = n & empenho = & descricao = ', 'Cancelar atualização', 'Deseja realmente cancelar a atualização do bem?<br />Todas as alterações serão perdidas')" class="btn btn-danger">
                 <i class="fas fa-times"></i> Cancelar
               </a>
-                 <!--<a onclick="btnExcluir(' {{base_url()}}/ativo/delete/{{ativo.patrimonio}} ', 'Deseja realmente excluir o bem?')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i></a>-->
+              <!--<a onclick="btnExcluir(' {{base_url()}}/ativo/delete/{{ativo.patrimonio}} ', 'Deseja realmente excluir o bem?')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i></a>-->
             </div>
           </div>
         </div>

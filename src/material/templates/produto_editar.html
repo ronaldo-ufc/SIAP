@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% import "forms.html" as forms %}
+{% import "uteis.html" as functions %}
+{% import "funcoes.html" as msg %}
+
+{% block content %}
+
+<div class="col-md-12">
+  {{ msg.messagem(classe, texto)}}
+</div>
+<div class="col-md-12">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav">
+        <li><a href="../../produto"><i class="fas fa-box-open"></i> Visualizar Produtos</a></li>
+      </ul>
+    </div>
+  </nav>
+</div>
+<div class="col-md-12">
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4 class=" text-capitalize text-muted"><i class="fas fa-retweet"></i> ATUALIZAR {{produto.nome}}</h4></div>
+    <div class="panel-body">
+      <form name="cadastro" action="" method="POST" enctype="multipart/form-data">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-2">
+                <input name="imagem_produto" type="hidden" value="" id="img_cod">
+                <figure class="figure">
+                  {% if produto.imagem %}
+                  <img id="perfil" class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/{{produto.imagem}}">
+                  {% else %}
+                  <img id="perfil" class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/sem_imagem.jpg">
+                  {% endif %}
+                  <figcaption class="figure-caption text-center text-muted">
+<i data-toggle="modal" data-target="#modalImagem" style="cursor: pointer" class="fas fa-sync-alt">Atualizar</i>
+      </figcaption>
+
+      </figure>
+    </div>
+    <div class="col-md-10">
+      <div class="row">
+        <div class="col-md-2">
+          <label for="c_ufc" class="control-label">Cód. UFC</label>
+          <input name="c_ufc" type="text" class="form-control" id="c_ufc" value="{{produto.codigo_ufc}}">
+                  </div>
+                  <div class="col-md-2">
+                    <label for="c_barras" class="control-label">Cód. Barras</label>
+                    <input name="c_barras" type="text" class="form-control" id="c_barras" value="{{produto.codigo_barras}}">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="nome" class="control-label">Descrição</label>
+                    <input name="nome" type="text" class="form-control" id="nome" required value="{{produto.nome}}">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="img" class="control-label">Foto</label>
+                    <input id="fileUpload" name="img" type="file" class="form-control" id="img" value="{{produto.foto}}">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-5">
+                    <label for="unidade" class="control-label">Unidade</label> {{functions.btnAddItens('Unidade|unidade', 'Adicionar uma Unidade de Medida')}}
+                    <select name="unidade" class="form-control" id="unidade" required>
+                      {% for unidade in unidades  %}
+                      <option value="{{unidade.unidade_codigo}}">{{unidade.nome}}</option>
+                      {% endfor %}
+
+                    </select>
+                  </div>
+                  <div class="col-md-5">
+                    <label for="grupo" class="control-label">Grupo</label>{{functions.btnAddItens('Grupo|grupo', 'Adicionar um Grupo de Itens')}}
+                    <select name="grupo" class="form-control" id="grupo" required>
+                      {% for grupo in grupos  %}
+                      <option value="{{grupo.grupo_codigo}}">{{grupo.nome}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <label for="quantidade_minima" class="control-label">Qtde. Mín. Estoque</label>
+                    <input name="quantidade_minima" type="text" class="form-control" id="quantidade_minima" required value="{{produto.quantidade_minima}}">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group green-border-focus">
+                  <label for="observacao">Observação</label>
+                  <textarea class="form-control" id="observacao" name="observacao" rows="4">{{produto.observacao}}</textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group"><br>
+                  <button  type="submit" class="btn btn-info">
+                    <i class="fas fa-retweet"></i> Atualizar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{{ functions.modalImagens(imagens) }}
+{{ functions.modalItens() }}
+{{ functions.modalExcluir() }}
+{{ functions.modalCancelar() }}
+{% endblock %}
+

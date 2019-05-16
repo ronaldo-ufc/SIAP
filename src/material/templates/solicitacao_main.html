@@ -33,6 +33,7 @@
                   <th>Data</th>
                   <th>Status</th>
                   <th>Solicitante</th>
+                  <th>Recebimento</th>
                   <th class="text-center">Ações</th>
                 </tr>
               </thead>
@@ -43,10 +44,12 @@
                   <td > {{solicitacao.data|date('d/m/Y')}}</td>
                   <td > {{solicitacao.statusnome}}</td>
                   <td title=""> {{solicitacao.usuario.nome}}</td>
-                  <td class="col-md-1 text-center bg-danger">
-                    <a title="Inserir Itens na Solicitação" href="solicitacoes/{{solicitacao.requisicao_codigo}}"> <i  class="fas fa-shopping-cart"></i></a> &nbsp;&nbsp;&nbsp;
-                    <a title="Enviar Solicitação" href="solicitacoes/enviar/{{solicitacao.requisicao_codigo}}"> <i style="display:{{solicitacao.statusdisplay}}" class="fas fa-cloud-upload-alt"></i></a> &nbsp;&nbsp;&nbsp;
-                    <a title="Excluir" onclick="return confirm('Tem certeza que deseja excluir a Solicitação {{solicitacao.numero}} e todos seus ítens?')" href="solicitacoes/excluir/{{solicitacao.requisicao_codigo}}"><i style="display:{{solicitacao.statusdisplay}}" class="far fa-trash-alt"></i></a>
+                  <td title=""> {{solicitacao.recebimento_user.nome}}</td>
+                  <td class="col-md-2 text-center">
+                    <a title="Inserir Itens na Solicitação" href="solicitacoes/{{solicitacao.requisicao_codigo}}"> <i  class="fas fa-shopping-cart fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
+                    <a title="Enviar Solicitação" href="solicitacoes/enviar/{{solicitacao.requisicao_codigo}}"> <i style="display:{{solicitacao.statusdisplay}}; color: #4cae4c" class="fas fa-cloud-upload-alt fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
+                    <a style="display: {{solicitacao.showBtnConfirmarRecebimento}}" onclick="setRecebimento('{{solicitacao.requisicao_codigo}}')" title="Confirmar Recebimento" data-toggle="modal" data-target="#modalConfirmarRecebimento" href="#"> <i style="color: #008000" class="far fa-thumbs-up fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
+                    <a title="Excluir" onclick="return confirm('Tem certeza que deseja excluir a Solicitação {{solicitacao.numero}} e todos seus ítens?')" href="solicitacoes/excluir/{{solicitacao.requisicao_codigo}}"><i style="display:{{solicitacao.statusdisplay}}; color: red" class="far fa-trash-alt fa-2x"></i></a>
                   </td>
                 </tr>
                 {% endfor %}
@@ -55,6 +58,40 @@
           </div>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalConfirmarRecebimento" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Confirmação de Recebimento</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="confirmar-recebimento" method="POST">
+          <input type="hidden" name="requisicao" id="requisicao">
+          <div class="row">
+            <div class="col-md-12">
+              <label for="login">Login</label>
+              <input name="login" id="login" type="text" class="form-control">
+            </div>
+            <div class="col-md-12">
+              <label for="senha">Senha</label>
+              <input name="senha" id="senha" type="password" class="form-control">
+            </div>
+          </div><br>
+          <div class="row">
+            <div class="col-md-12">
+              <button type="submit"  class="btn btn-success">Confirmar Recebimento </button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

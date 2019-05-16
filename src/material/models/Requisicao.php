@@ -2,6 +2,7 @@
 namespace siap\material\models;
 use siap\models\DBSiap;
 use siap\material\models\RequisicaoItens;
+include_once "public/uteis/data.php";
 
 class Requisicao{
   const ESTATUS_ENVIADA = 'E';
@@ -18,8 +19,9 @@ class Requisicao{
   private $usuario;
   private $origem;
   private $destino;
-  
-  
+  private $usuario_recebimento;
+  private $data_recebimento;
+  private $recebimento_user;
   private function bundle($row){
     $u = new Requisicao();
     $u->setRequisicao_codigo($row['requisicao_codigo']);
@@ -29,8 +31,10 @@ class Requisicao{
     $u->setSetor_origem($row['setor_origem']);
     $u->setSetor_destino($row['setor_destino']);
     $u->setUsuario_login($row['usuario_login']);
-    
+    $u->setUsuario_recebimento($row['usuario_recebimento']);
+    $u->setData_recebimento($row['data_recebimento']);
     $u->setUsuario(\siap\usuario\models\Usuario::getByLogin($row['usuario_login']));
+    $u->setRecebimento_user(\siap\usuario\models\Usuario::getByLogin($row['usuario_recebimento']));
     $u->setDestino(\siap\setor\models\Setor::getById($row['setor_destino']));
     
     return $u;
@@ -65,6 +69,22 @@ class Requisicao{
     return $stmt->errorInfo();
   }
   
+  static function Cancelar($requisicao){
+    #cANCELAR a requisição
+    $sql = "UPDATE siap.requisicao SET status = ? WHERE requisicao_codigo = ?";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array(self::ESTATUS_CANCELADA, $requisicao));
+    return $stmt->errorInfo();
+  }
+  
+   static function AprovarRecebimento($requisicao, $usuario){
+    #Aprova a requisição
+    $sql = "UPDATE siap.requisicao SET usuario_recebimento = ?, data_recebimento = current_timestamp WHERE requisicao_codigo = ?";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array($usuario, $requisicao));
+    return $stmt->errorInfo();
+  }
+  
   static function delete($codigo){
     $sql = "DELETE FROM siap.requisicao WHERE requisicao_codigo = ? and status = ?";
     $stmt = DBSiap::getSiap()->prepare($sql);
@@ -73,7 +93,7 @@ class Requisicao{
   }
 
   static function getAllBySetor($setor_codigo){
-    $sql = "SELECT * FROM siap.requisicao where setor_destino = ? order by status asc, requisicao_codigo desc";
+    $sql = "SELECT * FROM siap.requisicao where setor_destino = ? order by requisicao_codigo desc, status asc";
     $stmt = DBSiap::getSiap()->prepare($sql);
     $stmt->execute(array($setor_codigo));
     $rows = $stmt->fetchAll();
@@ -100,7 +120,7 @@ class Requisicao{
   }
   
   static function getAllByFiltro($numero, $status){
-    $sql = "SELECT * FROM siap.requisicao WHERE data >= CURRENT_DATE - 365 and status like '$status'";
+    $sql = "SELECT * FROM siap.requisicao WHERE data >= CURRENT_DATE - 365 and status like '$status' and status <> 'C'";
     if($numero){
         $sql = $sql." AND numero like '%$numero%' ";
     }
@@ -149,8 +169,15 @@ class Requisicao{
   public function getSetor_destino() {
     return $this->setor_destino;
   }
+  public function getData_recebimento() {
+    return formatoDateToDataHora($this->data_recebimento, 'DMY HMN');
+  }
 
-  public function getData() {
+  public function setData_recebimento($data_recebimento) {
+    $this->data_recebimento = $data_recebimento;
+  }
+
+    public function getData() {
     return $this->data;
   }
 
@@ -192,12 +219,28 @@ class Requisicao{
   public function getOrigem() {
     return $this->origem;
   }
-
-  public function getDestino() {
-    return $this->destino;
+  public function getUsuario_recebimento() {
+    
+    return $this->usuario_recebimento;
   }
 
-  public function setUsuario($usuario) {
+  public function setUsuario_recebimento($usuario_recebimento) {
+    $this->usuario_recebimento = $usuario_recebimento;
+  }
+
+    public function getDestino() {
+    return $this->destino;
+  }
+  public function getRecebimento_user() {
+   
+    return $this->recebimento_user;
+  }
+
+  public function setRecebimento_user($recebimento_user) {
+    $this->recebimento_user = $recebimento_user;
+  }
+
+    public function setUsuario($usuario) {
     $this->usuario = $usuario;
   }
 
@@ -207,6 +250,32 @@ class Requisicao{
 
   public function setDestino($destino) {
     $this->destino = $destino;
+  }
+  
+  static function isPendendeRecebimentoBySetor($setor){
+    $sql = "SELECT * FROM siap.requisicao WHERE DATE_PART('YEAR', data) = ? and status = ? and setor_destino = ? and usuario_recebimento is null order by requisicao_codigo desc limit 1";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array(date('Y'), self::ESTATUS_APROVADA, $setor));
+    $row = $stmt->fetch();
+    if ($row == null){
+      return false;
+    }
+    return self::bundle($row);
+  }
+
+
+  public function showBtnConfirmarRecebimento() {
+    if ($this->status == self::ESTATUS_APROVADA and !$this->usuario_recebimento){
+      return 'inline';
+    }
+    return 'none';
+  }
+  
+  public function isRecebida() {
+    if ($this->status == self::ESTATUS_APROVADA and $this->usuario_recebimento){
+      return 'inline';
+    }
+    return 'none';
   }
   
   public function haveRequisicaoAberta($setor){

@@ -27,23 +27,26 @@
 
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-6">
-            <span class="text-muted">Número da Solicitação: {{requisicao.numero}}</span>
+        <div class="row" style="font-size: 1.2em">
+          <div class="col-md-4">
+            <span class="text-info">Número da Solicitação: {{requisicao.numero}}</span>
           </div>
-          <div class="col-md-6">
-            <span class="text-muted">Estoque: UFC CRATEUS</span>
+          <div class="col-md-4">
+            <span class="text-info">Estoque: UFC CRATEUS</span>
+          </div>
+          <div class="col-md-4">
+            <span class="text-info">Status: {{requisicao.statusnome}} </span>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <span class="text-muted">Setor: {{setor_nome}}</span>
           </div>
-          <div class="col-md-3">
-            <span class="text-muted">Usuário: {{requisicao.usuario.nome}}</span>
+          <div class="col-md-4">
+            <span class="text-muted">Solicitante: {{requisicao.usuario.nome}}</span>
           </div>
-          <div class="col-md-3">
-            <span class="text-muted">Status: {{requisicao.statusnome}} </span>
+          <div class="col-md-4">
+            <span class="text-muted">Recebido: {{requisicao.recebimento_user.nome}} em <small>{{requisicao.data_recebimento}}</small></span>
           </div>
         </div>
       </div><hr>
@@ -78,10 +81,12 @@
           <table id="tabela" class="table table-bordered table-condensed table-hover table-striped">
             <thead>
               <tr class="bg-primary">
+                <th></th>
                 <th>Cód UFC</th>
                 <th>Produto</th>
                 <th>Qtd. Sol.</th>
                 <th>Qtd. Aten.</th>
+                <th>Qtd. Estor.</th>
                 <th>Status</th>
                 <th class="text-center">Ações</th>
               </tr>
@@ -89,14 +94,19 @@
             <tbody>
               {% for item in itens %}
               <tr>
+                <td style="width: 60px"><img class="img-ativo-show"  style="background-image: url(' {{base_url()}}/uploads/imagem/{{item.produto.imagem}} '); " style="width: 55px;" class="img-thumbnail img-responsive" src="{{base_url()}}/uploads/imagem/{{item.produto.imagem}}">
+                </td>
                 <td>{{item.produto.codigo_ufc}}</td>
                 <td>{{item.produto.nome}}</td>
                 <td class="col-md-1 text-right">{{item.quantidade}}</td>
                 <td class="col-md-1 text-right">{{item.atendida}}</td>
+                <td class="col-md-1 text-right">{{item.Quantidade_estornada}}</td>
                 <td class="col-md-1 text-right">{{item.statusnome}}</td>
-                <td class="col-md-1 text-center bg-danger">
+                <td class="col-md-1 text-center ">
                   <a style="display:{{requisicao.statusdisplay}}" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir o ítem {{item.produto.nome}} ?')" href="item/excluir/{{requisicao.requisicao_codigo}}/{{item.produto_codigo}}">
-                    <i class="far fa-trash-alt"></i></a>
+                    <i style="color: #900000" class="far fa-trash-alt fa-2x"></i></a>
+                  <a style="cursor: pointer; display:{{item.showBtnEstorno}}" id="btnEstorno" data-toggle="modal" data-id='{{item.produto.nome}}|{{item.produto.produto_codigo}}' data-target="#myModalEstorno" title="Estornar item" > <i style="color: #c0a16b" class="fas fa-retweet fa-2x"></i></a>
+
                 </td>
               </tr>
               {% endfor %}
@@ -108,7 +118,7 @@
   </div>
 </div>
 
-{{ functions.modalEntrada() }}
+{{ functions.modalEstorno(requisicao.requisicao_codigo) }}
 <script type="text/javascript">
 
 

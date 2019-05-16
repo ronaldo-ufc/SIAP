@@ -6,6 +6,8 @@ use siap\produto\models\Ativos;
 use siap\setor\models\Setor;
 use siap\relatorios\relatorio\RelatorioSetor;
 use \siap\relatorios\relatorio\CategoriaFiltro;
+use siap\relatorios\relatorio\ItemAprovados;
+use Dompdf\FontMetrics;
 use Dompdf\Dompdf;
 use siap\auth\models\Autenticador;
 
@@ -166,19 +168,41 @@ $app->map(['GET', 'POST'], '/empenho', function($request, $response, $args) {
 })->setName('RelatoriosEmpenho');
 
 $app->map(['GET', 'POST'], '/responsavel', function($request, $response, $args) {
-    $mensagemErro = NULL;
-    if ($request->isPost()) {
-        $dompdf = new DOMPDF();
-        $dompdf->setPaper('A4', 'portrait'); //landscape
-        $postParam = $request->getParams();
-        $responsavel = siap\relatorios\relatorio\Responsavel::bundle();
-        $header = $responsavel->start_pdf($postParam['dataInicio'], $postParam['dataFim']);
-        if ($header[2] != NULL) {
-            $mensagemErro = $header[2];
-            return $this->renderer->render($response, 'bens_responsavel.html', array('mensagemErro' => $mensagemErro));
-        } else {
-            return $this->renderer->render($response, 'gerar_pdf.html', array('dompdf' => $dompdf, 'array' => array("Attachment" => false), 'header' => $header[1]));
-        }
+  $mensagemErro = NULL;
+  if ($request->isPost()) {
+    $dompdf = new DOMPDF();
+    $dompdf->setPaper('A4', 'portrait'); //landscape
+    $postParam = $request->getParams();
+    $responsavel = siap\relatorios\relatorio\Responsavel::bundle();
+    $header = $responsavel->start_pdf($postParam['dataInicio'], $postParam['dataFim']);
+    if ($header[2] != NULL) {
+        $mensagemErro = $header[2];
+        return $this->renderer->render($response, 'bens_responsavel.html', array('mensagemErro' => $mensagemErro));
+    } else {
+        return $this->renderer->render($response, 'gerar_pdf.html', array('dompdf' => $dompdf, 'array' => array("Attachment" => false), 'header' => $header[1]));
     }
-    return $this->renderer->render($response, 'bens_responsavel.html', array('mensagemErro' => $mensagemErro));
+  }
+  return $this->renderer->render($response, 'bens_responsavel.html', array('mensagemErro' => $mensagemErro));
 })->setName('RelatorioResponsavel');
+
+
+$app->get('/materiais-aprovado/{requisicao}', function($request, $response, $args) {
+  $dompdf = new Dompdf();
+  $dompdf->setPaper('A4', 'portrait'); //landscape
+
+  $relatorio = new ItemAprovados();
+
+  $header = $relatorio->start_pdf($args['requisicao']);
+  if ($header[2] != NULL) {
+    echo "erro";
+  } else {
+    
+    $dompdf->load_html($header[1]);
+    
+    $dompdf->render();
+  
+    $canvas = $dompdf->get_canvas();
+    $canvas->page_text(500, 800, "Página {PAGE_NUM} de {PAGE_COUNT}", true, 8, array(0, 0, 0));
+    $dompdf->stream("document.pdf", array("Attachment" => false));
+  }
+})->setName('RelatoriosMovimentacoesDoBem');

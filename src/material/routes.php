@@ -8,7 +8,7 @@ use siap\usuario\models\Usuario;
 use siap\material\models\MontaBuscasItens;
 use siap\material\models\RequisicaoItens;
 use siap\material\models\Estoque;
-
+use siap\imagem\models\Imagem;
 include_once 'public/uteis/funcoes.php';
 
 $app->get('/produto', function($request, $response, $args) {
@@ -21,6 +21,7 @@ $app->get('/produto', function($request, $response, $args) {
   $observacao = $postParam['observacao'];
   
   $produtos = Produto::getAllByParams($c_ufc , $c_barras, $nome, $unidade, $grupo, $observacao);
+  
   $msg = getMensagem($this->flash->getMessages());
   return $this->renderer->render($response, 'produto_main.html', array('unidades'=>Unidade::getAll(), 'grupos'=> Grupo::getAll(),'produtos'=>$produtos, 'classe'=> $msg[0], 'texto'=>$msg[1]));
 })->setName('visualizaProduto');
@@ -59,6 +60,34 @@ $app->map(['GET', 'DELETE'], '/excluir/{produto_codigo}', function($request, $re
   return $response->withStatus(301)->withHeader('Location', '../produto');
   
 })->setName('excluirProduto');
+
+$app->post('/produto/editar/{produto_codigo}', function($request, $response, $args) {
+  $postParam = $request->getParams();
+  
+  if (!$postParam['imagem_produto'] && $_FILES['img']){
+    $upload = new siap\models\UploadImagem();
+    $file = $upload->preparar($_FILES['img'], $this->get('upload_directory_imagem'));
+  }else{
+     $file = $postParam['imagem_produto'];
+  }
+  $msg = Produto::update($postParam['c_ufc'], $postParam['c_barras'], $postParam['nome'], $postParam['unidade'], $postParam['grupo'], $postParam['observacao'], $postParam['quantidade_minima'], $file, $args['produto_codigo']);
+  if ($msg[2]) {
+      $this->flash->addMessage('danger', $msg[2]);
+  } else {
+      $this->flash->addMessage('success', 'Produto atualizado com sucesso.');
+  }
+  return $response->withStatus(301)->withHeader('Location', '../../produto');
+})->setName('SalvarEditarProduto');
+
+$app->get('/produto/editar/{produto_codigo}', function($request, $response, $args) {
+  $produto = Produto::getById($args['produto_codigo']);
+  $unidades = Unidade::getAllById($produto->getUnidade_codigo());
+  $grupos = Grupo::getAllById($produto->getGrupo_codigo());
+  $imagens = Imagem::getAll();
+  
+  return $this->renderer->render($response, 'produto_editar.html', array('imagens'=>$imagens,  'produto'=>$produto, 'unidades'=>$unidades, 'grupos'=> $grupos));
+  
+})->setName('editarProduto');
 
 $app->post('/entrada', function($request, $response, $args) {
   $postParam = $request->getParams();
@@ -101,19 +130,26 @@ $app->get('/solicitacoes/novo', function($request, $response, $args) {
   $solicitacao_aberta = $requisicao->haveRequisicaoAberta($usuario->getSetor());
   if ($solicitacao_aberta){
     $this->flash->addMessage('danger', 'A solicitação de número <strong>'.$solicitacao_aberta->getNumero().'</strong> ainda não foi enviada.');
-  }else{
-    Requisicao::create($aut->getUsuario(), COD_ALMOXARIFADO, $usuario->getSetor());
+    return $response->withStatus(301)->withHeader('Location', '../solicitacoes');
   }
+  $r = Requisicao::isPendendeRecebimentoBySetor($usuario->getSetor());
+  if ($r){
+    $this->flash->addMessage('danger', 'Não foi possível criar uma nova requisição. Existe uma que ainda não foi dada o recebimento. Requisição nº '.$r->getNumero());
+    return $response->withStatus(301)->withHeader('Location', '../solicitacoes');
+  }
+  Requisicao::create($aut->getUsuario(), COD_ALMOXARIFADO, $usuario->getSetor());
+  
   return $response->withStatus(301)->withHeader('Location', '../solicitacoes');
 })->setName('NovaSolicitacao');
 
 $app->get('/solicitacoes/{requisicao_codigo}', function($request, $response, $args) {
+  $msg = getMensagem($this->flash->getMessages());
   $requisicao_codigo = $args['requisicao_codigo'];
   $aut = Autenticador::instanciar();
   $usuario = Usuario::getByLogin($aut->getUsuario());
   $requisicao = Requisicao::getByCodigo($requisicao_codigo);
   $itens = RequisicaoItens::getByRequisicao($requisicao_codigo);
-  return $this->renderer->render($response, 'solicitacao_itens.html', array('setor_nome'=>$usuario->getSetorNome(), 'requisicao'=>$requisicao, 'itens'=>$itens));
+  return $this->renderer->render($response, 'solicitacao_itens.html', array('setor_nome'=>$usuario->getSetorNome(), 'requisicao'=>$requisicao, 'itens'=>$itens, 'classe'=> $msg[0], 'texto'=>$msg[1]));
 })->setName('ItensSolicitacoes');
 
 $app->post('/solicitacoes/{requisicao_codigo}', function($request, $response, $args) {
@@ -125,6 +161,23 @@ $app->post('/solicitacoes/{requisicao_codigo}', function($request, $response, $a
     
   return $response->withStatus(301)->withHeader('Location', $args['requisicao_codigo']);
 })->setName('SalvarItensSolicitacoes');
+
+$app->post('/solicitacoes/estorno/{requisicao_codigo}', function($request, $response, $args) {
+  $postParam = $request->getParams();
+
+  $item = $postParam['item'];
+  $quantidade = $postParam['quantidade'];
+ 
+  $msg = RequisicaoItens::estorno($args['requisicao_codigo'], $item, $quantidade);
+  if ($msg[2]) {
+   $this->flash->addMessage('danger', $msg[2]);
+  }else{
+    $this->flash->addMessage('success', 'Estorno realizado com sucesso.');
+  }
+  return $response->withStatus(301)->withHeader('Location', '../'.$args['requisicao_codigo']);
+})->setName('SalvarItensSolicitacoes');
+
+
 
 $app->post('/seach/{nome}', function($request, $response, $args) {
   $p = Produto::getAllByNome($args['nome']);
@@ -139,7 +192,7 @@ $app->post('/seach/itens/{codigo}', function($request, $response, $args) {
 });
 
 $app->map(['GET', 'DELETE'],'/solicitacoes/item/excluir/{solicitacao}/{produto_codigo}', function($request, $response, $args) {
-  RequisicaoItens::delete($args['produto_codigo']);
+  RequisicaoItens::delete($args['solicitacao'], $args['produto_codigo']);
   return $response->withStatus(301)->withHeader('Location', '../../../'.$args['solicitacao']);
 });
 
@@ -168,15 +221,12 @@ $app->get('/solicitacoes/enviar/{codigo}', function($request, $response, $args) 
 /********************************  GERENCIAR ************************************/
 
 $app->get('/gerenciar', function($request, $response, $args) {
-  $requisicoes = Requisicao::getAllEnviadas();
-  $msg = getMensagem($this->flash->getMessages());
-  return $this->renderer->render($response, 'gerenciar_solicitacao_main.html', array('solicitacoes'=>$requisicoes, 'classe'=> $msg[0], 'texto'=>$msg[1]));
-});
-
-$app->post('/gerenciar', function($request, $response, $args) {
   $postParam = $request->getParams();
-
-  $requisicoes = Requisicao::getAllByFiltro($postParam['numero'], $postParam['status']);
+  if ($postParam){
+    $requisicoes = Requisicao::getAllByFiltro($postParam['numero'], $postParam['status']);
+  }else{
+    $requisicoes = Requisicao::getAllEnviadas();
+  }
   $msg = getMensagem($this->flash->getMessages());
   return $this->renderer->render($response, 'gerenciar_solicitacao_main.html', array('solicitacoes'=>$requisicoes, 'classe'=> $msg[0], 'texto'=>$msg[1]));
 });
@@ -200,6 +250,7 @@ $app->post('/gerenciar/{requisicao_codigo}', function($request, $response, $args
   $aut = Autenticador::instanciar();
 
   $itens = $postParam['quantidade'];
+  $flag_aprovar =  false;
   try {
     foreach($itens as $produto => $quantidade)
     {
@@ -207,9 +258,16 @@ $app->post('/gerenciar/{requisicao_codigo}', function($request, $response, $args
       if ($msg[2]){
          throw new \Exception($msg[2]);
       }
+      if ($quantidade > 0){
+        $flag_aprovar =  true;
+      }
       
     }
-    $msg = Requisicao::Aprovar($args['requisicao_codigo']);
+    if ($flag_aprovar){
+      $msg = Requisicao::Aprovar($args['requisicao_codigo']);
+    }else{
+      $msg = Requisicao::Cancelar($args['requisicao_codigo']);
+    }
     if ($msg[2]){
       throw new \Exception($msg[2]);
     }
@@ -220,5 +278,56 @@ $app->post('/gerenciar/{requisicao_codigo}', function($request, $response, $args
     
 })->setName('ItensSolicitacoes');
 
+$app->post('/confirmar-recebimento', function($request, $response, $args) {
+ $postParam = $request->getParams();
+ 
+ $senha = trim ($postParam['senha']);
+ $login = trim ($postParam['login']);
+ $requisicao = trim ($postParam['requisicao']);
+ 
+ $usuario = Usuario::getByLogin($login);
+ if (!$usuario){$this->flash->addMessage('danger', 'Usuario não encontrado');return $response->withStatus(301)->withHeader('Location', '../materiais/solicitacoes');}
+ if ($usuario->getSenha() == md5($senha)){
+    $msg = Requisicao::AprovarRecebimento($requisicao, $login);
+    if ($msg[2]) {
+      $this->flash->addMessage('danger', $msg[2]);
+    }else{
+      $this->flash->addMessage('success', 'Recebimento foi confirmado');
+    }
+ }else{
+   $this->flash->addMessage('danger', 'Senha não confere');
+ }
+ return $response->withStatus(301)->withHeader('Location', '../materiais/solicitacoes');
+})->setName('ItensSolicitacoes');
 
+
+//******************************************************* Estorno ********************************************//
+
+$app->get('/estorno', function($request, $response, $args) {
+  $msg = getMensagem($this->flash->getMessages());
+  $itens = RequisicaoItens::getAllEstornos();
+  return $this->renderer->render($response, 'receber_estorno.html', array('itens'=>$itens, 'classe'=> $msg[0], 'texto'=>$msg[1]));
+})->setName('Estorno');
+
+$app->post('/estorno', function($request, $response, $args) {
+  $postParam = $request->getParams();
+
+  $senha = trim ($postParam['senha']);
+  $login = trim ($postParam['login']);
+  $requisicao = trim ($postParam['requisicao']);
+  $produto = $postParam['produto'];
+ $usuario = Usuario::getByLogin($login);
+ if (!$usuario){$this->flash->addMessage('danger', 'Usuario não encontrado');return $response->withStatus(301)->withHeader('Location', 'estorno');}
+ if ($usuario->getSenha() == md5($senha)){
+    $msg = RequisicaoItens::AprovarRecebimento($requisicao, $produto, $login);
+    if ($msg[2]) {
+      $this->flash->addMessage('danger', $msg[2]);
+    }else{
+      $this->flash->addMessage('success', 'Recebimento foi confirmado');
+    }
+ }else{
+   $this->flash->addMessage('danger', 'Senha não confere');
+ }
+ return $response->withStatus(301)->withHeader('Location', 'estorno');
+})->setName('Estorno');
 

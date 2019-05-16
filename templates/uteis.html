@@ -1,3 +1,40 @@
+{% macro modalImagens(imagens) %}
+<div id="modalImagem" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Selecione uma imagem</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          {% for imagem in imagens %}
+
+
+
+          <div class="col-md-3">
+            <div class="thumbnail">
+
+              <img   onclick="escolherImagem('{{imagem.caminho}}')" id="perfil"  src="{{base_url()}}/uploads/imagem/{{imagem.caminho}}">
+
+            </div>
+          </div>
+
+
+          {% endfor %}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnSairModalItens" type="button" class="btn btn-warning" data-dismiss="modal">
+          <span class="glyphicon glyphicon-log-out"></span> Sair
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
 {% macro modalItens() %}
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
@@ -51,7 +88,7 @@
 {% endmacro %}
 
 {% macro btnAddEntrada(data, title) %}
-&nbsp;&nbsp;<a style="cursor: pointer" id="btnEntrada" data-toggle="modal" data-id='{{data}}' data-target="#myModal" title="{{title}}" ><i class="fas fa-inbox"></i></a>
+&nbsp;&nbsp;<a style="cursor: pointer" id="btnEntrada" data-toggle="modal" data-id='{{data}}' data-target="#myModal" title="{{title}}" ><i class="fas fa-inbox fa-2x"></i></a>
 {% endmacro %}
 
 {% macro modalExcluir() %}
@@ -173,6 +210,41 @@
           </div>
         </div>
 
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Salvar">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro modalEstorno(requisicao_codigo) %}
+<!-- Modal -->
+<div class="modal fade" id="myModalEstorno" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modalLabelEntrada"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Insira a quantidade Estornado do item: <span id="titulo"></span></h4>
+      </div>
+      <form action="estorno/{{requisicao_codigo}}" method="POST">
+        <input type="hidden" id="item" name="item" value="">
+        <input type="hidden" id="requisicao" name="requisicao" value="{{requisicao_codigo}}">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="quantidade">Quantidade</label>
+                <input class="form-control" id="quantidade" name="quantidade" type="text" value="" required>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="modal-footer">
           <input class="btn btn-primary" type="submit" value="Salvar">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>

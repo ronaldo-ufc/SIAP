@@ -1,6 +1,6 @@
 <?php
 namespace siap\models;
-
+use siap\imagem\models\Imagem;
 class UploadImagem{
   public $width; // Definida no arquivo index.php, será a largura máxima da nossa imagem
   public $height; // Definida no arquivo index.php, será a altura máxima da nossa imagem
@@ -77,7 +77,8 @@ class UploadImagem{
     // procuramos no nosso texto qualquer caractere do primeiro array e substituímos pelo seu correspondente presente no 2º array
     $final = str_replace($com_pontuacao, $sem_pontuacao, $final);
     // retornamos a variável com nosso texto sem pontuações, acentos e letras acentuadas
-    return uniqid ( time () )."_".$final;
+    return $final;
+    //return uniqid ( time () )."_".$final;
 //    return uniqid ( time () );
   } // -> fim function tirarAcento()
 
@@ -140,5 +141,26 @@ class UploadImagem{
     }
     return array(null, $file['name']);
   } // -> fim function salvar()
+  
+  function preparar($arquivo, $caminho){
+    // Associamos a classe à variável $upload
+    $upload = new UploadImagem();
+    // Determinamos nossa largura máxima permitida para a imagem
+    $upload->width = 450;
+    // Determinamos nossa altura máxima permitida para a imagem
+    $upload->height = 350;
+    // Exibimos a mensagem com sucesso ou erro retornada pela função salvar.
+    //Se for sucesso, a mensagem também é um link para a imagem enviada.
+    $filename = $upload->salvar($caminho, $arquivo);
+
+    if ($filename[0]) {
+
+        //$mensagemErro = $filename[0];
+    } else {
+      $arquivo=explode(".",$filename[1]);
+      Imagem::create($arquivo[0], $filename[1]);
+      return $filename[1];
+    }  
+  }
 } // -> fim classe
 
