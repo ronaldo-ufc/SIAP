@@ -14,6 +14,7 @@
       <ul class="nav navbar-nav">
         <li><a href="javascript:history.back()"><i class="fas fa-angle-left"></i> Voltar</a></li>
         <li><a href="../gerenciar"><i class="fas fa-tasks"></i> Gerenciamento de Solicitações</a></li>
+        <li><a href="{{ base_url() }}/relatorios/materiais-aprovado/{{requisicao.requisicao_codigo}}"><i class="fas fa-print"></i> Imprimir</a></li>
       </ul>
     </div>
   </nav>
@@ -63,6 +64,7 @@
                 <tr class="bg-primary">
                   <th>Cód UFC</th>
                   <th>Produto</th>
+                  <th>Und</th>
                   <th>Qde Sol.</th>
                   <th>Atendida</th>
                   <th>Estoque</th>
@@ -71,9 +73,10 @@
               </thead>
               <tbody>
                 {% for item in itens %}
-                <tr class="{{item.produto.getCorClassQuantidadeMinima}}" title="{{item.produto_codigo}}">
+                <tr class="{{item.produto.getCorClassQuantidadeMinima}}" title="Cód produto nº {{item.produto_codigo}}">
                   <td class="col-md-1">{{item.produto.codigo_ufc}}</td>
                   <td >{{item.produto.nome}}</td>
+                  <td>{{item.produto.unidade.nome}}</td>
                   <td class="col-md-1 text-right">{{item.quantidade}}</td>
 
                   <td class="col-md-1 text-center bg-success text-right">

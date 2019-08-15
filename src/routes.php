@@ -10,6 +10,18 @@ $app->get('/', function ($request, $response, $args) {
 })->setName('home')->add($auth);
 
 
+
+
+$app->get('/teste', function ($request, $response, $args) {
+  
+  $posicao = strpos('0201/2019', '0');
+  var_dump($posicao);
+  //echo $posicao;
+  echo substr('0201/2019', $posicao+1);
+    
+   
+});
+
 $app->group('/autenticacao', function() use($app) 
 {
   require_once(__DIR__ . '/auth/routes.php');

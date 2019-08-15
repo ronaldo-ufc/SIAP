@@ -22,6 +22,7 @@ class Requisicao{
   private $usuario_recebimento;
   private $data_recebimento;
   private $recebimento_user;
+  
   private function bundle($row){
     $u = new Requisicao();
     $u->setRequisicao_codigo($row['requisicao_codigo']);
@@ -41,14 +42,16 @@ class Requisicao{
   }
   
   static function create($usuario, $origem, $destino){
+    
     $sql = "select * from siap.gera_solicitacao(?,?,?,?)";
     $stmt = DBSiap::getSiap()->prepare($sql);
     $stmt->execute(array(date('Y'), $origem, $destino, $usuario));
     return $stmt->errorInfo();
+    
   }
   
   static function enviar($codigo){
-    $sql = "UPDATE siap.requisicao SET status = ? WHERE requisicao_codigo =?";
+    $sql = "UPDATE siap.requisicao SET status = ?, data = current_date WHERE requisicao_codigo =?";
     $stmt = DBSiap::getSiap()->prepare($sql);
     $stmt->execute(array(self::ESTATUS_ENVIADA, $codigo));
     return $stmt->errorInfo();
@@ -93,7 +96,7 @@ class Requisicao{
   }
 
   static function getAllBySetor($setor_codigo){
-    $sql = "SELECT * FROM siap.requisicao where setor_destino = ? order by requisicao_codigo desc, status asc";
+    $sql = "SELECT * FROM siap.requisicao where setor_destino = ? order by data desc, status asc";
     $stmt = DBSiap::getSiap()->prepare($sql);
     $stmt->execute(array($setor_codigo));
     $rows = $stmt->fetchAll();
@@ -119,15 +122,24 @@ class Requisicao{
     return $result;
   }
   
-  static function getAllByFiltro($numero, $status){
-    $sql = "SELECT * FROM siap.requisicao WHERE data >= CURRENT_DATE - 365 and status like '$status' and status <> 'C'";
+  static function getAllByFiltro($numero, $status, $setor, $inicio, $fim){
+    $sql = "SELECT * FROM siap.requisicao "
+            . "WHERE data >= CURRENT_DATE - 365 and "
+            . "status like '$status' and "
+            . "status <> 'C'";
     if($numero){
         $sql = $sql." AND numero like '%$numero%' ";
     }
-
+    if ($setor != '%'){
+       $sql = $sql. " AND setor_destino = $setor ";
+    }
+    if ($inicio && $fim){
+       $sql = $sql. " AND data between '$inicio' and '$fim' ";
+    }
+    $sql = $sql." ORDER BY data desc, requisicao_codigo desc";
+    
     $stmt = DBSiap::getSiap()->prepare($sql);
     $stmt->execute(array());
-    
     $rows = $stmt->fetchAll();
 
     $result = array();
@@ -180,6 +192,10 @@ class Requisicao{
     public function getData() {
     return $this->data;
   }
+  
+  public function getDataFormatada() {
+    return formatoDateToDataHora($this->data, 'DMY HMN');
+  }
 
   public function getUsuario_login() {
     return $this->usuario_login;
@@ -190,7 +206,7 @@ class Requisicao{
   }
 
   public function setNumero($numero) {
-    $this->numero = $numero;
+    $this->numero = strpos($numero, '0')==0?substr($numero, 1):$numero;
   }
 
   public function setStatus($status) {

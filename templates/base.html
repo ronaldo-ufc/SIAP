@@ -5,6 +5,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119522547-1"></script>
     <script>
       base_url = 'http://10.5.5.10/siap';
+
     </script>
 
     <script>
@@ -13,9 +14,9 @@
           dataLayer.push(arguments);
       }
       gtag('js', new Date());
-
       gtag('config', 'UA-119522547-1');
     </script>
+
     <link rel="apple-touch-icon" sizes="57x57" href="{{ base_url() }}/assets/icons/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="{{ base_url() }}/assets/icons/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="{{ base_url() }}/assets/icons/apple-icon-72x72.png">
@@ -37,7 +38,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>SIAP - Sistema de Almoxarifado e Patrimônio</title>
+    <title>SIAP - Sistema Integrado de Almoxarifado e Patrimônio</title>
     <!--  <link href=" {{ base_url() }}/assets/img/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" /> -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 
@@ -51,13 +52,6 @@
 
     <link href=" {{ base_url() }}/assets/css/main.css" rel="stylesheet">
 
-    <style rel="stylesheet" type="text/css">
-      table.relatorio tr td{
-          border-bottom: 1px red solid;
-      }
-    </style>
-
-
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -68,7 +62,7 @@
         <script src="http://www.crateus.ufc.br/app/assets/js/jquery_mask2.js" type="text/javascript"></script>-->
   </head>
   <body style="overflow-x:hidden">
-
+    <input type="hidden" id="ip" name="ip" value="{{ip}}">
     {% include "menu.html" %}
 
     <div style="margin-bottom: 75px">&nbsp;</div>
@@ -105,6 +99,15 @@
     <script src=" {{ base_url() }}/assets/js/dataTables.checkboxes.min.js"></script>
     <script src=" {{ base_url() }}/assets/js/jquery.dataTables.min.js"></script>
 
+    <script>
+
+      window.onload = function () {
+          var ip = document.getElementById('ip').value;
+          if (ip === '10.5.5.1') {
+              base_url = "http://200.129.62.148:10000/siap";
+          }
+      };
+    </script>
     {% block link %} {% endblock %}
   </body>
 </html>

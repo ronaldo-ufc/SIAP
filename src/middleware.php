@@ -16,6 +16,7 @@ $auth = function ($request, $response, $next) {
       
     $twig->addGlobal('current_user', $aut);
     $twig->addGlobal('menus_pais', $menus_pais);
+    $twig->addGlobal('ip', getClientIp());
     
     $response = $next($request, $response);
     return $response;

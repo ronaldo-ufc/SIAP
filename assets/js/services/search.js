@@ -1,6 +1,7 @@
 $(document).ready(function () {
     var tabela = $('#tabela').DataTable({
         "lengthMenu": [[50, 25, 20, 15, 10, 5, -1], [50, 25, 20, 15, 10, 5, "TUDO"]],
+       
         "language": {
             "lengthMenu": "Mostrando _MENU_ registros por página",
             "zeroRecords": "Nenhum registro encontrado",
@@ -41,11 +42,15 @@ $(document).ready(function () {
     });
     var tabelaAtivos = $('#tabelaItens').DataTable({
         "lengthMenu": [[50, 25, 20, 15, 10, 5, -1], [50, 25, 20, 15, 10, 5, "TUDO"]],
-//        "bSort": false,
+//        "bFilter": false,
+//        "bInfo": false,
+//        "pageLength": 7,
+        //"bLengthChange": false,
+        "bSort": false,
         "language": {
             "lengthMenu": "Mostrando _MENU_ registros por página",
             "zeroRecords": "Nenhum registro encontrado",
-            "info": "Total _MAX_ registros - Mostrando página _PAGE_ de _PAGES_",
+            "info": "Total _MAX_ solicitações - Mostrando página _PAGE_ de _PAGES_",
             "infoEmpty": "Nenhum registro disponível",
             "infoFiltered": "(Filtrado de _MAX_ registros no total)",
             "search": "Pesquisa",

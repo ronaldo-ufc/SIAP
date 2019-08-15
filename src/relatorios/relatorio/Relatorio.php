@@ -5,6 +5,7 @@ namespace siap\relatorios\relatorio;
 class Relatorio{
   private $titulo;
   private $content;
+  protected $header;
   
   public function getCabecalho() {
      $data = date("d/m/Y H:m:s");
@@ -20,9 +21,10 @@ class Relatorio{
     return $this->titulo;
   }
 
-  public function setTitulo($titulo) {
-    $this->titulo = '<div style="text-align:center;"><p><b>'. strtoupper($titulo).'</b></p></div>';
+  public function setTitulo($titulo, $sub='') {
+    $this->titulo = '<div style="text-align:center;"><h3><b>'. strtoupper($titulo).'</b></h3><small><em>'.$sub.'</em></small></h3></div>';
   }
+  
   
   public function setContent($content) {
     $this->content = '<div class="container" style="font-size:12px; font-family:Calibri; padding:10px">';
@@ -33,8 +35,23 @@ class Relatorio{
     return $this->content;
   }
 
-    public function imprime(){
+  public function imprime(){
     return $this->getCabecalho().$this->getTitulo().$this->getContent();
+  }
+  
+  function imprimir($dompdf, $papel = 'A4', $orientacao='portrait', $n_pagina=1){
+    $dompdf->setPaper($papel, $orientacao); //landscape // portrait
+    if ($this->header[2] != NULL) {
+      echo "erro";
+    } else {
+      $dompdf->load_html($this->header[1]);
+      $dompdf->render();
+      $canvas = $dompdf->get_canvas();
+      if ($n_pagina==1){
+        $canvas->page_text(500, 800, "Página {PAGE_NUM} de {PAGE_COUNT}", true, 8, array(0, 0, 0));
+      }
+      $dompdf->stream("document.pdf", array("Attachment" => false));
+    }
   }
 
 }

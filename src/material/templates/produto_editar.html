@@ -34,16 +34,16 @@
                   <img id="perfil" class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/sem_imagem.jpg">
                   {% endif %}
                   <figcaption class="figure-caption text-center text-muted">
-<i data-toggle="modal" data-target="#modalImagem" style="cursor: pointer" class="fas fa-sync-alt">Atualizar</i>
-      </figcaption>
+                    <i data-toggle="modal" data-target="#modalImagem" style="cursor: pointer" class="fas fa-sync-alt">Atualizar</i>
+                  </figcaption>
 
-      </figure>
-    </div>
-    <div class="col-md-10">
-      <div class="row">
-        <div class="col-md-2">
-          <label for="c_ufc" class="control-label">Cód. UFC</label>
-          <input name="c_ufc" type="text" class="form-control" id="c_ufc" value="{{produto.codigo_ufc}}">
+                </figure>
+              </div>
+              <div class="col-md-10">
+                <div class="row">
+                  <div class="col-md-2">
+                    <label for="c_ufc" class="control-label">Cód. UFC</label>
+                    <input name="c_ufc" type="text" class="form-control" id="c_ufc" value="{{produto.codigo_ufc}}">
                   </div>
                   <div class="col-md-2">
                     <label for="c_barras" class="control-label">Cód. Barras</label>
@@ -59,7 +59,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-md-5">
+                  <div class="col-md-4">
                     <label for="unidade" class="control-label">Unidade</label> {{functions.btnAddItens('Unidade|unidade', 'Adicionar uma Unidade de Medida')}}
                     <select name="unidade" class="form-control" id="unidade" required>
                       {% for unidade in unidades  %}
@@ -68,7 +68,7 @@
 
                     </select>
                   </div>
-                  <div class="col-md-5">
+                  <div class="col-md-4">
                     <label for="grupo" class="control-label">Grupo</label>{{functions.btnAddItens('Grupo|grupo', 'Adicionar um Grupo de Itens')}}
                     <select name="grupo" class="form-control" id="grupo" required>
                       {% for grupo in grupos  %}
@@ -79,6 +79,10 @@
                   <div class="col-md-2">
                     <label for="quantidade_minima" class="control-label">Qtde. Mín. Estoque</label>
                     <input name="quantidade_minima" type="text" class="form-control" id="quantidade_minima" required value="{{produto.quantidade_minima}}">
+                  </div>
+                  <div class="col-md-2">
+                    <label for="localizacao" class="control-label">Localização</label>
+                    <input name="localizacao" type="text" class="form-control" id="localizacao" required value="{{produto.localizacao}}">
                   </div>
                 </div>
               </div>
@@ -95,7 +99,7 @@
             <div class="row">
               <div class="col-md-2">
                 <div class="form-group"><br>
-                  <button  type="submit" class="btn btn-info">
+                  <button  type="submit" class="btn btn-primary">
                     <i class="fas fa-retweet"></i> Atualizar
                   </button>
                 </div>

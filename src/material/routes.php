@@ -39,8 +39,9 @@ $app->post('/produto/novo', function($request, $response, $args) {
   $grupo = $postParam['grupo'];
   $observacao = $postParam['observacao'];
   $quantidade_minima = $postParam['quantidade_minima'];
-
-  $msg = Produto::create($c_ufc, $c_barras, $nome, $unidade, $grupo, $observacao, $quantidade_minima);
+  $localizacao = $postParam['localizacao'];
+  
+  $msg = Produto::create($c_ufc, $c_barras, $nome, $unidade, $grupo, $observacao, $quantidade_minima,$localizacao);
   if ($msg[2]){ return $this->renderer->render($response, 'produto_novo.html', array('unidades'=>Unidade::getAll(), 'grupos'=> Grupo::getAll(), 'mensagemErro'=>$msg[2])); }
   
   return $response->withStatus(301)->withHeader('Location', '../produto');
@@ -70,7 +71,7 @@ $app->post('/produto/editar/{produto_codigo}', function($request, $response, $ar
   }else{
      $file = $postParam['imagem_produto'];
   }
-  $msg = Produto::update($postParam['c_ufc'], $postParam['c_barras'], $postParam['nome'], $postParam['unidade'], $postParam['grupo'], $postParam['observacao'], $postParam['quantidade_minima'], $file, $args['produto_codigo']);
+  $msg = Produto::update($postParam['c_ufc'], $postParam['c_barras'], $postParam['nome'], $postParam['unidade'], $postParam['grupo'], $postParam['observacao'], $postParam['quantidade_minima'], $file, $postParam['localizacao'], $args['produto_codigo']);
   if ($msg[2]) {
       $this->flash->addMessage('danger', $msg[2]);
   } else {
@@ -125,6 +126,7 @@ $app->get('/solicitacoes/novo', function($request, $response, $args) {
   
   $aut = Autenticador::instanciar();
   $usuario = Usuario::getByLogin($aut->getUsuario());
+  
   #Verifica se tem Requisição em aberto no ano corrente
   $requisicao = new Requisicao();
   $solicitacao_aberta = $requisicao->haveRequisicaoAberta($usuario->getSetor());
@@ -132,11 +134,14 @@ $app->get('/solicitacoes/novo', function($request, $response, $args) {
     $this->flash->addMessage('danger', 'A solicitação de número <strong>'.$solicitacao_aberta->getNumero().'</strong> ainda não foi enviada.');
     return $response->withStatus(301)->withHeader('Location', '../solicitacoes');
   }
+  
+  #Verifica pendencia de recebimento
   $r = Requisicao::isPendendeRecebimentoBySetor($usuario->getSetor());
   if ($r){
     $this->flash->addMessage('danger', 'Não foi possível criar uma nova requisição. Existe uma que ainda não foi dada o recebimento. Requisição nº '.$r->getNumero());
     return $response->withStatus(301)->withHeader('Location', '../solicitacoes');
   }
+  
   Requisicao::create($aut->getUsuario(), COD_ALMOXARIFADO, $usuario->getSetor());
   
   return $response->withStatus(301)->withHeader('Location', '../solicitacoes');
@@ -185,10 +190,23 @@ $app->post('/seach/{nome}', function($request, $response, $args) {
   echo $tabela->getTabela();
 });
 
+$app->post('/seach/produto/{nome}', function($request, $response, $args) {
+  $p = Produto::getAllByNome($args['nome']);
+  $tabela = new MontaBuscasItens($p);
+  return $response->write($tabela->getProduto());
+});
+
 $app->post('/seach/itens/{codigo}', function($request, $response, $args) {
   $p = Produto::getById($args['codigo']);
   
   return $this->renderer->render($response, 'resChoice.html', array('produto'=>$p));
+});
+
+$app->post('/inserir/produto/{codigo}', function($request, $response, $args) {
+  $p = Produto::getById($args['codigo']);
+  $a = "<br><label>Produto: ".$p->getNome()."</label><br><br><input type='hidden' name='produto_codigo' value='".$p->getProduto_codigo()."'>";
+  return $response->write($a);
+  //return $this->renderer->render($response, 'resChoice.html', array('produto'=>$p));
 });
 
 $app->map(['GET', 'DELETE'],'/solicitacoes/item/excluir/{solicitacao}/{produto_codigo}', function($request, $response, $args) {
@@ -223,12 +241,13 @@ $app->get('/solicitacoes/enviar/{codigo}', function($request, $response, $args) 
 $app->get('/gerenciar', function($request, $response, $args) {
   $postParam = $request->getParams();
   if ($postParam){
-    $requisicoes = Requisicao::getAllByFiltro($postParam['numero'], $postParam['status']);
+    $requisicoes = Requisicao::getAllByFiltro($postParam['numero'], $postParam['status'], $postParam['setor'], $postParam['inicio'], $postParam['fim']);
   }else{
     $requisicoes = Requisicao::getAllEnviadas();
   }
   $msg = getMensagem($this->flash->getMessages());
-  return $this->renderer->render($response, 'gerenciar_solicitacao_main.html', array('solicitacoes'=>$requisicoes, 'classe'=> $msg[0], 'texto'=>$msg[1]));
+  $setores = siap\setor\models\Setor::getAll();
+  return $this->renderer->render($response, 'gerenciar_solicitacao_main.html', array('solicitacoes'=>$requisicoes, 'setores'=>$setores, 'classe'=> $msg[0], 'texto'=>$msg[1]));
 });
 
 $app->get('/gerenciar/{requisicao_codigo}', function($request, $response, $args) {

@@ -30,19 +30,21 @@
                 <label for="c_ufc" class="control-label">Cód. UFC</label>
                 <input name="c_ufc" type="text" class="form-control" id="c_ufc">
               </div>
-              <div class="col-md-1">
+              <div class="col-md-2">
                 <label for="c_barras" class="control-label">Cód. Barras</label>
                 <input name="c_barras" type="text" class="form-control" id="c_barras">
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <label for="nome" class="control-label">Descrição</label>
                 <input name="nome" type="text" class="form-control" id="nome" required>
               </div>
-              <div class="col-md-1">
+              <div class="col-md-2">
                 <label for="quantidade_minima" class="control-label">Qtde Mín</label>
                 <input name="quantidade_minima" type="text" class="form-control" id="quantidade_minima" required>
               </div>
-              <div class="col-md-2">
+            </div>
+            <div class="row">
+              <div class="col-md-3">
                 <label for="unidade" class="control-label">Unidade</label> {{functions.btnAddItens('Unidade|unidade', 'Adicionar uma Unidade de Medida')}}
                 <select name="unidade" class="form-control" id="unidade" required>
                   <option value="1">UNIDADE</option>
@@ -52,13 +54,17 @@
 
                 </select>
               </div>
-              <div class="col-md-2">
+              <div class="col-md-3">
                 <label for="grupo" class="control-label">Grupo</label>{{functions.btnAddItens('Grupo|grupo', 'Adicionar um Grupo de Itens')}}
                 <select name="grupo" class="form-control" id="grupo" required>
                   {% for grupo in grupos  %}
                   <option value="{{grupo.grupo_codigo}}">{{grupo.nome}}</option>
                   {% endfor %}
                 </select>
+              </div>
+              <div class="col-md-2">
+                <label for="localizacao" class="control-label">Localização</label>
+                <input name="localizacao" type="text" class="form-control" id="localizacao" required>
               </div>
             </div>
             <div class="row">

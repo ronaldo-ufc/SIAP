@@ -9,78 +9,91 @@
   {{ msg.messagem(classe, texto)}}
 </div>
 <div class="col-md-12">
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <ul class="nav navbar-nav">
-        <li><a data-toggle="collapse" href="#collapseFiltro" role="button" aria-expanded="true" aria-controls="collapseFiltro"><i class="fas fa-search"></i> Filtros</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-</div>
-<div class="col-md-12">
   <div class="panel panel-default">
     <div class="panel-heading"><h4>Gerenciamento de Solicitações</h4></div>
     <div class="panel-body">
+      <div class="row">
+        <a style="cursor: pointer" class="btn btn-lg btn-block" data-toggle="collapse" href="#collapseFiltro" role="button" aria-expanded="true" aria-controls="collapseFiltro"><i class="fas fa-search"></i> Filtros</a>
+      </div>
+      <br>
       <div class="collapse" id="collapseFiltro">
-        <div class="jumbotron">
-          <form action="" method="GET">
-            <div class="row">
-              <div class="col-md-2">
-                <label for="numero" class="control-label">Num. Sol</label>
-                <input name="numero" type="text" class="form-control" id="numero">
-              </div>
-              <div class="col-md-3">
-                <label for="status" class="control-label">Status</label>
-                <select name="status" id="status" class="form-control">
-                  <option value="%">Todas</option>
-                  <option value="A">Aprovada</option>
-                  <option value="R">Cancelada</option>
-                </select>
-              </div>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <form action="" method="GET">
+              <div class="row">
+                <div class="col-md-2">
+                  <label for="numero" class="control-label">Num. Sol</label>
+                  <input name="numero" type="text" class="form-control" id="numero">
+                </div>
+                <div class="col-md-2">
+                  <label for="inicio" class="control-label">Início</label>
+                  <input name="inicio" type="date" class="form-control" id="inicio">
+                </div>
+                <div class="col-md-2">
+                  <label for="fim" class="control-label">Término</label>
+                  <input name="fim" type="date" class="form-control" id="fim">
+                </div>
+                <div class="col-md-3">
+                  <label for="setor" class="control-label">Setor</label>
+                  <select name="setor" id="setor" class="form-control">
+                    <option value="%">Todos</option>
+                    {% for setor in setores %}
+                    <option value="{{setor.setor_id}}">{{setor.nome}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label for="status" class="control-label">Situação</label>
+                  <select name="status" id="status" class="form-control">
+                    <option value="%">Todas</option>
+                    <option value="A">Aprovada</option>
+                    <option value="R">Cancelada</option>
+                  </select>
+                </div>
 
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group"><br>
-                  <button  type="submit" class="btn btn-default">
-                    <i class="fas fa-search"></i> Filtrar
-                  </button>
-                  <a class="btn btn-default" data-toggle="collapse" href="#collapseFiltro" role="button" aria-expanded="true" aria-controls="collapseFiltro"><i class="fas fa-times"></i> Cancelar</a>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group"><br>
+                    <button  type="submit" class="btn btn-default">
+                      <i class="fas fa-search"></i> Filtrar
+                    </button>
+                    <a class="btn btn-default" data-toggle="collapse" href="#collapseFiltro" role="button" aria-expanded="true" aria-controls="collapseFiltro"><i class="fas fa-times"></i> Cancelar</a>
+                  </div>
                 </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
       <form name="cadastro" action="" method="POST">
         <div class="row">
           <div class="col-md-12">
-            <table id="tabelaItens" class="table table-striped table-bordered table-condensed">
+            <table id="tabelaItens" class="table-hover table-bordered">
               <thead class="bg-primary">
-                <tr>
-                  <th>Número</th>
-                  <th>Data</th>
-                  <th>Setor</th>
+                <tr >
+                  <th class="text-center">Número</th>
+                  <th class="text-center">Data Sol.</th>
+                  <th class="text-center">Setor</th>
 
-                  <th>Solicitante</th>
-                  <th>Recebimento</th>
-                  <th>Status</th>
+                  <th class="text-center">Solicitante</th>
+                  <th class="text-center">Recebimento</th>
+                  <th class="text-center">Situação</th>
                   <th class="text-center">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {% for solicitacao in solicitacoes %}
-                <tr class=" {{solicitacao.statusclass }}">
-                  <td > {{solicitacao.numero}}</td>
+                <tr >
+                  <th > {{solicitacao.numero}}</th>
                   <td > {{solicitacao.data|date('d/m/Y')}}</td>
                   <td title=""> {{solicitacao.destino.nome}}</td>
 
                   <td title=""> {{solicitacao.usuario.nome}}</td>
                   <td title=""> {{solicitacao.recebimento_user.nome}}</td>
-                  <td > {{solicitacao.statusnome}}</td>
+                  <td > <span class="badge badge-{{ solicitacao.StatusClass }}">{{solicitacao.statusnome}}</span></td>
                   <td class="col-md-1 text-center">
-                    <a title="Ver Itens Solicitados" href="gerenciar/{{solicitacao.requisicao_codigo}}"> <i  class="fas fa-shopping-cart fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
+                    <a title="Ver Itens Solicitados" href="gerenciar/{{solicitacao.requisicao_codigo}}"> <i style="color: #269abc"  class="fas fa-shopping-cart fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
                     <!--  <a title="Aprovar Solicitação" href="gerenciar/aprovar/{{solicitacao.requisicao_codigo}}"> <i class="fas fa-thumbs-up"></i></a> &nbsp;&nbsp;&nbsp;
                       <a title="Recusar" onclick="return confirm('Tem certeza que deseja recusar a Solicitação {{solicitacao.numero}}?')" href="gerenciar/recusar/{{solicitacao.requisicao_codigo}}"><i class="fas fa-ban"></i></a>
                     -->

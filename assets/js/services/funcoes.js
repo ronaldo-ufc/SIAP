@@ -98,7 +98,7 @@ $("#busca_item").keyup(function () {
     if (nomeProduto.length <= 3) return;
     $.ajax({
 
-        url: "http://10.5.5.10/siap/materiais/seach/"+nomeProduto,
+        url: base_url+"/materiais/seach/"+nomeProduto,
         dataType: 'html',
         data: {produto: nomeProduto},
         type: "POST",
@@ -122,11 +122,69 @@ $("#busca_item").keyup(function () {
     });
 });
 
+$("#busca_produto").keyup(function () {
+    var nomeProduto = $("#busca_produto").val();
+    if (nomeProduto.length <= 3) return;
+    $.ajax({
+
+        url: base_url+"/materiais/seach/produto/"+nomeProduto,
+        dataType: 'html',
+        data: {produto: nomeProduto},
+        type: "POST",
+
+        beforeSend: function () {
+            $('#carregando').show();
+         
+        },
+        success: function (data) {
+            $('#carregando').hide();
+            $("#resBusca").html(data);
+
+        },
+        error: function (data) {
+             $('#carregando').html(data);
+            
+        }
+
+
+
+    });
+});
+
+function inserirProduto(id){
+    $("#resBusca").html('');
+    $.ajax({
+
+        url: base_url+"/materiais/inserir/produto/"+id,
+        dataType: 'html',
+        data: {produto: id},
+        type: "POST",
+
+        beforeSend: function () {
+            $('#carregando').show();
+         
+        },
+        success: function (data) {
+            $('#carregando').hide();
+            $("#resChoice").html(data);
+
+        },
+        error: function (data) {
+             $('#carregando').html(data);
+            
+        }
+
+
+
+    });
+    
+}
+
 function choiceProduto(id){
     $("#resBusca").html('');
     $.ajax({
 
-        url: "http://10.5.5.10/siap/materiais/seach/itens/"+id,
+        url: base_url+"/materiais/seach/itens/"+id,
         dataType: 'html',
         data: {produto: id},
         type: "POST",

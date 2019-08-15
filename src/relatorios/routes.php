@@ -7,14 +7,11 @@ use siap\setor\models\Setor;
 use siap\relatorios\relatorio\RelatorioSetor;
 use \siap\relatorios\relatorio\CategoriaFiltro;
 use siap\relatorios\relatorio\ItemAprovados;
-use Dompdf\FontMetrics;
-use Dompdf\Dompdf;
-use siap\auth\models\Autenticador;
 
 $app->map(['GET', 'POST'], '/bens', function($request, $response, $args) {
     $setores = Setor::getAll();
     if ($request->isPost()) {
-        $dompdf = new DOMPDF();
+        $dompdf = $this->DOMPDF;
         $dompdf->setPaper('A4', 'portrait'); //landscape
         $postParam = $request->getParams();
         $setor = Setor::getById(intval($postParam["radio"]));
@@ -46,8 +43,9 @@ $app->map(['GET', 'POST'], '/categoria', function($request, $response, $args) {
     $categorias = siap\cadastro\models\Categoria::getAll();
     $setores = Setor::getAll();
     if ($request->isPost()) {
-        $dompdf = new DOMPDF();
+        $dompdf = $this->DOMPDF;
         $dompdf->setPaper('A4', 'portrait'); //landscape
+        
         $postParam = $request->getParams();
         $relatorio_categoria = CategoriaFiltro::bundle();
         $header = $relatorio_categoria->start_pdf($postParam["nome"], $postParam['categoria'], $postParam["modelo"], $postParam["dataAtesto"], $postParam["status"], $postParam["conservacao"], $postParam["setor"], $postParam["fornecedor"], $postParam["notaFiscal"], $postParam['empenho'], $postParam['descricao']);
@@ -68,7 +66,7 @@ $app->map(['GET', 'POST'], '/categoria/setor', function($request, $response, $ar
     $categorias = siap\cadastro\models\Categoria::getAll();
     $setores = Setor::getAll();
     if ($request->isPost()) {
-        $dompdf = new DOMPDF();
+        $dompdf = $this->DOMPDF;
         $dompdf->setPaper('A4', 'portrait'); //landscape
         $postParam = $request->getParams();
         $relatorio_categoria = \siap\relatorios\relatorio\CategoriaSetor::bundle();
@@ -86,7 +84,7 @@ $app->map(['GET', 'POST'], '/categoria/setor', function($request, $response, $ar
 $app->map(['GET', 'POST'], '/movimentacao/setor', function($request, $response, $args) {
     $mensagemErro = NULL;
     if ($request->isPost()) {
-        $dompdf = new DOMPDF();
+        $dompdf = $this->DOMPDF;
         $dompdf->setPaper('A4', 'portrait'); //landscape
         $postParam = $request->getParams();
         $mov_bem_setor = \siap\relatorios\relatorio\MovimentacaoBemSetor::bundle();
@@ -108,7 +106,7 @@ $app->map(['GET', 'POST'], '/movimentacao/setor', function($request, $response, 
 
 $app->map(['GET', 'POST'], '/setor/movimentacao', function($request, $response, $args) {
     if ($request->isPost()) {
-        $dompdf = new DOMPDF();
+        $dompdf = $this->DOMPDF;
         $dompdf->setPaper('A4', 'portrait'); //landscape
         $postParam = $request->getParams();
         $mov_bem_setor = \siap\relatorios\relatorio\MovimentacaoBemSetor::bundle();
@@ -125,7 +123,7 @@ $app->map(['GET', 'POST'], '/setor/movimentacao', function($request, $response, 
 })->setName('RelatoriosBemMovimentacao');
 
 $app->map(['GET', 'POST'], '/setor/movimentacao/{patrimonio}', function($request, $response, $args) {
-    $dompdf = new DOMPDF();
+    $dompdf = $this->DOMPDF;
     $dompdf->setPaper('A4', 'portrait'); //landscape
     $mov_bem = \siap\relatorios\relatorio\MovimentacaoBem::bundle();
     $header = $mov_bem->start_pdf($args["patrimonio"]);
@@ -133,7 +131,7 @@ $app->map(['GET', 'POST'], '/setor/movimentacao/{patrimonio}', function($request
 })->setName('RelatoriosMovimentacoesDoBem');
 
 $app->map(['GET', 'POST'], '/setor/mov/grupo[/{params:.*}]', function($request, $response, $args) {
-    $dompdf = new DOMPDF();
+    $dompdf = $this->DOMPDF;
     $dompdf->setPaper('A4', 'portrait'); //landscape
     $mov_bem = \siap\relatorios\relatorio\MovimentacaoConjuntoBem::bundle();
     $lista = array();
@@ -147,7 +145,7 @@ $app->map(['GET', 'POST'], '/setor/mov/grupo[/{params:.*}]', function($request, 
 $app->map(['GET', 'POST'], '/empenho', function($request, $response, $args) {
     $mensagemErro = NULL;
     if ($request->isPost()) {
-        $dompdf = new DOMPDF();
+        $dompdf = $this->DOMPDF;
         $dompdf->setPaper('A4', 'portrait'); //landscape
         $postParam = $request->getParams();
         $empenho = siap\relatorios\relatorio\Empenho::bundle();
@@ -170,7 +168,7 @@ $app->map(['GET', 'POST'], '/empenho', function($request, $response, $args) {
 $app->map(['GET', 'POST'], '/responsavel', function($request, $response, $args) {
   $mensagemErro = NULL;
   if ($request->isPost()) {
-    $dompdf = new DOMPDF();
+    $dompdf = $this->DOMPDF;
     $dompdf->setPaper('A4', 'portrait'); //landscape
     $postParam = $request->getParams();
     $responsavel = siap\relatorios\relatorio\Responsavel::bundle();
@@ -187,22 +185,20 @@ $app->map(['GET', 'POST'], '/responsavel', function($request, $response, $args) 
 
 
 $app->get('/materiais-aprovado/{requisicao}', function($request, $response, $args) {
-  $dompdf = new Dompdf();
-  $dompdf->setPaper('A4', 'portrait'); //landscape
-
   $relatorio = new ItemAprovados();
+  $relatorio->criar($args['requisicao']);
+  $relatorio->imprimir($this->DOMPDF);
+})->setName('Relatoriomateriais-aprovado');
 
-  $header = $relatorio->start_pdf($args['requisicao']);
-  if ($header[2] != NULL) {
-    echo "erro";
-  } else {
-    
-    $dompdf->load_html($header[1]);
-    
-    $dompdf->render();
-  
-    $canvas = $dompdf->get_canvas();
-    $canvas->page_text(500, 800, "Página {PAGE_NUM} de {PAGE_COUNT}", true, 8, array(0, 0, 0));
-    $dompdf->stream("document.pdf", array("Attachment" => false));
-  }
-})->setName('RelatoriosMovimentacoesDoBem');
+
+$app->get('/consumo/produto', function($request, $response, $args) {
+  return $this->renderer->render($response, 'consumo_setor.html', array());
+})->setName('Relatorioconsumo');
+
+$app->get('/consumo/produto/pdf', function($request, $response, $args) {
+  $postParam = $request->getParams();
+  $relatorio = new \siap\relatorios\relatorio\ItemConsumo();
+
+  $relatorio->criar($postParam['produto_codigo'], $postParam['dataInicio'] , $postParam['dataFim']);
+  $relatorio->imprimir($this->DOMPDF);
+})->setName('Relatorioconsumo-produto');

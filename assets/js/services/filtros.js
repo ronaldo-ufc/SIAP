@@ -1,10 +1,12 @@
 
+/* global base_url */
+
 function menuSelect() {
     
     var e = document.getElementById("privilegio");
     var itemSelecionado = e.options[e.selectedIndex].value;
 
-    var url = 'http://'+location.hostname+'/siap/services/menu/'+itemSelecionado;
+    var url = base_url+'/services/menu/'+itemSelecionado;
     
     $.getJSON(url, function (data)  {
             
@@ -27,7 +29,7 @@ function subMenuSelect() {
     
     console.log('Privilegio '+privilegio);
     console.log(menu);
-    var url = 'http://'+location.hostname+'/siap/services/submenu/'+privilegio+'/'+menu;
+    var url = base_url+'/services/submenu/'+privilegio+'/'+menu;
     
     $.getJSON(url, function (data)  {
             
@@ -52,7 +54,7 @@ function modeloSelect() {
     var e = document.getElementById("marca");
     var itemSelecionado = e.options[e.selectedIndex].value;
 
-    var url = 'http://'+location.hostname+'/siap/services/modelos/'+itemSelecionado;
+    var url = base_url+'/services/modelos/'+itemSelecionado;
 
     $.getJSON(url, function (data)  {
 

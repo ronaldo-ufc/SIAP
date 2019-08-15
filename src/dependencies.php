@@ -1,4 +1,9 @@
 <?php
+
+use Dompdf;
+
+//use Dompdf;
+
 define('COD_ALMOXARIFADO', 22);
 
 $container = $app->getContainer();
@@ -29,6 +34,11 @@ $container['flash'] = function () {
   session_start();
   return new \Slim\Flash\Messages();
 };
+
+$container['DOMPDF'] = function () {
+   return new Dompdf\Dompdf(); 
+};
+
 //Override the default Not Found Handler
 //$container['notFoundHandler'] = function ($c) {
 //    return function ($request, $response) use ($c) {
