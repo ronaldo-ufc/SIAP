@@ -268,10 +268,10 @@ class Requisicao{
     $this->destino = $destino;
   }
   
-  static function isPendendeRecebimentoBySetor($setor){
-    $sql = "SELECT * FROM siap.requisicao WHERE DATE_PART('YEAR', data) = ? and status = ? and setor_destino = ? and usuario_recebimento is null order by requisicao_codigo desc limit 1";
+  static function isPendendeRecebimentoBySetor($usuario){
+    $sql = "SELECT * FROM siap.requisicao WHERE DATE_PART('YEAR', data) = ? and status = ? and usuario_login = ? and usuario_recebimento is null order by requisicao_codigo desc limit 1";
     $stmt = DBSiap::getSiap()->prepare($sql);
-    $stmt->execute(array(date('Y'), self::ESTATUS_APROVADA, $setor));
+    $stmt->execute(array(date('Y'), self::ESTATUS_APROVADA, $usuario));
     $row = $stmt->fetch();
     if ($row == null){
       return false;
@@ -281,7 +281,8 @@ class Requisicao{
 
 
   public function showBtnConfirmarRecebimento() {
-    if ($this->status == self::ESTATUS_APROVADA and !$this->usuario_recebimento){
+    $aut = \siap\auth\models\Autenticador::instanciar();
+    if ($this->status == self::ESTATUS_APROVADA and !$this->usuario_recebimento and $aut->getUsuario() == $this->usuario_login){
       return 'inline';
     }
     return 'none';
@@ -294,10 +295,10 @@ class Requisicao{
     return 'none';
   }
   
-  public function haveRequisicaoAberta($setor){
-    $sql = "SELECT * FROM siap.requisicao WHERE DATE_PART('YEAR', data) = ? and status = ? and setor_destino = ? order by requisicao_codigo desc limit 1";
+  public function haveRequisicaoAberta($usuario){
+    $sql = "SELECT * FROM siap.requisicao WHERE DATE_PART('YEAR', data) = ? and status = ? and usuario_login = ? order by requisicao_codigo desc limit 1";
     $stmt = DBSiap::getSiap()->prepare($sql);
-    $stmt->execute(array(date('Y'), self::ESTATUS_NAOENVIADA, $setor));
+    $stmt->execute(array(date('Y'), self::ESTATUS_NAOENVIADA, $usuario));
     $row = $stmt->fetch();
     if ($row == null){
       return false;
@@ -324,6 +325,10 @@ class Requisicao{
   }
   
   public function getStatusDisplay(){
+    $aut = \siap\auth\models\Autenticador::instanciar();
+    if ($aut->getUsuario() != $this->usuario_login){
+      return 'none';
+    }
     switch ($this->status){
       case self::ESTATUS_NAOENVIADA: return 'relative';
       case self::ESTATUS_ENVIADA: return 'none';

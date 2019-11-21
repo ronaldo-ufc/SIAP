@@ -24,7 +24,7 @@
     <div class="panel-heading"><h4>Materiais de consumo</h4></div>
     <div class="panel-body">
       <div class="collapse" id="collapseFiltro">
-        <div class="jumbotron">
+        <div class="alert">
           <form action="" method="GET">
             <div class="row">
               <div class="col-md-2">
@@ -126,5 +126,17 @@
   </div>
 </div>
 
-{{ functions.modalEntrada() }}
+{{ functions.modalMovimentacao() }}
+
+<script>
+  function verifica(value){
+  var input = document.getElementById("requisicao");
+  if (value == 'R'){
+  input.disabled = false;
+  } else{
+  input.disabled = true;
+  input.value = null;
+  }
+  };
+</script>
 {% endblock %}

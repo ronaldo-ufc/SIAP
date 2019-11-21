@@ -90,26 +90,32 @@ $app->get('/produto/editar/{produto_codigo}', function($request, $response, $arg
   
 })->setName('editarProduto');
 
-$app->post('/entrada', function($request, $response, $args) {
-  $postParam = $request->getParams();
-  $produto = $postParam['item'];
-  $quantidade = $postParam['quantidade'];
-  $aut = Autenticador::instanciar();
-  $msg = Estoque::entrada($produto, $quantidade, $aut->getUsuario());
+//$app->post('/entrada', function($request, $response, $args) {
+//  $postParam = $request->getParams();
+//  
+//  
+//  $aut = Autenticador::instanciar();
+//  $msg = Estoque::entrada($produto, $quantidade, $aut->getUsuario());
+//  
+// if ($msg[2]) {
+//      $this->flash->addMessage('danger', $msg[2]);
+//  } else {
+//      $this->flash->addMessage('success', 'entrada realizada com sucesso');
+//  }
+//  
+//  return $response->withStatus(301)->withHeader('Location', 'produto');
+//})->setName('NovoProduto');
+
+$app->post('/movimentacao', function($request, $response, $args) {
+  $msg = Estoque::movimentacao($request->getParams());
   
- if ($msg[2]) {
+  if ($msg[2]) {
       $this->flash->addMessage('danger', $msg[2]);
   } else {
-      $this->flash->addMessage('success', 'entrada realizada com sucesso');
+      $this->flash->addMessage('success', 'Movimentação realizada com sucesso');
   }
-  
-  return $response->withStatus(301)->withHeader('Location', 'produto');
-})->setName('NovoProduto');
-
-
-
-
-
+  return $response->withStatus(301)->withHeader('Location', $_SERVER['HTTP_REFERER']);
+})->setName('MovimentacaoDeProduto');
 
 
 
@@ -129,14 +135,14 @@ $app->get('/solicitacoes/novo', function($request, $response, $args) {
   
   #Verifica se tem Requisição em aberto no ano corrente
   $requisicao = new Requisicao();
-  $solicitacao_aberta = $requisicao->haveRequisicaoAberta($usuario->getSetor());
+  $solicitacao_aberta = $requisicao->haveRequisicaoAberta($aut->getUsuario());
   if ($solicitacao_aberta){
     $this->flash->addMessage('danger', 'A solicitação de número <strong>'.$solicitacao_aberta->getNumero().'</strong> ainda não foi enviada.');
     return $response->withStatus(301)->withHeader('Location', '../solicitacoes');
   }
   
   #Verifica pendencia de recebimento
-  $r = Requisicao::isPendendeRecebimentoBySetor($usuario->getSetor());
+  $r = Requisicao::isPendendeRecebimentoBySetor($aut->getUsuario());
   if ($r){
     $this->flash->addMessage('danger', 'Não foi possível criar uma nova requisição. Existe uma que ainda não foi dada o recebimento. Requisição nº '.$r->getNumero());
     return $response->withStatus(301)->withHeader('Location', '../solicitacoes');

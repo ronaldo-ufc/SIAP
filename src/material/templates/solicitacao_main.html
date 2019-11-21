@@ -49,7 +49,7 @@
                   <td > <span class="badge badge-{{ solicitacao.StatusClass }}">{{solicitacao.statusnome}}</span></td>
                   <td class="col-md-2 text-center">
                     <a title="Inserir Itens na Solicitação" href="solicitacoes/{{solicitacao.requisicao_codigo}}"> <i  class="fas fa-shopping-cart fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
-                    <a title="Enviar Solicitação" href="solicitacoes/enviar/{{solicitacao.requisicao_codigo}}"> <i style="display:{{solicitacao.statusdisplay}}; color: #4cae4c" class="fas fa-cloud-upload-alt fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
+                    <a style="display:{{solicitacao.statusdisplay}};" title="Enviar Solicitação" href="solicitacoes/enviar/{{solicitacao.requisicao_codigo}}"> <i style="color: #4cae4c" class="fas fa-cloud-upload-alt fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
                     <a style="display: {{solicitacao.showBtnConfirmarRecebimento}}" onclick="setRecebimento('{{solicitacao.requisicao_codigo}}')" title="Confirmar Recebimento" data-toggle="modal" data-target="#modalConfirmarRecebimento" href="#"> <i style="color: #008000" class="far fa-thumbs-up fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
                     <!--   <a title="Excluir" onclick="return confirm('Tem certeza que deseja excluir a Solicitação {{solicitacao.numero}} e todos seus ítens?')" href="solicitacoes/excluir/{{solicitacao.requisicao_codigo}}"><i style="display:{{solicitacao.statusdisplay}}; color: red" class="far fa-trash-alt fa-2x"></i></a> -->
                   </td>

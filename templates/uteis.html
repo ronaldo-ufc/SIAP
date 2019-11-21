@@ -220,6 +220,63 @@
 </div>
 {% endmacro %}
 
+{% macro modalMovimentacao() %}
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content col-md-12">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modalLabelEntrada"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">MOVIMENTAÇÃO DE ITEM: <span id="titulo"></span></h4>
+      </div>
+      <form action="movimentacao" method="POST">
+        <input type="hidden" id="item" name="produto_codigo" value="">
+        <div class="row">
+          <br>
+          <div class="col-md-12">
+            <div class="btn-group" data-toggle="buttons">
+              <label class="btn btn-secondary active">
+                <input value="E" type="radio" name="tipo" id="tipo_J" autocomplete="off" checked> Entrada
+              </label>&nbsp;&nbsp;
+              <label class="btn btn-secondary">
+                <input value="S" type="radio" name="tipo" id="tipo_F" autocomplete="off"> &nbsp;&nbsp;Saída&nbsp;&nbsp;
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <label for="options">Tipo da Movimentação</label>
+            <select class="form-control" id="options" onchange="verifica(this.value)" name="movimentacao_tipo" required="">
+              <option value="">Selecione...</option>
+              <option value="R">Requisição</option>
+              <option value="A">Ajuste por Erro</option>
+              <option value="I">Inventário</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="quantidade">Núm. Requisição</label>
+            <input disabled="" class="form-control" id="requisicao" name="requisicao_central" type="text" value="" required="">
+          </div>
+          <div class="col-md-4">
+            <label for="quantidade">Quantidade</label>
+            <input class="form-control" id="quantidade" name="quantidade" type="number" value="1" min="1" required>
+          </div>
+        </div>
+        <br>
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Salvar">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
 {% macro modalEstorno(requisicao_codigo) %}
 <!-- Modal -->
 <div class="modal fade" id="myModalEstorno" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
@@ -253,4 +310,5 @@
     </div>
   </div>
 </div>
+
 {% endmacro %}

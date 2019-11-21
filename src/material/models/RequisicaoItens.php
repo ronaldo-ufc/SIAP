@@ -203,8 +203,9 @@ class RequisicaoItens{
   }
   
   public function showBtnEstorno() {
+    $aut = \siap\auth\models\Autenticador::instanciar();
     $requisicao = $this->getRequisicao();
-    if ($requisicao->getStatus() == self::ESTATUS_APROVADA and $requisicao->getUsuario_recebimento() and !$this->getUsuario_recebimento_estorno()){
+    if ($requisicao->getStatus() == self::ESTATUS_APROVADA and $requisicao->getUsuario_recebimento() and !$this->getUsuario_recebimento_estorno() and $aut->getUsuario() == $requisicao->getUsuario_login()){
       return 'inline';
     }
     return 'none';

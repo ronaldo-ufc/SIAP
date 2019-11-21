@@ -1,0 +1,49 @@
+{
+  "name": "deathnerd/php-wtforms",
+  "description": "A PHP rewrite of the fantastic Python library WTForms",
+  "type": "library",
+  "version": "0.5.2",
+  "license": "GPL-2.0",
+  "authors": [
+    {
+      "name": "Wes Gilleland",
+      "email": "wes.gilleland@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "WTForms\\": "src/",
+      "WTForms\\CSRF\\": "src/csrf/",
+      "WTForms\\CSRF\\Session\\": "src/csrf/session/",
+      "WTForms\\CSRF\\Core\\": "src/csrf/core/",
+      "WTForms\\Exceptions\\": "src/exceptions/",
+      "WTForms\\Fields\\": "src/fields/",
+      "WTForms\\Fields\\Core\\": "src/fields/core/",
+      "WTForms\\Fields\\HTML5\\": "src/fields/html5/",
+      "WTForms\\Fields\\Simple\\": "src/fields/simple/",
+      "WTForms\\Widgets\\": "src/widgets/",
+      "WTForms\\Widgets\\Core\\": "src/widgets/core/",
+      "WTForms\\Widgets\\HTML5\\": "src/widgets/html5/",
+      "WTForms\\Validators\\": "src/validators/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "WTForms\\Tests\\": "tests/",
+      "WTForms\\Tests\\Common\\": "tests/common/",
+      "WTForms\\Tests\\CSRF\\": "tests/csrf/",
+      "WTForms\\Tests\\Fields\\": "tests/fields/",
+      "WTForms\\Tests\\SupportingClasses\\": "tests/supporting_classes/"
+    }
+  },
+  "require": {
+    "php": ">=5.5",
+    "nesbot/carbon": ">=1.18 <2.0.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.8.*"
+  }
+}
