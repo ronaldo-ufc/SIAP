@@ -30,7 +30,7 @@ $app->map(['GET', 'POST'], '/novo', function($request, $response, $args){
       $form->errors = 'success';
 
     }else{ 
-      $msg = 'Não foi possível salvar o usuário, verifique os dados inseridos!';
+      $msg = 'CPF '.$form->getLogin().' digitado é inválido';
       $form->errors = 'danger';
     }
     return $this->renderer->render($response, 'usuario_novo.html' , array('form' => $form, 'mensagem'=>$msg));

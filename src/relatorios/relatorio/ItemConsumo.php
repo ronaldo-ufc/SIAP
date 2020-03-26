@@ -10,7 +10,7 @@ class ItemConsumo extends Relatorio{
     $produto = \siap\material\models\Produto::getById($produto_codigo);
     
     if (!$itens or !$produto){
-      return;
+      return false;
     }
     $relatorio = new ItemAprovados();
     $relatorio->setTitulo('RELATÓRIO DE CONSUMO', 'PERÍODO '.formatoDMY($data_ini). ' A '.formatoDMY($data_fim));
@@ -36,6 +36,7 @@ class ItemConsumo extends Relatorio{
     
     $relatorio->setContent($tabela);
     $this->header = array('Sucess', $relatorio->imprime(), NULL);
+    return true;
   }
      
 }

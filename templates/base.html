@@ -4,7 +4,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119522547-1"></script>
     <script>
-      base_url = 'http://10.5.5.10/siap';
+      var BASE_URL = '{{ base_url() }}';
 
     </script>
 
@@ -85,14 +85,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!--     Include all compiled plugins (below), or include individual files as needed -->
     <script src=" {{ base_url() }}/assets/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-    <script src=" {{ base_url() }}/assets/js/main.js" type="text/javascript"></script>
-    <script src=" {{ base_url() }}/assets/js/base.js" type="text/javascript"></script>
-    <script src=" {{ base_url() }}/assets/js/funcoes.js" type="text/javascript"></script>
-    <script src=" {{ base_url() }}/assets/js/services/inputSelect.js" type="text/javascript"></script>
-    <script src=" {{ base_url() }}/assets/js/services/saveItens.js" type="text/javascript"></script>
-    <script src=" {{ base_url() }}/assets/js/services/filtros.js" type="text/javascript"></script>
-    <script src=" {{ base_url() }}/assets/js/services/search.js" type="text/javascript"></script>
-    <script src=" {{ base_url() }}/assets/js/services/funcoes.js" type="text/javascript"></script>
+    <script src=" {{ base_url() }}/assets/js/main.js?v=1" type="text/javascript"></script>
+    <script src=" {{ base_url() }}/assets/js/base.js?v=1" type="text/javascript"></script>
+    <script src=" {{ base_url() }}/assets/js/funcoes.js?v=1" type="text/javascript"></script>
+    <script src=" {{ base_url() }}/assets/js/services/inputSelect.js?v=1" type="text/javascript"></script>
+    <script src=" {{ base_url() }}/assets/js/services/saveItens.js?v=1" type="text/javascript"></script>
+    <script src=" {{ base_url() }}/assets/js/services/filtros.js?v=1" type="text/javascript"></script>
+    <script src=" {{ base_url() }}/assets/js/services/search.js?v=1" type="text/javascript"></script>
+    <script src=" {{ base_url() }}/assets/js/services/funcoes.js?v=1" type="text/javascript"></script>
     <!--<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>-->
     <script src=" {{ base_url() }}/assets/js/datatables.min.js"></script>
     <script src=" {{ base_url() }}/assets/js/dataTables.bootstrap.min.js"></script>
@@ -100,13 +100,14 @@
     <script src=" {{ base_url() }}/assets/js/jquery.dataTables.min.js"></script>
 
     <script>
-
-      window.onload = function () {
-          var ip = document.getElementById('ip').value;
-          if (ip === '10.5.5.1') {
-              base_url = "http://200.129.62.148:10000/siap";
-          }
-      };
+      /*
+       window.onload = function () {
+       var ip = document.getElementById('ip').value;
+       if (ip === '10.5.5.1') {
+       base_url = "http://200.129.62.148:10000/siap";
+       }
+       };
+       */
     </script>
     {% block link %} {% endblock %}
   </body>

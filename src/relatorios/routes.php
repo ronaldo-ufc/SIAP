@@ -190,15 +190,60 @@ $app->get('/materiais-aprovado/{requisicao}', function($request, $response, $arg
   $relatorio->imprimir($this->DOMPDF);
 })->setName('Relatoriomateriais-aprovado');
 
+/*****************************************************************/
 
 $app->get('/consumo/produto', function($request, $response, $args) {
-  return $this->renderer->render($response, 'consumo_setor.html', array());
+  $msg = getMensagem($this->flash->getMessages());
+  $ini = date('Y').'-01-01';
+  $fim = date('Y-m-d');
+  return $this->renderer->render($response, 'setor_consumo.html', array( 
+      'ini'=>$ini, 
+      'fim'=>$fim, 
+      'classe'=> $msg[0], 
+      'texto'=>$msg[1]
+  ));
 })->setName('Relatorioconsumo');
 
 $app->get('/consumo/produto/pdf', function($request, $response, $args) {
   $postParam = $request->getParams();
   $relatorio = new \siap\relatorios\relatorio\ItemConsumo();
 
-  $relatorio->criar($postParam['produto_codigo'], $postParam['dataInicio'] , $postParam['dataFim']);
+  $vazio = $relatorio->criar($postParam['produto_codigo'], $postParam['dataInicio'] , $postParam['dataFim']);
+  if (!$vazio){
+    $this->flash->addMessage('warning', 'Não existe dados para serem mostrados');
+    return $response->withStatus(301)->withHeader('Location', $_SERVER['HTTP_REFERER']);
+  }
   $relatorio->imprimir($this->DOMPDF);
+})->setName('Relatorioconsumo-produto');
+
+
+/*****************************************************************/
+
+$app->get('/setor-consumo', function($request, $response, $args) {
+  $msg = getMensagem($this->flash->getMessages());
+  $setores = Setor::getAll();
+  $ini = date('Y').'-01-01';
+  $fim = date('Y-m-d');
+  return $this->renderer->render($response, 'materiais_requisitados_por_setor.html', array(
+      'setores'=>$setores, 
+      'ini'=>$ini, 
+      'fim'=>$fim, 
+      'classe'=> $msg[0], 
+      'texto'=>$msg[1]
+  ));
+  
+})->setName('RelatorioSetorConsumo');
+
+$app->get('/setor-consumo/pdf', function($request, $response, $args) {
+  
+  $relatorio = new \siap\relatorios\relatorio\SetorConsumo();
+  $vazio = $relatorio->criar($request->getParams());
+  
+  if (!$vazio){
+    $this->flash->addMessage('warning', 'Não existe dados para serem mostrados');
+    return $response->withStatus(301)->withHeader('Location', $_SERVER['HTTP_REFERER']);
+  }
+  
+  $relatorio->imprimir($this->DOMPDF);
+            
 })->setName('Relatorioconsumo-produto');

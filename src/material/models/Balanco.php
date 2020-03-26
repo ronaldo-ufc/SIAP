@@ -64,6 +64,28 @@ class Balanco {
     }
     return $result;
   }
+  static function getSetorConsumo($setor_id, $data_ini, $data_fim, $ordem){
+    $sql = "select b.produto_codigo, setor_id, p.nome, siap.item_quantidade(b.produto_codigo, setor_id) as quantidade  from siap.balanco b "
+            . " inner join siap.produto p on b.produto_codigo = p.produto_codigo "
+            . " where setor_id = ? "
+            . " and data between ? and ? "
+            . " and tipo = 'E' "
+            . " group by b.produto_codigo, b.setor_id, p.nome "
+            . " order by ";
+    
+    $sql .= $ordem == 1? " quantidade desc": " p.nome ";
+    
+            
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array($setor_id, $data_ini, $data_fim));
+    $rows = $stmt->fetchAll();
+    //return $stmt->errorInfo();
+    $result = array();
+    foreach ($rows as $row) {
+        array_push($result, self::bundle($row));
+    }
+    return $result;
+  }
 
   public function getBalanco_codigo() {
     return $this->balanco_codigo;

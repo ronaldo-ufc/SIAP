@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% import "funcoes.html" as msg %}
+{% block content %}
+<div class="col-md-12">
+  <!--{{ forms.error_message(form, mensagem )}}-->
+  {{ msg.messagem(classe, texto)}}
+</div>
+<div class="col-md-4 col-md-offset-4">
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4>Relatório de Consumo</h4></div>
+    <div class="panel-body">
+      <form id="formFiltro" method="get" action="produto/pdf">
+        <div class="row">
+
+
+          <div class="col-md-12" >
+            <div class="form-row">
+              <div class="col">
+                <div class="input-group">
+                  <span class="input-group-addon" id="basic-addon1"><i class="fas fa-search"></i></span>
+                  <input name="busca_produto" type="text" class="form-control" placeholder="Digite o nome do ítem" id="busca_produto" aria-describedby="basic-addon1">
+                </div>
+              </div>
+              <div class="col">
+                <div class="text-center" id="carregando" style="display:none;"><img style="max-width: 5%" src="http://www.crateus.ufc.br/sigce/assets/img/reload.gif" /></div>
+              </div>
+            </div>
+          </div>
+          <div  id="resBusca" class="col-md-8 col-md-offset-2">
+
+          </div>
+
+          <div id="resChoice" class="col-md-12">
+
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="dataInicio">Início</label>
+            <input required="" class="form-control" type="date" name="dataInicio" id="dataInicio" value="{{ini}}">
+          </div>
+          <div class="form-group col-md-12">
+            <label for="dataFim">Término</label>
+            <input required="" class="form-control" type="date" name="dataFim" id="dataFim" value="{{fim}}">
+          </div>
+
+        </div>
+        <div class="text-center"> <input type="submit" id="gerarRel" class="btn btn-primary" name="gerarRel" value="Gerar Relatório" ></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

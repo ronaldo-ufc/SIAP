@@ -1,4 +1,4 @@
-/* global base_url */
+/* global BASE_URL */
 
 $(document).on("click", "#btnAdicionar", function () {
     var info = $(this).attr('data-id');
@@ -98,7 +98,7 @@ $("#busca_item").keyup(function () {
     if (nomeProduto.length <= 3) return;
     $.ajax({
 
-        url: base_url+"/materiais/seach/"+nomeProduto,
+        url: BASE_URL+"/materiais/seach/"+nomeProduto,
         dataType: 'html',
         data: {produto: nomeProduto},
         type: "POST",
@@ -127,7 +127,7 @@ $("#busca_produto").keyup(function () {
     if (nomeProduto.length <= 3) return;
     $.ajax({
 
-        url: base_url+"/materiais/seach/produto/"+nomeProduto,
+        url: BASE_URL+"/materiais/seach/produto/"+nomeProduto,
         dataType: 'html',
         data: {produto: nomeProduto},
         type: "POST",
@@ -155,7 +155,7 @@ function inserirProduto(id){
     $("#resBusca").html('');
     $.ajax({
 
-        url: base_url+"/materiais/inserir/produto/"+id,
+        url: BASE_URL+"/materiais/inserir/produto/"+id,
         dataType: 'html',
         data: {produto: id},
         type: "POST",
@@ -184,7 +184,7 @@ function choiceProduto(id){
     $("#resBusca").html('');
     $.ajax({
 
-        url: base_url+"/materiais/seach/itens/"+id,
+        url: BASE_URL+"/materiais/seach/itens/"+id,
         dataType: 'html',
         data: {produto: id},
         type: "POST",
@@ -213,12 +213,12 @@ function setRecebimento(cod){
     $('#requisicao').val(cod);
 }
 function editarProduto(id){ 
-    var URL = base_url+'/materiais/produto/editar/'+id;
+    var URL = BASE_URL+'/materiais/produto/editar/'+id;
     $(window.document.location).attr('href', URL);
 }
 
 function escolherImagem(img){
-    $("#perfil").attr('src', base_url+'/uploads/imagem/'+img);
+    $("#perfil").attr('src', BASE_URL+'/uploads/imagem/'+img);
     $("#img_cod").val(img);
     document.getElementById('fileUpload').addEventListener('change', fileChanged(), false);
 }

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% import "funcoes.html" as msg %}
+{% block content %}
+<div class="col-md-12">
+  <!--{{ forms.error_message(form, mensagem )}}-->
+  {{ msg.messagem(classe, texto)}}
+</div>
+<div class="col-md-4 col-md-offset-4">
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4>Relatório de Materiais Requisitados Por Setor</h4></div>
+    <div class="panel-body">
+      <form method="get" action="setor-consumo/pdf">
+        <div class="row">
+          <div class="form-group col-md-8">
+            <label for="setor">Setor</label>
+            <select required="" class="form-control" id="setor" name="setor_id">
+              <option value="">Selecione ...</option>
+              {% for setor in setores %}
+              <option value="{{setor.setor_id}}">{{setor.nome}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="setor">Ordem</label>
+            <select class="form-control" id="ordem" name="ordem">
+              <option value="1">Maior Quantidade</option>
+              <option value="2">Alfabética</option>
+            </select>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="dataInicio">Início</label>
+            <input required="" class="form-control" type="date" name="dataInicio" id="dataInicio" value="{{ini}}">
+          </div>
+          <div class="form-group col-md-12">
+            <label for="dataFim">Término</label>
+            <input required="" class="form-control" type="date" name="dataFim" id="dataFim" value="{{fim}}">
+          </div>
+        </div>
+        <div class="text-center"> <input type="submit" id="gerarRel" class="btn btn-primary" name="gerarRel" value="Gerar Relatório" ></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

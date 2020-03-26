@@ -287,7 +287,7 @@ class Ativos {
         if($setor != "n"){
             $sql = $sql."AND ativo.setor_id = '$setor' ";
         }
-        $sql = $sql." ORDER BY data_atesto desc";
+        $sql = $sql." ORDER BY data_atesto desc limit 150";
        
         $stmt = DBSiap::getSiap()->prepare($sql);
         $stmt->execute(array());

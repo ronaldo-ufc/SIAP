@@ -2,6 +2,14 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/wamp/www/siap/assets/js/services/filtros.js</file>
+            <file>file:/C:/wamp/www/siap/templates/menu.html</file>
+            <file>file:/C:/wamp/www/siap/templates/base.html</file>
+            <file>file:/C:/wamp/www/siap/src/middleware.php</file>
+            <file>file:/C:/wamp/www/siap/src/produto/models/Ativos.php</file>
+            <file>file:/C:/wamp/www/siap/src/produto/routes.php</file>
+            <file>file:/C:/wamp/www/siap/assets/js/services/funcoes.js</file>
+        </group>
     </open-files>
 </project-private>

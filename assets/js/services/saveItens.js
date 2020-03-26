@@ -21,7 +21,7 @@ $(document).on("click", "#btnSalvarItens", function () {
     document.getElementById('nome_item').value='';  // Limpa o campo
     document.getElementById('sigla_item').value=''; // Limpa o campo
     console.log(sigla);
-    $.post("http://"+location.hostname+"/siap/services/salvar/item", "item="+item+"&nome="+valor+"&marca="+fab+"&sigla="+sigla, function( data ) {
+    $.post(BASE_URL+"/services/salvar/item", "item="+item+"&nome="+valor+"&marca="+fab+"&sigla="+sigla, function( data ) {
         $("#alerta").show();
         $("#mensagem").html(data);
         atualizaSelect(item);
@@ -30,7 +30,7 @@ $(document).on("click", "#btnSalvarItens", function () {
 
 function atualizaSelect(item) {
   
-    var url = 'http://'+location.hostname+'/siap/services/receber/item/'+item;
+    var url = BASE_URL+'/services/receber/item/'+item;
 
     $.getJSON(url, function (data)  {
 
