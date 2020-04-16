@@ -11,11 +11,11 @@ use siap\produto\models\Movimentacao;
 use siap\produto\models\AtivosReabertura;
 require_once 'models/dompdf/autoload.inc.php';
 
-
-$app->get('/show', function($request, $response, $args) {
+$app->get('/visualizar', function($request, $response, $args) {
+    $aut = Autenticador::instanciar();
     $data = array();
     $GET = $request->getParams();
-
+    
     $data['nome'] = $GET["nome"];
     $data['categoria'] = $GET["categoria"]?$GET["categoria"]:'n';
     $data['modelo'] = $GET["modelo"]?$GET["modelo"]:'n';
@@ -36,13 +36,45 @@ $app->get('/show', function($request, $response, $args) {
     }
     if ($mensagem && $data['nome']){$data['nome'] = '%';}
     //Rota virou get, filtros todos na url
-    $ativos = Ativos::Filtrar($data['nome'], $data['categoria'], $data['modelo'], $data['dataAtesto'], $data['status'], $data['conservacao'], $data['setor'], $data['fornecedor'], $data['notaFiscal'], $data['empenho'], $data['descricao']);
-//    foreach ($data as &$value) {
-//        if ($value == "" || $value == "n") {
-//            unset($value);
-//        }
-//    }
+    $ativos = Ativos::Filtrar($data['nome'], $data['patrimonio'], $data['categoria'], $data['modelo'], $data['dataAtesto'], $data['status'], $data['conservacao'], $data['setor'], $data['fornecedor'], $data['notaFiscal'], $data['empenho'], $data['descricao'], $aut->getUsuario());
+    
+    $categorias = \siap\cadastro\models\Categoria::getAll();
+    $modelos = \siap\cadastro\models\Modelo::getAll();
+    $status = siap\cadastro\models\Status::getAll();
+    $conservacoes = siap\cadastro\models\EConservacao::getAll();
+    $setores = siap\setor\models\Setor::getAll();
 
+    return $this->renderer->render($response, 'ativos_show_by_user.html', array('ativos' => $ativos, 'mensagem' => $mensagem, 'categorias' => $categorias,
+                'modelos' => $modelos, 'status' => $status, 'conservacoes' => $conservacoes, 'setores' => $setores));
+})->setName('AtivosShowByUser');
+
+$app->get('/administrar', function($request, $response, $args) {
+    $data = array();
+    $GET = $request->getParams();
+
+    $data['nome'] = $GET["nome"];
+    $data['patrimonio'] = $GET["patrimonio"];
+    $data['categoria'] = $GET["categoria"]?$GET["categoria"]:'n';
+    $data['modelo'] = $GET["modelo"]?$GET["modelo"]:'n';
+    $data['dataAtesto'] = $GET["dataAtesto"];
+    $data['status'] = $GET["status"]?$GET["status"]:'n';
+    $data['conservacao'] = $GET["conservacao"]?$GET["conservacao"]:'n';
+    $data['setor'] = $GET["setor"]?$GET["setor"]:'n';
+    $data['fornecedor'] = $GET["fornecedor"];
+    $data['notaFiscal'] = $GET["notaFiscal"];
+    $data['empenho'] = $GET['empenho'];
+    $data['descricao'] = $GET['descricao'];
+    $messages = $this->flash->getMessages();
+    #Verificando se tem mensagem de erro
+    if ($messages) {
+        foreach ($messages as $_msg) {
+            $mensagem = $_msg[0];
+        }
+    }
+    if ($mensagem && $data['nome']){$data['nome'] = '%';}
+    //Rota virou get, filtros todos na url
+    $cpf_usuario = null;
+    $ativos = Ativos::Filtrar($data['nome'], $data['patrimonio'], $data['categoria'], $data['modelo'], $data['dataAtesto'], $data['status'], $data['conservacao'], $data['setor'], $data['fornecedor'], $data['notaFiscal'], $data['empenho'], $data['descricao'], $cpf_usuario);
     
     $categorias = \siap\cadastro\models\Categoria::getAll();
     $modelos = \siap\cadastro\models\Modelo::getAll();

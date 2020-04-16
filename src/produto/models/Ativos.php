@@ -248,12 +248,16 @@ class Ativos {
       }
       return self::bundle($row);
     }
-    static function Filtrar($nome,$categoria,$modelo,$atesto,$status,$conservacao,$setor,$fornecedor,$nota_fiscal,$empenho,$descricao){
+    static function Filtrar($nome, $patrimonio, $categoria,$modelo,$atesto,$status,$conservacao,$setor,$fornecedor,$nota_fiscal,$empenho,$descricao,$cpf_usuario){
         $sql = "SELECT * from siap.ativo where true ";
         if($nome){
             $nome = strtoupper(tirarAcentos($nome));
             $sql = $sql."AND ativo.nome LIKE '%$nome%' ";
         }
+        if($patrimonio){
+            $sql = $sql."AND ativo.patrimonio LIKE '%$patrimonio%' ";
+        }
+        
         if($modelo != "n"){
             $sql = $sql."AND ativo.modelo_id = '$modelo' ";
         }
@@ -287,6 +291,13 @@ class Ativos {
         if($setor != "n"){
             $sql = $sql."AND ativo.setor_id = '$setor' ";
         }
+        
+        if ($cpf_usuario) {
+          $sql = $sql." AND setor_id = (select setor_id 
+				  from setor_responsavel 
+				  where responsavel_id = '$cpf_usuario' and current_date between data_inicio and data_fim)";
+        }
+        
         $sql = $sql." ORDER BY data_atesto desc limit 150";
        
         $stmt = DBSiap::getSiap()->prepare($sql);
