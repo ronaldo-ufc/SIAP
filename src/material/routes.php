@@ -71,6 +71,7 @@ $app->post('/produto/editar/{produto_codigo}', function($request, $response, $ar
   }else{
      $file = $postParam['imagem_produto'];
   }
+  //var_dump($file);
   $msg = Produto::update($postParam['c_ufc'], $postParam['c_barras'], $postParam['nome'], $postParam['unidade'], $postParam['grupo'], $postParam['observacao'], $postParam['quantidade_minima'], $file, $postParam['localizacao'], $args['produto_codigo']);
   if ($msg[2]) {
       $this->flash->addMessage('danger', $msg[2]);
@@ -90,23 +91,8 @@ $app->get('/produto/editar/{produto_codigo}', function($request, $response, $arg
   
 })->setName('editarProduto');
 
-//$app->post('/entrada', function($request, $response, $args) {
-//  $postParam = $request->getParams();
-//  
-//  
-//  $aut = Autenticador::instanciar();
-//  $msg = Estoque::entrada($produto, $quantidade, $aut->getUsuario());
-//  
-// if ($msg[2]) {
-//      $this->flash->addMessage('danger', $msg[2]);
-//  } else {
-//      $this->flash->addMessage('success', 'entrada realizada com sucesso');
-//  }
-//  
-//  return $response->withStatus(301)->withHeader('Location', 'produto');
-//})->setName('NovoProduto');
-
 $app->post('/movimentacao', function($request, $response, $args) {
+  
   $msg = Estoque::movimentacao($request->getParams());
   
   if ($msg[2]) {

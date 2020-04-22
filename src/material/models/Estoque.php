@@ -2,6 +2,7 @@
 namespace siap\material\models;
 use siap\models\DBSiap;
 use siap\auth\models\Autenticador;
+include_once 'public/uteis/funcoes.php';
 
 class Estoque {
   const ALMOXARIFADO = 22;
@@ -30,8 +31,9 @@ class Estoque {
                                         setor_id,
                                         usuario_cadastro_login,
                                         requisicao_central,
-                                        movimentacao_tipo) 
-             VALUES (?, ?, ?, ?, ?, ?, ?)";
+                                        movimentacao_tipo,
+                                        vlr_uni)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = DBSiap::getSiap()->prepare($sql);
     $stmt->execute(array($postParam['tipo'],
                         $postParam['quantidade'],
@@ -40,6 +42,7 @@ class Estoque {
                         $aut->getUsuario(),
                         $postParam['requisicao_central'],
                         $postParam['movimentacao_tipo'],
+                        moedaBanco($postParam['vlr_uni'])
             ));
     return $stmt->errorInfo();
   }
