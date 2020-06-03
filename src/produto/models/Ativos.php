@@ -116,7 +116,7 @@ class Ativos {
                 . " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         $stmt = DBSiap::getSiap()->prepare($sql);
-        $stmt->execute(array($patrimonio,
+        $stmt->execute(array(trim($patrimonio),
             strtoupper(tirarAcentos($nome)),
             $data_atesto,
             strtoupper(tirarAcentos($nota_fiscal)),
