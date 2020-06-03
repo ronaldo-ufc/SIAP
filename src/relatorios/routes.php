@@ -8,33 +8,41 @@ use siap\relatorios\relatorio\RelatorioSetor;
 use \siap\relatorios\relatorio\CategoriaFiltro;
 use siap\relatorios\relatorio\ItemAprovados;
 
-$app->map(['GET', 'POST'], '/bens', function($request, $response, $args) {
-    $setores = Setor::getAll();
-    if ($request->isPost()) {
-        $dompdf = $this->DOMPDF;
-        $dompdf->setPaper('A4', 'portrait'); //landscape
-        $postParam = $request->getParams();
-        $setor = Setor::getById(intval($postParam["radio"]));
-        if (intval($postParam["radio"]) != -1) {
-            $relatorio_setor = RelatorioSetor::bundle(intval($postParam["radio"]), $setor, $setor->getNome());
-            $header = $relatorio_setor->start_pdf();
-            if ($header[2] != NULL) {
-                return $this->renderer->render($response, 'bens_permanentes.html', array('setores' => $setores, "mensagemErro" => $header[2]));
-            } else {
-                return $this->renderer->render($response, 'gerar_pdf.html', array('dompdf' => $dompdf, 'array' => array("Attachment" => FALSE), 'header' => $header[1]));
-            }
-        } else {
-            $relatorio_all_setor = \siap\relatorios\relatorio\TodosSetores::bundle();
-            $header = $relatorio_all_setor->start_pdf();
-            if ($header[2] != NULL) {
-                return $this->renderer->render($response, 'bens_permanentes.html', array('setores' => $setores, "mensagemErro" => $header[2]));
-            } else {
-                return $this->renderer->render($response, 'gerar_pdf.html', array('dompdf' => $dompdf, 'array' => array("Attachment" => FALSE), 'header' => $header[1]));
-            }
-        }
-    }
-    return $this->renderer->render($response, 'bens_permanentes.html', array('setores' => $setores));
+$app->get('/bens', function($request, $response, $args) {
+  $setores = Setor::getAll();
+  return $this->renderer->render($response, 'bens_permanentes.html', array('setores' => $setores));
 })->setName('RelatoriosBemPermanente');
+
+$app->get('/gerarpdf-bens', function($request, $response, $args) {
+//  ini_set('display_errors',1);
+//  ini_set('display_startup_erros',1);
+//  error_reporting(E_ALL);
+    
+//  $dompdf = $this->DOMPDF;
+//  $dompdf->setPaper('A4', 'landscape'); //landscape
+  $postParam = $request->getParams();
+  
+  if (intval($postParam["radio"]) != -1) {
+    $setor = Setor::getById(intval($postParam["radio"]));
+    $relatorio_setor = RelatorioSetor::bundle(intval($postParam["radio"]), $setor->getNome());
+    $header = $relatorio_setor->start_pdf();
+    if ($header[2] != NULL) {
+        return $response->withStatus(301)->withHeader('Location', 'bens');
+    } else {
+        echo $header[1]; return;
+    }
+  } else {
+      $relatorio_all_setor = \siap\relatorios\relatorio\TodosSetores::bundle();
+      $header = $relatorio_all_setor->start_pdf();
+      
+      if ($header[2] != NULL) {
+          return $response->withStatus(301)->withHeader('Location', 'bens');
+      } else {
+          echo $header[1]; return;
+      }
+  }
+    
+})->setName('gerarPDFBens');
 
 $app->map(['GET', 'POST'], '/categoria', function($request, $response, $args) {
     $modelos = \siap\cadastro\models\Modelo::getAll();
@@ -49,6 +57,7 @@ $app->map(['GET', 'POST'], '/categoria', function($request, $response, $args) {
         $postParam = $request->getParams();
         $relatorio_categoria = CategoriaFiltro::bundle();
         $header = $relatorio_categoria->start_pdf($postParam["nome"], $postParam['categoria'], $postParam["modelo"], $postParam["dataAtesto"], $postParam["status"], $postParam["conservacao"], $postParam["setor"], $postParam["fornecedor"], $postParam["notaFiscal"], $postParam['empenho'], $postParam['descricao']);
+        
         if ($header[2] != NULL) {
             return $this->renderer->render($response, 'bens_categoria.html', array('modelos' => $modelos, 'status' => $status, 'conservacoes' => $conservacoes, 'setores' => $setores, 'categorias' => $categorias, "mensagemErro" => $header[2]));
         } else {

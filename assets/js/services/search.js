@@ -92,10 +92,10 @@ function notify(icon,title,mensagem){
 function verificarCheckBox() {
     var checkbox = $('input:checkbox[name^=patrimonios]:checked');
     if(checkbox.length == 1) {
-        window.location.href = "http://"+location.hostname+"/siap/ativo/movimentacao/"+checkbox.val();
+        window.location.href = BASE_URL+"/ativo/movimentacao/"+checkbox.val();
     }
     else if(checkbox.length > 1){
-        let url = "http://"+location.hostname+"/siap/ativo/mov/grupo/";
+        let url = BASE_URL+"/ativo/mov/grupo/";
         for (var i=0;i<checkbox.length;i++){
             if(i == checkbox.length-1){
                 url = url+checkbox[i].value;
@@ -109,19 +109,20 @@ function verificarCheckBox() {
 //    console.log(url);
         window.location.href = url;
     }
+    
     else{
         //window.location.href = "http://"+location.hostname+"/siap/ativo/show";
-        alert('Para realizar uma movimentação em lote, é necessário selecionar 2 ou mais bens.');
+        alert('Para realizar uma movimentação em lote, é necessário selecionar no mínimo dois ativos.');
     }
 }
 
 function verificarCheckBoxRelatorio() {
     var checkbox = $('input:checkbox[name^=patrimonios]:checked');
     if(checkbox.length == 1) {
-        window.location.href = "http://"+location.hostname+"/siap/relatorios/setor/movimentacao/"+checkbox.val();
+        window.location.href = BASE_URL+"/relatorios/setor/movimentacao/"+checkbox.val();
     }
     else if(checkbox.length > 1){
-        let url = "http://"+location.hostname+"/siap/relatorios/setor/mov/grupo/";
+        let url = BASE_URL+"/relatorios/setor/mov/grupo/";
         for (var i=0;i<checkbox.length;i++){
             if(i == checkbox.length-1){
                 url = url+checkbox[i].value;

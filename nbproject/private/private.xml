@@ -3,10 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp/www/siap/src/material/models/Estoque.php</file>
-            <file>file:/C:/wamp/www/siap/src/material/routes.php</file>
-            <file>file:/C:/wamp/www/siap/public/uteis/funcoes.php</file>
-            <file>file:/C:/wamp/www/siap/templates/uteis.html</file>
+            <file>file:/C:/wamp/www/siap/src/relatorios/routes.php</file>
+            <file>file:/C:/wamp/www/siap/src/relatorios/relatorio/RelatorioSetor.php</file>
+            <file>file:/C:/wamp/www/siap/src/relatorios/templates/bens_permanentes.html</file>
+            <file>file:/C:/wamp/www/siap/src/relatorios/relatorio/TodosSetores.php</file>
         </group>
     </open-files>
 </project-private>

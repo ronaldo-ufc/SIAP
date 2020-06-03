@@ -17,19 +17,21 @@ class TodosSetores {
         date_default_timezone_set('America/Sao_Paulo');
         $data = date("d-m-Y");
         $hora = date('H:i:s');
-        $ativos = \siap\produto\models\Ativos::getAll();
-        $tamanho = retornaTamanhoLista($ativos);
+        $tamanho = \siap\produto\models\Ativos::getCountAll();
+        $setores = Setor::getAll();
+        
         if ($tamanho == 0) {
             return array('Erro', 'info', 'Não existem registros cadastrados para este setor.');
         } else {
             $header = '<style>th, td { border-bottom: 1px solid black } .relatorio tr:nth-child(even) {background: #FFF} .relatorio tr:nth-child(odd) {background: #EEE}@page {@bottom-right {content: counter(page) " of " counter(pages);}}</style><body><div style="text-align: center;  border-style: solid; border-width: 1px; padding: 10px 2px 10px 2px;">
-        <img style="max-width: 100px; max-height: 100px; margin-left: 20px;" src="assets/img/brasao_ufc.png" align="left">
+        <img style="max-width: 100px; max-height: 100px; margin-left: 20px;" src="../assets/img/brasao_ufc.png" align="left">
         <p><b>UNIVERSIDADE FEDERAL DO CEARÁ<br />CAMPUS DE CRATEÚS<br />SISTEMA DE ALMOXARIFADO E PATRIMÔNIO - SIAP</b><br />
             EMITIDO EM ' . $data . ' ' . $hora . '</p>'
                     . '</div><br />';
             $titulo = '<div style="text-align:center;"><p><b>RELATÓRIO DOS BENS PERMANENTES POR SETOR</b></p></div><br />';
             $tabel = '';
-            foreach (Setor::getAll() as $setor) {
+            foreach ($setores as $setor) {
+             
                 $ativos = \siap\produto\models\Ativos::getAllBySetor($setor->getSetor_id());
                 $tamanho = retornaTamanhoLista($ativos);
                 if ($tamanho == 0) {
@@ -54,7 +56,6 @@ class TodosSetores {
                             . '<td>' . $ativo->getConservacao()->getNome() . '</td>'
                             . '</tr>';
                 }
-//            <tr style="background:#FFF;"><th >Patrimônio</th><th >Nome</th><th >Categoria</th><th >Modelo</th><th >Fabricante</th><th >Est. Conservação</th></tr>
                 $tabel .= '</tbody>'
                         . '<div style="text-align:left; page-break-inside:avoid; page-break-after:auto;"><br /><b>TOTAL: ' . $tamanho . '</b></div>
             </table>'
@@ -63,11 +64,8 @@ class TodosSetores {
                         . '</div><br />';
             }
             $tabel .= '</body>';
-
-////        $footer = '<footer style="position:absolute;bottom:0;width:100%;" ><p>Posted by: Hege Refsnes</p><p>Contact information: <a href="mailto:someone@example.com">someone@example.com</a>.</p></footer>';
             $header .= $titulo;
             $header .= $tabel;
-////        $header .= $footer;
             return array('Sucess', $header, NULL);
         }
     }

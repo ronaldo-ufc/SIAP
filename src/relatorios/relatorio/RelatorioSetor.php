@@ -12,10 +12,9 @@ class RelatorioSetor {
     private $setor;
     private $setor_id;
 
-    static function bundle($setor_id, $setor, $nome) {
+    static function bundle($setor_id, $nome) {
         $u = new RelatorioSetor();
         $u->setSetor_id($setor_id);
-        $u->setSetor($setor);
         $u->setNome($nome);
         return $u;
     }

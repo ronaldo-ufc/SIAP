@@ -17,12 +17,12 @@ $app->get('/visualizar', function($request, $response, $args) {
     $GET = $request->getParams();
     
     $data['nome'] = $GET["nome"];
-    $data['categoria'] = $GET["categoria"]?$GET["categoria"]:'n';
-    $data['modelo'] = $GET["modelo"]?$GET["modelo"]:'n';
+    $data['categoria'] = $GET["categoria"]?$GET["categoria"]:null;
+    $data['modelo'] = $GET["modelo"]?$GET["modelo"]:null;
     $data['dataAtesto'] = $GET["dataAtesto"];
-    $data['status'] = $GET["status"]?$GET["status"]:'n';
-    $data['conservacao'] = $GET["conservacao"]?$GET["conservacao"]:'n';
-    $data['setor'] = $GET["setor"]?$GET["setor"]:'n';
+    $data['status'] = $GET["status"]?$GET["status"]:null;
+    $data['conservacao'] = $GET["conservacao"]?$GET["conservacao"]:null;
+    $data['setor'] = $GET["setor"]?$GET["setor"]:null;
     $data['fornecedor'] = $GET["fornecedor"];
     $data['notaFiscal'] = $GET["notaFiscal"];
     $data['empenho'] = $GET['empenho'];
@@ -38,6 +38,7 @@ $app->get('/visualizar', function($request, $response, $args) {
     //Rota virou get, filtros todos na url
     $ativos = Ativos::Filtrar($data['nome'], $data['patrimonio'], $data['categoria'], $data['modelo'], $data['dataAtesto'], $data['status'], $data['conservacao'], $data['setor'], $data['fornecedor'], $data['notaFiscal'], $data['empenho'], $data['descricao'], $aut->getUsuario());
     
+       
     $categorias = \siap\cadastro\models\Categoria::getAll();
     $modelos = \siap\cadastro\models\Modelo::getAll();
     $status = siap\cadastro\models\Status::getAll();
@@ -48,18 +49,18 @@ $app->get('/visualizar', function($request, $response, $args) {
                 'modelos' => $modelos, 'status' => $status, 'conservacoes' => $conservacoes, 'setores' => $setores));
 })->setName('AtivosShowByUser');
 
-$app->get('/administrar', function($request, $response, $args) {
+$app->get('/show', function($request, $response, $args) {
     $data = array();
     $GET = $request->getParams();
 
     $data['nome'] = $GET["nome"];
     $data['patrimonio'] = $GET["patrimonio"];
-    $data['categoria'] = $GET["categoria"]?$GET["categoria"]:'n';
-    $data['modelo'] = $GET["modelo"]?$GET["modelo"]:'n';
+    $data['categoria'] = $GET["categoria"]?$GET["categoria"]:null;
+    $data['modelo'] = $GET["modelo"]?$GET["modelo"]:null;
     $data['dataAtesto'] = $GET["dataAtesto"];
-    $data['status'] = $GET["status"]?$GET["status"]:'n';
-    $data['conservacao'] = $GET["conservacao"]?$GET["conservacao"]:'n';
-    $data['setor'] = $GET["setor"]?$GET["setor"]:'n';
+    $data['status'] = $GET["status"]?$GET["status"]:null;
+    $data['conservacao'] = $GET["conservacao"]?$GET["conservacao"]:null;
+    $data['setor'] = $GET["setor"]?$GET["setor"]:null;
     $data['fornecedor'] = $GET["fornecedor"];
     $data['notaFiscal'] = $GET["notaFiscal"];
     $data['empenho'] = $GET['empenho'];
@@ -558,29 +559,28 @@ $app->map(['GET', 'POST'], '/mov/grupo[/{params:.*}]', function($request, $respo
         // handle single input with single file upload
         $uploadedFile = $uploadedFiles['documento'];
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-            $filename = moveUploadedFile($directory, $uploadedFile);
-            if ($filename) {
-                $aut = Autenticador::instanciar();
-                $postParam = $request->getParams();
-                $patrimonio = $postParam['pat'];
-                $tam = sizeof($patrimonio);
-                $count = 0;
-                foreach ($patrimonio as $numero) {
-                    $bem = Ativos::getById($numero);
-                    if ($bem) {
-                        array_push($lista, $bem);
-                    }
-                    $msg = Movimentacao::create($numero, $postParam['setor'], $postParam['movimentacao_data'], $filename, $postParam['observacao'], $aut->getUsuario());
-                    if ($msg) {
-                        $count += 1;
-                    }
-                }
-                if ($count == sizeof($patrimonio)) {
-                    $mensagem = 'Operação Realizada com Sucesso.';
-                } else {
-                    $mensagemErro = 'No período desta movimentação não existe um Agente Setorial responsável pelo setor. Cadastre primeiro o Agente Setorial para o setor.';
-                }
+          $filename = moveUploadedFile($directory, $uploadedFile);
+        }else{
+          $filename = 'sem documento';
+        }
+        $aut = Autenticador::instanciar();
+        $postParam = $request->getParams();
+        $patrimonio = $postParam['pat'];
+        $count = 0;
+        foreach ($patrimonio as $numero) {
+            $bem = Ativos::getById($numero);
+            if ($bem) {
+                array_push($lista, $bem);
             }
+            $msg = Movimentacao::create($numero, $postParam['setor'], $postParam['movimentacao_data'], $filename, $postParam['observacao'], $aut->getUsuario());
+            if ($msg) {
+                $count += 1;
+            }
+        }
+        if ($count == sizeof($patrimonio)) {
+            $mensagem = 'Operação Realizada com Sucesso.';
+        } else {
+            $mensagemErro = 'No período desta movimentação não existe um Agente Setorial responsável pelo setor. Cadastre primeiro o Agente Setorial para o setor.';
         }
     } else {
         //explode("&", $args["patrimonios"]):: Pegando tudo após grupo/ e separando pelo caractere '/'

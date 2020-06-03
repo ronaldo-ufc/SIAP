@@ -18,8 +18,8 @@
 
           <div class="form-group col-md-2">
             <label for="categoria">Categoria</label>
-            <select required class="form-control" id="categoria" name="categoria">
-              <option value="n">  </option>
+            <select class="form-control" id="categoria" name="categoria">
+              <option value="">  </option>
               {% for _categoria in categorias %}
               <option value="{{_categoria.categoria_id}}"> {{_categoria.nome}} </option>
               {% endfor %}
@@ -28,8 +28,8 @@
 
           <div class="form-group col-md-2">
             <label for="modelo">Modelo</label>
-            <select required class="form-control" id="modelo" name="modelo">
-              <option value="n">  </option>
+            <select class="form-control" id="modelo" name="modelo">
+              <option value="">  </option>
               {% for _modelo in modelos %}
               <option value="{{_modelo.modelo_id}}"> {{_modelo.nome}} </option>
               {% endfor %}
@@ -38,8 +38,8 @@
 
           <div class="form-group col-md-2">
             <label for="conservacao">Estado de Conservação</label>
-            <select required class="form-control" id="conservacao" name="conservacao">
-              <option value="n">  </option>
+            <select class="form-control" id="conservacao" name="conservacao">
+              <option value="">  </option>
               {% for _conservacao in conservacoes %}
               <option value="{{_conservacao.conservacao_id}}"> {{_conservacao.nome}} </option>
               {% endfor %}
@@ -58,8 +58,8 @@
         <div class="row">
           <div class="form-group col-md-3">
             <label for="setor">Setor</label>
-            <select required class="form-control" id="setor" name="setor">
-              <option value="n">  </option>
+            <select class="form-control" id="setor" name="setor">
+              <option value="">  </option>
               {% for _setor in setores %}
               <option value="{{_setor.setor_id}}"> {{_setor.nome}} </option>
               {% endfor %}
@@ -86,8 +86,8 @@
 
           <div class="form-group col-md-2">
             <label for="status">Status</label>
-            <select required class="form-control" id="status" name="status">
-              <option value="n">  </option>
+            <select class="form-control" id="status" name="status">
+              <option value="">  </option>
               {% for _status in status %}
               <option value="{{_status.status_id}}"> {{_status.nome}} </option>
               {% endfor %}
@@ -130,9 +130,9 @@
               <tr >
                 <th >
                   <div class="img-responsive">
-<div class="img-ativo-show"  style="background-image: url('../uploads/imagem/{{ ativo.foto}} '); ">
+                    <div class="img-ativo-show"  style="background-image: url('../uploads/imagem/{{ ativo.foto}} '); ">
 
-    <!--  <img style="width: 50px"   src="../uploads/imagem/{{ativo.foto}}">-->
+                      <!--  <img style="width: 50px"   src="../uploads/imagem/{{ativo.foto}}">-->
                     </div>
                   </div>
                 </th>
@@ -148,7 +148,7 @@
               {% endfor %}
             </tbody>
           </table>
-         </div>
+        </div>
       </div>
     </div        >
     <!--</form>-->

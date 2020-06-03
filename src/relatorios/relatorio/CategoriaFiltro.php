@@ -18,7 +18,8 @@ class CategoriaFiltro {
         date_default_timezone_set('America/Sao_Paulo');
         $data = date("d-m-Y");
         $hora = date('H:i:s');
-        $ativos = Ativos::Filtrar($nome, $categoria, $modelo, $atesto, $status, $conservacao, $setor, $fornecedor, $nota_fiscal, $empenho, $descricao);
+        $ativos = Ativos::Filtrar($nome, $categoria, $modelo, $atesto, $status, $conservacao, $setor, $fornecedor, $nota_fiscal, $empenho, $descricao, null, null);
+               
         if ($ativos == FALSE) {
             return array('Erro', 'info', 'Não existem registros para os filtros especificados na consulta.');
         } else {

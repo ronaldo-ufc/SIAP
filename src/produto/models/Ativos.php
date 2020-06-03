@@ -255,27 +255,27 @@ class Ativos {
             $sql = $sql."AND ativo.nome LIKE '%$nome%' ";
         }
         if($patrimonio){
-            $sql = $sql."AND ativo.patrimonio LIKE '%$patrimonio%' ";
+            $sql = $sql."AND ativo.patrimonio like '%$patrimonio%' ";
         }
         
-        if($modelo != "n"){
+        if($modelo){
             $sql = $sql."AND ativo.modelo_id = '$modelo' ";
         }
-        if($categoria != "n"){
+        if($categoria){
             $sql = $sql."AND ativo.categoria_id = '$categoria' ";
         }
         if($atesto){
             $sql = $sql."AND ativo.data_atesto = '$atesto' ";
         }
-        if($status != "n"){
+        if($status){
             $sql = $sql."AND ativo.status_id = '$status' ";
         }
-        if($conservacao != "n"){
+        if($conservacao){
             $sql = $sql."AND ativo.conservacao_id = '$conservacao' ";
         }
         if($fornecedor){
             $fornecedor = strtoupper(tirarAcentos($fornecedor));
-            $sql = $sql."AND ativo.fornecedor LIKE '%$fornecedor%' ";
+            $sql = $sql."AND ativo.fornecedor like '%$fornecedor%' ";
         }
         if($nota_fiscal){
             $sql = $sql."AND ativo.nota_fiscal = '$nota_fiscal' ";
@@ -286,20 +286,21 @@ class Ativos {
         }
         if($descricao){
             $descricao = strtoupper(tirarAcentos($descricao));
-            $sql = $sql."AND ativo.descricao LIKE '%$descricao%' ";
+            $sql = $sql."AND ativo.descricao like '%$descricao%' ";
         }
-        if($setor != "n"){
+        if($setor){
             $sql = $sql."AND ativo.setor_id = '$setor' ";
         }
         
         if ($cpf_usuario) {
-          $sql = $sql." AND setor_id = (select setor_id 
+          
+          $sql = $sql." AND setor_id = (select setor_id
 				  from setor_responsavel 
 				  where responsavel_id = '$cpf_usuario' and current_date between data_inicio and data_fim)";
         }
         
         $sql = $sql." ORDER BY data_atesto desc limit 150";
-       
+        
         $stmt = DBSiap::getSiap()->prepare($sql);
         $stmt->execute(array());
         $rows = $stmt->fetchAll();
@@ -308,7 +309,7 @@ class Ativos {
             array_push($result, self::bundle($row));
         }
         if (sizeof($result) == 0) {
-            return false;
+            return $stmt->errorInfo();
         } else {
             return $result;
         }
@@ -328,6 +329,17 @@ class Ativos {
             array_push($result, self::bundle($row));
         }
         return $result;
+    }
+    
+    static function getCountAll() {
+        $sql = "select count(*) as quantidade from siap.ativo";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array());
+        $row = $stmt->fetch();
+        if ($row == null) {
+            return 0;
+        }
+        return $row['quantidade'];
     }
     
     static function getAllEmpenho() {
