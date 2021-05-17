@@ -48,14 +48,15 @@ class Balanco {
     return $u;
   }
   static function getAllAgrupadoByProduto($produto_codigo, $data_ini, $data_fim, $setor_id=22){
-    $sql = "select setor_id, produto_codigo, siap.item_quantidade(produto_codigo, setor_id) as quantidade  from siap.balanco b "
+    $sql = "select setor_id, produto_codigo, siap.qtdRequisitadoBysetor(produto_codigo, setor_id, ?, ?) as quantidade  from siap.balanco b "
             . " where produto_codigo = ? "
             . " and data between ? and ? "
             . " and tipo = 'E' "
             . " and setor_id <> ? "
-            . " group by b.setor_id, produto_codigo";
+            . " group by b.setor_id, produto_codigo"
+            . " order by quantidade desc";
     $stmt = DBSiap::getSiap()->prepare($sql);
-    $stmt->execute(array($produto_codigo, $data_ini, $data_fim, $setor_id));
+    $stmt->execute(array($data_ini, $data_fim, $produto_codigo, $data_ini, $data_fim, $setor_id));
     $rows = $stmt->fetchAll();
     //return $stmt->errorInfo();
     $result = array();
@@ -65,11 +66,12 @@ class Balanco {
     return $result;
   }
   static function getSetorConsumo($setor_id, $data_ini, $data_fim, $ordem){
-    $sql = "select b.produto_codigo, setor_id, p.nome, siap.item_quantidade(b.produto_codigo, setor_id) as quantidade  from siap.balanco b "
+    $sql = "select b.produto_codigo, setor_id, p.nome, siap.qtdRequisitadoBysetor(b.produto_codigo, setor_id, ?, ?) as quantidade  from siap.balanco b "
             . " inner join siap.produto p on b.produto_codigo = p.produto_codigo "
             . " where setor_id = ? "
             . " and data between ? and ? "
             . " and tipo = 'E' "
+            . " and siap.qtdRequisitadoBysetor(b.produto_codigo, setor_id, ?, ?) > 0"
             . " group by b.produto_codigo, b.setor_id, p.nome "
             . " order by ";
     
@@ -77,7 +79,7 @@ class Balanco {
     
             
     $stmt = DBSiap::getSiap()->prepare($sql);
-    $stmt->execute(array($setor_id, $data_ini, $data_fim));
+    $stmt->execute(array($data_ini, $data_fim, $setor_id, $data_ini, $data_fim, $data_ini, $data_fim));
     $rows = $stmt->fetchAll();
     //return $stmt->errorInfo();
     $result = array();

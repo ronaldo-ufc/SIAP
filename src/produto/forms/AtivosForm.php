@@ -7,6 +7,7 @@ use siap\cadastro\models\Fabricante;
 use siap\cadastro\models\Modelo;
 use siap\cadastro\models\Aquisicao;
 use siap\cadastro\models\Status;
+use siap\cadastro\models\Estado;
 use siap\cadastro\models\EConservacao;
 use WTForms\Form;
 use WTForms\Validators\InputRequired;
@@ -62,6 +63,10 @@ class AtivosForm extends Form {
     if(!$_status){
       $_status = Status::getAll();
     }
+    $_estado = Estado::getAllById($estado_id);
+    if(!$_estado){
+      $_estado = Estado::getAll();
+    }
     $econservacao = EConservacao::getAllById($conservacao_id);
     if(!$econservacao){
       $econservacao = EConservacao::getAll();
@@ -78,6 +83,12 @@ class AtivosForm extends Form {
     $status = [];
     foreach($_status as $val){
       array_push($status, array($val->getStatus_id(), $val->getNome()));
+    }
+    
+    #Cria o Array para alimentar os select dos Estado
+    $estado = [];
+    foreach($_estado as $val){
+      array_push($estado, array($val->getEstado_id(), $val->getNome()));
     }
     
     #Cria o Array para alimentar os select dos Aquisicão
@@ -130,10 +141,14 @@ class AtivosForm extends Form {
     $this->fornecedor = new StringField([
     ]);
     
-    $this->descricao = new TextAreaField(["validators" => [new InputRequired("Descrição do ativo é obrigatória")]
-    ]);
+    $this->descricao = new TextAreaField(
+            ["validators" => [new InputRequired("Descrição do ativo é obrigatória")],
+            "rows" => 10
+    ]
+    );
     
     $this->observacao = new TextAreaField([
+        "rows" => 5
     ]);
     
     $this->foto = new FileField(["value" => $foto
@@ -164,8 +179,12 @@ class AtivosForm extends Form {
                                     "validators" => [new InputRequired("Campo de status é obrigatório")]
     ]);
     
+    $this->estado = new SelectField(["choices" => $estado,
+                                    "validators" => [new InputRequired("Campo de Estado é obrigatório")]
+    ]);
+    
     $this->estado_de_conservacao = new SelectField(["choices" => $conservacao,
-                                    "validators" => [new InputRequired("Campo de aquisição é obrigatório")]
+                                    "validators" => [new InputRequired("Campo de Estado de Conservação é obrigatório")]
     ]);
     //$this->data_inicio->data = date('Y-m-d');
   }
@@ -216,6 +235,10 @@ class AtivosForm extends Form {
 
   function getStatus() {
     return $this->status->data;
+  }
+  
+  function getEstado() {
+    return $this->estado->data;
   }
 
   function getSetor() {

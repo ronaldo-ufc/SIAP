@@ -63,22 +63,27 @@ $app->map(['GET', 'DELETE'], '/excluir/{produto_codigo}', function($request, $re
 })->setName('excluirProduto');
 
 $app->post('/produto/editar/{produto_codigo}', function($request, $response, $args) {
-  $postParam = $request->getParams();
-  
-  if (!$postParam['imagem_produto'] && $_FILES['img']){
-    $upload = new siap\models\UploadImagem();
-    $file = $upload->preparar($_FILES['img'], $this->get('upload_directory_imagem'));
-  }else{
-     $file = $postParam['imagem_produto'];
-  }
-  //var_dump($file);
-  $msg = Produto::update($postParam['c_ufc'], $postParam['c_barras'], $postParam['nome'], $postParam['unidade'], $postParam['grupo'], $postParam['observacao'], $postParam['quantidade_minima'], $file, $postParam['localizacao'], $args['produto_codigo']);
-  if ($msg[2]) {
-      $this->flash->addMessage('danger', $msg[2]);
-  } else {
-      $this->flash->addMessage('success', 'Produto atualizado com sucesso.');
-  }
-  return $response->withStatus(301)->withHeader('Location', '../../produto');
+    $postParam = $request->getParams();  
+    if ($postParam['imagem_produto']){
+        $file = $postParam['imagem_produto'];
+    }
+    
+    if ($postParam['atualizar_imagem']){
+        $file = $postParam['atualizar_imagem'];
+    }
+    
+    if ($_FILES['img']['name']!=""){
+      $upload = new siap\models\UploadImagem();
+      $file = $upload->preparar($_FILES['img'], $this->get('upload_directory_imagem'));
+    }
+    
+    $msg = Produto::update($postParam['c_ufc'], $postParam['c_barras'], $postParam['nome'], $postParam['unidade'], $postParam['grupo'], $postParam['observacao'], $postParam['quantidade_minima'], $file, $postParam['localizacao'], $args['produto_codigo']);
+    if ($msg[2]) {
+        $this->flash->addMessage('danger', $msg[2]);
+    } else {
+        $this->flash->addMessage('success', 'Produto atualizado com sucesso.');
+    }
+    return $response->withStatus(301)->withHeader('Location', '../../produto');
 })->setName('SalvarEditarProduto');
 
 $app->get('/produto/editar/{produto_codigo}', function($request, $response, $args) {
@@ -145,7 +150,13 @@ $app->get('/solicitacoes/{requisicao_codigo}', function($request, $response, $ar
   $aut = Autenticador::instanciar();
   $usuario = Usuario::getByLogin($aut->getUsuario());
   $requisicao = Requisicao::getByCodigo($requisicao_codigo);
+  
+  if ($requisicao->getSetor_destino() != $usuario->getSetor()){
+    return $response->withStatus(301)->withHeader('Location', '../solicitacoes');
+  }
+  
   $itens = RequisicaoItens::getByRequisicao($requisicao_codigo);
+  
   return $this->renderer->render($response, 'solicitacao_itens.html', array('setor_nome'=>$usuario->getSetorNome(), 'requisicao'=>$requisicao, 'itens'=>$itens, 'classe'=> $msg[0], 'texto'=>$msg[1]));
 })->setName('ItensSolicitacoes');
 

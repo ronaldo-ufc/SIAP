@@ -15,7 +15,7 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-md-3 text-center">
-          <img class="img-thumbnail img-responsive"  src="{{base_url()}}/uploads/imagem/{{ativo.foto}}">
+          <img class="img-thumbnail img-responsive"  src="{{ base_url}}/uploads/imagem/{{ativo.foto}}">
         </div>
         <!--<div class="col-md-9 text-left">-->
         <!--Alteração Feita: A classe do h3 era class="text-muted", mas a img do bem estava em cima do nome, então mudei p/ class="text-center"-->
@@ -85,7 +85,7 @@
               <tr>
                 <td title="Responsável pelo Setor: {{movimentacao.setorResponsavel.getResponsavel.nome}}">{{movimentacao.setorResponsavel.getSetor.nome}}</td>
                 <td>{{movimentacao.movimentacao_data|date('d/m/Y')}}</td>
-                <td><a target="_blank" href="{{ base_url() }}/uploads/documentos/{{movimentacao.documento}}">{{movimentacao.documento}}</a></td>
+                <td><a target="_blank" href="{{  base_url }}/uploads/documentos/{{movimentacao.documento}}">{{movimentacao.documento}}</a></td>
                 <td>{{movimentacao.observacao}}</td>
               </tr>
               {% endfor %}

@@ -95,7 +95,7 @@
             <tbody>
               {% for item in itens %}
               <tr>
-                <td style="width: 60px"><img class="img-ativo-show"  style="background-image: url(' {{base_url()}}/uploads/imagem/{{item.produto.imagem}} '); " style="width: 55px;" class="img-thumbnail img-responsive" src="{{base_url()}}/uploads/imagem/{{item.produto.imagem}}">
+                <td style="width: 60px"><img class="img-ativo-show"  style="background-image: url(' {{ base_url}}/uploads/imagem/{{item.produto.imagem}} '); " style="width: 55px;" class="img-thumbnail img-responsive" src="{{ base_url}}/uploads/imagem/{{item.produto.imagem}}">
                 </td>
                 <td>{{item.produto.codigo_ufc}}</td>
                 <td>{{item.produto.nome}}</td>

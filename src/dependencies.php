@@ -15,8 +15,9 @@ $container['renderer'] = function ($c) {
     
     $view->addExtension(new \Slim\Views\TwigExtension(
 		$c->router,
-		$c->request->getUri()
+		'http://sistemas.crateus.ufc.br/siap' //$c->request->getUri()
     ));
+    $view['base_url'] = 'http://sistemas.crateus.ufc.br/siap';
     return $view;
 };
 

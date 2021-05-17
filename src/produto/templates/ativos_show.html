@@ -163,7 +163,7 @@
                 <td title="{{ativo.descricao}}">{{ativo.conservacao.nome}}</td>
                 <td title="{{ativo.setor.nome}}">{{ativo.setor.sigla}}</td>
                 <td style="width: 70px;" class="text-center bg-success"><a href="movimentacao/{{ativo.patrimonio}}"><i class="fas fa-people-carry"></i></a></td>
-                <td  style="width: 50px;" class="text-center bg-danger" data-toggle="modal" data-target="#modalExcluir"> <a onclick="btnExcluir(' {{base_url()}}/ativo/delete/{{ativo.patrimonio}} ', 'Excluir bem' , 'Deseja realmente excluir o bem?')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i></a></td>
+                <td  style="width: 50px;" class="text-center bg-danger" data-toggle="modal" data-target="#modalExcluir"> <a onclick="btnExcluir(' {{ base_url}}/ativo/delete/{{ativo.patrimonio}} ', 'Excluir bem' , 'Deseja realmente excluir o bem?')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i></a></td>
               </tr>
               {% endfor %}
             </tbody>

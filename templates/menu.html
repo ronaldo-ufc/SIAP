@@ -2,7 +2,7 @@
     .box{
         width: 20px;
         height: 20px;
-        background: url('{{ base_url() }}/assets/img/conf.png') no-repeat;
+        background: url('{{  base_url }}/assets/img/conf.png') no-repeat;
         background-size: contain;
     }
 /*    .engrenagens{
@@ -26,8 +26,8 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand nav-img" href="{{ base_url() }}"><img class="img-responsive" style="max-width: 150px" src="http://www.crateus.ufc.br/documentos/site/comunicacao/brasao/Brasao%20Horizontal%20Crate%C3%BAs%20Policromatico.png"></a>
-      <a class="navbar-brand" href="{{ base_url() }}">SIAP - Sistema de Almoxarifado e Patrimônio</a>
+      <a class="navbar-brand nav-img" href="{{  base_url }}"><img class="img-responsive" style="max-width: 150px" src="http://www.crateus.ufc.br/documentos/site/comunicacao/brasao/Brasao%20Horizontal%20Crate%C3%BAs%20Policromatico.png"></a>
+      <a class="navbar-brand" href="{{  base_url }}">SIAP - Sistema de Almoxarifado e Patrimônio</a>
     </div>
     {% if current_user.logado %}
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -40,7 +40,7 @@
           </a>
           <ul class="dropdown-menu">
             {% for filho in pai.filhos(current_user.usuarioRol) %}
-            <li> <a title="{{filho.menu_hint}}" href="{{ base_url() }}/{{filho.menu_url}}"><i class="{{filho.menu_icon}}"></i> {{filho.menu_nome}} </a> </li>
+            <li> <a title="{{filho.menu_hint}}" href="{{  base_url }}/{{filho.menu_url}}"><i class="{{filho.menu_icon}}"></i> {{filho.menu_nome}} </a> </li>
             {% endfor %}
           </ul>
         </li>
@@ -50,13 +50,13 @@
               <div class="engrenagens">
                   <div class="box"></div>
               </div>
-              <!--<img src="{{ base_url() }}/assets/img/conf.png">-->
+              <!--<img src="{{  base_url }}/assets/img/conf.png">-->
           </a>
           <ul class="dropdown-menu">
-            <li> <a href="{{ base_url() }}/home/usuario/dados">Meus dados</a> </li>
-            <!-- <li><a href="{{ base_url() }}/dados/edit/pwd">Alterar minha senha</a></li> -->
+            <li> <a href="{{  base_url }}/home/usuario/dados">Meus dados</a> </li>
+            <!-- <li><a href="{{  base_url }}/dados/edit/pwd">Alterar minha senha</a></li> -->
             <li class="divider"></li>
-            <li><a href="{{ base_url() }}/autenticacao/logout" class="js-security-logout">Sair</a></li>
+            <li><a href="{{  base_url }}/autenticacao/logout" class="js-security-logout">Sair</a></li>
           </ul>
         </li>
       </ul>

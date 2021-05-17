@@ -22,16 +22,18 @@
     <div class="panel-heading"><h4 class=" text-capitalize text-muted"><i class="fas fa-retweet"></i> ATUALIZAR {{produto.nome}}</h4></div>
     <div class="panel-body">
       <form name="cadastro" action="" method="POST" enctype="multipart/form-data">
+          <input name="atualizar_imagem" type="hidden" value="" id="caminho">
         <div class="row">
           <div class="col-md-12">
             <div class="row">
               <div class="col-md-2">
                 <input name="imagem_produto" type="hidden" value="{{produto.imagem}}" id="img_cod">
+                
                 <figure class="figure">
                   {% if produto.imagem %}
-                  <img id="perfil" class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/{{produto.imagem}}">
+                  <img id="perfil" class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{ base_url}}/uploads/imagem/{{produto.imagem}}">
                   {% else %}
-                  <img id="perfil" class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/sem_imagem.jpg">
+                  <img id="perfil" class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{ base_url}}/uploads/imagem/sem_imagem.jpg">
                   {% endif %}
                   <figcaption class="figure-caption text-center text-muted">
                     <i data-toggle="modal" data-target="#modalImagem" style="cursor: pointer" class="fas fa-sync-alt">Atualizar</i>
@@ -111,9 +113,23 @@
     </div>
   </div>
 </div>
+
 {{ functions.modalImagens(imagens) }}
 {{ functions.modalItens() }}
 {{ functions.modalExcluir() }}
 {{ functions.modalCancelar() }}
+{% endblock %}
+
+{% block link %} 
+<script>
+   
+    function escolherImagem(img){
+        $("#perfil").attr('src', BASE_URL+'/uploads/imagem/'+img);
+        $("#caminho").val(img);
+        //document.getElementById('fileUpload').addEventListener('change', fileChanged(), false);
+    }
+  
+</script>
+
 {% endblock %}
 

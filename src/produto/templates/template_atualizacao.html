@@ -18,9 +18,9 @@
           <div class="col-md-2">
             <figure class="figure">
               {% if foto %}
-              <img class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/{{foto}}">
+              <img class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{ base_url}}/uploads/imagem/{{foto}}">
               {% else %}
-              <img class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/sem_imagem.jpg">
+              <img class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{ base_url}}/uploads/imagem/sem_imagem.jpg">
               {% endif %}
               <figcaption class="figure-caption text-center text-muted">Imagem do Ativo</figcaption>
             </figure>
@@ -68,7 +68,7 @@
           </div>
           <div class="col-md-1">
             <div class="form-group">
-                <a  data-toggle="modal" data-target="#modalCancelar" onclick="btnCancelar(' {{base_url()}}/ativo/main ', 'Cancelar atualização', 'Deseja realmente cancelar a atualização do modelo ?<br />Todas as alterações serão perdidas')" class="btn btn-danger">
+                <a  data-toggle="modal" data-target="#modalCancelar" onclick="btnCancelar(' {{ base_url}}/ativo/main ', 'Cancelar atualização', 'Deseja realmente cancelar a atualização do modelo ?<br />Todas as alterações serão perdidas')" class="btn btn-danger">
                 <i class="fas fa-times"></i> Cancelar
               </a>
             </div>

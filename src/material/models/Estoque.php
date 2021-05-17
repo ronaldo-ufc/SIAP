@@ -44,6 +44,7 @@ class Estoque {
                         $postParam['movimentacao_tipo'],
                         moedaBanco($postParam['vlr_uni'])
             ));
+           
     return $stmt->errorInfo();
   }
 }

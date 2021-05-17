@@ -217,13 +217,6 @@ function editarProduto(id){
     $(window.document.location).attr('href', URL);
 }
 
-function escolherImagem(img){
-    $("#perfil").attr('src', BASE_URL+'/uploads/imagem/'+img);
-    $("#img_cod").val(img);
-    document.getElementById('fileUpload').addEventListener('change', fileChanged(), false);
-}
-
-
 function setEstorno(cod, prod){
     $('#requisicao').val(cod);
     $('#produto').val(prod);

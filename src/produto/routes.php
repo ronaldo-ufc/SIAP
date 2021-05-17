@@ -88,16 +88,6 @@ $app->get('/show', function($request, $response, $args) {
 })->setName('AtivosShow');
 
 
-
-//
-//Mostra os modelos com opção de criar ativos em branco ou atravez de modelo 
-//
-$app->map(['GET', 'POST'], '/main', function($request, $response, $args) {
-    $template = TemplateProduto::getAll();
-    return $this->renderer->render($response, 'ativo_main.html', array('templates' => $template, 'mensagem' => $mensagem));
-})->setName('Ativos.Main');
-
-
 //
 //Excluir um ativo por meio do número do patrimônio
 //
@@ -155,7 +145,7 @@ $app->map(['GET', 'POST'], '/novo/branco', function($request, $response, $args) 
         if ($form->getPatrimonio() != '') {
             //Verificando se foi digitado o NOME do patrimonio
             if ($form->getNome() != '') {
-                $msg = Ativos::create($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $args['modelo_id'], $aut->getUsuario(), $form->getCategoria(), $form->getEmpenho());
+                $msg = Ativos::create($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $args['modelo_id'], $aut->getUsuario(), $form->getCategoria(),$form->getEstado(), $form->getEmpenho());
                 if ($msg[2]) {
                     $mensagemErro = $msg[2];
                 } else {
@@ -236,7 +226,7 @@ $app->map(['GET', 'POST'], '/novo/modelo/{modelo_id}', function($request, $respo
         if ($form->getPatrimonio() != '') {
             //Verificando se foi digitado o NOME do patrimonio
             if ($form->getNome() != '') {
-                $msg = Ativos::create($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $args['modelo_id'], $aut->getUsuario(), $form->getCategoria(), $form->getEmpenho());
+                $msg = Ativos::create($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getSetor(), $form->getConservacao(), $args['modelo_id'], $aut->getUsuario(), $form->getCategoria(),$form->getEstado(), $form->getEmpenho());
                 if ($msg[2]) {
                     $mensagemErro = $msg[2];
                 } else {
@@ -260,14 +250,45 @@ $app->map(['GET', 'POST'], '/novo/modelo/{modelo_id}', function($request, $respo
 // 
 //***********************************************************************************************
 //
+
+//
+//Mostra os modelos com opção de criar ativos em branco ou atravez de modelo 
+//
+$app->map(['GET', 'POST'], '/main', function($request, $response, $args) {
+    #Verificando se tem mensagem de erro
+    $messages = $this->flash->getMessages();
+    if ($messages) {
+        foreach ($messages as $_msg) {
+            $mensagem = $_msg[0];
+        }
+    }
+    
+    $template = TemplateProduto::getAll();
+    return $this->renderer->render($response, 'ativo_main.html', array(
+        'templates' => $template, 
+        'mensagem' => $mensagem
+    ));
+})->setName('Ativos.Main');
+
+//
 //Mostra os modelos com opção gerenciamento (excluir um modelo) 
 //
 
-
 $app->map(['GET', 'POST'], '/modelo/main', function($request, $response, $args) {
+    #Verificando se tem mensagem de erro
+    $messages = $this->flash->getMessages();
+    if ($messages) {
+        foreach ($messages as $_msg) {
+            $mensagem = $_msg[0];
+        }
+    }
+    
     $template = TemplateProduto::getAll();
 
-    return $this->renderer->render($response, 'template_main.html', array('templates' => $template, 'mensagem' => $mensagem));
+    return $this->renderer->render($response, 'template_main.html', array(
+        'templates' => $template, 
+        'mensagem' => $mensagem
+    ));
 })->setName('TemplateMain');
 
 //
@@ -324,6 +345,15 @@ $app->map(['GET', 'POST'], '/modelo/novo', function($request, $response, $args) 
     return $this->renderer->render($response, 'template_novo.html', array('form' => $form, 'mensagem' => $mensagem, 'foto' => $foto, 'mensagemErro' => $mensagemErro));
 })->setName('AtivoModelo');
 
+$app->get('/atualizar/modelo-foto/{template_id}', function($request, $response, $args) {
+    $template = TemplateProduto::getById($args['template_id']);
+    if ($template) {
+        $count = Ativos::updateFoto($template->getFoto(), $args['template_id']);
+    }
+    
+    $this->flash->addMessage('danger', $count.' ativos atualizados com sucesso.');
+    return $response->withStatus(301)->withHeader('Location', '/siap/ativo/main');
+})->setName('ativo.atualizar.modelo-foto');
 
 $app->map(['GET', 'POST'], '/atualizar/modelo/{modelo_id}', function($request, $response, $args) {
     $modelo = \siap\produto\models\TemplateProduto::getById($args['modelo_id']);
@@ -400,76 +430,83 @@ $app->map(['GET', 'POST'], '/atualizar/modelo/{modelo_id}', function($request, $
 
 
 
-$app->map(['GET', 'POST'], '/atualizar/{patrimonio_id}', function($request, $response, $args) {
+$app->get('/atualizar/{patrimonio_id}', function($request, $response, $args) {
     $ativo = Ativos::getById($args['patrimonio_id']);
     $mensagem = NULL;
     $mensagemErro = NULL;
-    if ($request->isGet()) {
-        $foto = $ativo->getFoto();
-        $form = AtivosForm::create(["formdata" => $_GET, "data" => [
-                        "patrimonio" => $args['patrimonio_id'],
-                        "nome" => $ativo->getNome(),
-                        "foto" => $ativo->getFoto(),
-                        "data_atesto" => $ativo->getData_atesto(),
-                        "nota_fiscal" => $ativo->getNota_fiscal(),
-                        "fornecedor" => $ativo->getFornecedor(),
-                        "descricao" => $ativo->getDescricao(),
-                        "observacao" => $ativo->getObservacao(),
-                        "marca" => $ativo->getFabricante_id(),
-                        "modelo" => $ativo->getModelo_id(),
-                        "tipo_de_aquisicao" => $ativo->getAquisicao_id(),
-                        "status" => $ativo->getStatus_id(),
-                        "estado_de_conservacao" => $ativo->getConservacao_id(),
-                        "template_id" => $args['modelo_id'],
-                        "categoria" => $ativo->getCategoria_id(),
-                        "empenho" => $ativo->getEmpenho()
-        ]]);
-    } else {
-        #Caso seja POST ou seja o usuário está salvando o bem 
-        $aut = \siap\auth\models\Autenticador::instanciar();
-        $form = AtivosForm::create(["formdata" => $_POST]);
-
-        #Recebe o nome da foto do bem que está numa variável tipo hiddem para pode mostrar, 
-        #pois o form estava perdendo o valor quando fazia o post.
-        $postParam = $request->getParams();
-
-        if ($_FILES['foto']['error'] == 4) {
-
-            $foto = $ativo->getFoto();
-        } else {
-            // Associamos a classe à variável $upload
-            $upload = new siap\models\UploadImagem();
-            // Determinamos nossa largura máxima permitida para a imagem
-            $upload->width = 450;
-            // Determinamos nossa altura máxima permitida para a imagem
-            $upload->height = 350;
-            // Exibimos a mensagem com sucesso ou erro retornada pela função salvar.
-            //Se for sucesso, a mensagem também é um link para a imagem enviada.
-            $filename = $upload->salvar($this->get('upload_directory_imagem'), $_FILES['foto']);
-
-            if ($filename[0]) {
-
-                $mensagemErro = $filename[0];
-            } else {
-
-                $foto = $filename[1];
-            }
-        }
-        //Verificando se foi digitado o NOME do patrimonio
-        if ($form->getNome() != '') {
-            $msg = Ativos::update($ativo->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getConservacao(), $aut->getUsuario(), $form->getCategoria(), $form->getEmpenho());
-            if ($msg[2]) {
-                $mensagemErro = $msg[2];
-            } else {
-                $mensagem = 'Operação realizada com sucesso.';
-            }
-        } else {
-            $mensagemErro = 'Um nome deve ser definido para o bem.';
-        }
-    }
+  // var_dump($ativo);
+   // return;
+    $foto = $ativo->getFoto();
+    
+    $form = AtivosForm::create(["formdata" => $_GET, "data" => [
+                    "patrimonio" => $args['patrimonio_id'],
+                    "nome" => $ativo->getNome(),
+                    "foto" => $ativo->getFoto(),
+                    "data_atesto" => $ativo->getData_atesto(),
+                    "nota_fiscal" => $ativo->getNota_fiscal(),
+                    "fornecedor" => $ativo->getFornecedor(),
+                    "descricao" => $ativo->getDescricao(),
+                    "observacao" => $ativo->getObservacao(),
+                    "marca" => $ativo->getFabricante_id(),
+                    "modelo" => $ativo->getModelo_id(),
+                    "tipo_de_aquisicao" => $ativo->getAquisicao_id(),
+                    "status" => $ativo->getStatus_id(),
+                    "estado" => $ativo->getEstado_id(),
+                    "estado_de_conservacao" => $ativo->getConservacao_id(),
+                    "template_id" => $args['modelo_id'],
+                    "categoria" => $ativo->getCategoria_id(),
+                    "empenho" => $ativo->getEmpenho()
+    ]]);
+    
 
     return $this->renderer->render($response, 'ativo_atualizacao.html', array('form' => $form, 'mensagem' => $mensagem, 'foto' => $foto, 'setor_nome' => $ativo->getSetor()->getNome(), 'mensagem' => $mensagem, 'mensagemErro' => $mensagemErro, 'patrimonio' => $args['patrimonio_id']));
 })->setName('AtivoAtualizacao');
+
+$app->post('/atualizar/{patrimonio_id}', function($request, $response, $args) {
+    $ativo = Ativos::getById($args['patrimonio_id']);
+   
+    #Caso seja POST ou seja o usuário está salvando o bem 
+    $aut = \siap\auth\models\Autenticador::instanciar();
+    $form = AtivosForm::create(["formdata" => $_POST]);
+
+    #Recebe o nome da foto do bem que está numa variável tipo hiddem para pode mostrar, 
+    #pois o form estava perdendo o valor quando fazia o post.
+    if ($_FILES['foto']['error'] == 4) {
+
+        $foto = $ativo->getFoto();
+    } else {
+        // Associamos a classe à variável $upload
+        $upload = new siap\models\UploadImagem();
+        // Determinamos nossa largura máxima permitida para a imagem
+        $upload->width = 450;
+        // Determinamos nossa altura máxima permitida para a imagem
+        $upload->height = 350;
+        // Exibimos a mensagem com sucesso ou erro retornada pela função salvar.
+        //Se for sucesso, a mensagem também é um link para a imagem enviada.
+        $filename = $upload->salvar($this->get('upload_directory_imagem'), $_FILES['foto']);
+
+        if ($filename[0]) {
+
+            $mensagemErro = $filename[0];
+        } else {
+
+            $foto = $filename[1];
+        }
+    }
+    //Verificando se foi digitado o NOME do patrimonio
+    if ($form->getNome() != '' && $form->getPatrimonio() != '') {
+        $ativo = new Ativos($args['patrimonio_id']);
+        $msg = $ativo->update($form->getPatrimonio(), $form->getNome(), $form->getData_atesto(), $form->getNota_fiscal(), $form->getFornecedor(), $form->getDescricao(), $form->getObservacao(), $foto, $form->getMarca(), $form->getModelo(), $form->getAquisicao(), $form->getStatus(), $form->getConservacao(), $aut->getUsuario(), $form->getCategoria(),$form->getEstado(), $form->getEmpenho());
+        if ($msg[2]) {
+            $mensagemErro = $msg[2];
+        } else {
+            $mensagem = 'Operação realizada com sucesso.';
+        }
+    } else {
+        $mensagemErro = 'Um nome deve ser definido para o bem.';
+    }
+    return $response->withStatus(301)->withHeader('Location', '/siap/ativo/show');
+})->setName('ativo.salvar');
 
 // **********************************************************************************************
 // ROTAS RELACIONADAS AS MOVIMENTAÇÕES 

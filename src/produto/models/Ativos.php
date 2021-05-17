@@ -38,6 +38,7 @@ class Ativos {
     private $template_id;
     private $usuario_id;
     private $categoria_id;
+    private $estado_id;
     //private $responsavel_id;
     private $fabricante;
     private $modelo;
@@ -50,10 +51,14 @@ class Ativos {
     private $categoria;
     private $empenho;
     //private $responsavel;
+    
+    function __construct($patrimonio) {
+        $this->patrimonio = $patrimonio;
+    }
 
     private function bundle($row) {
-        $u = new Ativos();
-        $u->setPatrimonio($row['patrimonio']);
+        $u = new Ativos($row['patrimonio']);
+        
         $u->setNome($row['nome']);
         $u->setData_atesto($row['data_atesto']);
         $u->setNota_fiscal($row['nota_fiscal']);
@@ -71,6 +76,7 @@ class Ativos {
         $u->setUsuario_id($row['usuario_id']);
         $u->setCategoria_id($row['categoria_id']);
         $u->setEmpenho($row['empenho']);
+        $u->setEstado_id($row['estado_id']);
         //$u->setResponsavel_id(1);
 
         #Montando os objetos
@@ -86,7 +92,7 @@ class Ativos {
         return $u;
     }
 
-    static function create($patrimonio, $nome, $data_atesto, $nota_fiscal, $fornecedor, $descricao, $observacao, $foto, $fabricante_id, $modelo_id, $aquisicao_id, $status_id, $setor_id, $conservacao_id, $template_id, $usuario, $categoria_id,$empenho) {
+    static function create($patrimonio, $nome, $data_atesto, $nota_fiscal, $fornecedor, $descricao, $observacao, $foto, $fabricante_id, $modelo_id, $aquisicao_id, $status_id, $setor_id, $conservacao_id, $template_id, $usuario, $categoria_id,$estado_id,$empenho) {
         #Verifica se tem um ativo já foi deletado
         if (self::temAtivoDeletado($patrimonio)) {
             return array('Erro', 'info', 'Existe um ativo excluído com esse número de patrimônio. Recupere o ativo no menu de recupeção de ativo!');
@@ -112,8 +118,9 @@ class Ativos {
                 . "template_id, "
                 . "usuario_id, "
                 . "categoria_id,"
+                . "estado_id,"
                 . "empenho)"
-                . " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                . " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         $stmt = DBSiap::getSiap()->prepare($sql);
         $stmt->execute(array(trim($patrimonio),
@@ -133,18 +140,20 @@ class Ativos {
             $template_id,
             $usuario,
             $categoria_id,
+            $estado_id,
             strtoupper(tirarAcentos($empenho))
         ));
         return $stmt->errorInfo();
     }
 
-    static function update($patrimonio, $nome, $data_atesto, $nota_fiscal, $fornecedor, $descricao, $observacao, $foto, $fabricante_id, $modelo_id, $aquisicao_id, $status_id, $conservacao_id, $usuario, $categoria_id,$empenho) {
-        #Verifica se o tombamento está cadastrado.
-        if (self::getById($patrimonio) == NULL) {
-            return array('Erro', 'info', 'Não existe um ativo cadastrado com esse número de patrimônio.');
-        }
+    function update($patrimonio, $nome, $data_atesto, $nota_fiscal, $fornecedor, $descricao, $observacao, $foto, $fabricante_id, $modelo_id, $aquisicao_id, $status_id, $conservacao_id, $usuario, $categoria_id,$estado_id,$empenho) {
+//        #Verifica se o tombamento está cadastrado.
+//        if (self::getById($patrimonio) == NULL) {
+//            return array('Erro', 'info', 'Não existe um ativo cadastrado com esse número de patrimônio.');
+//        }
         
         $sql = "UPDATE siap.ativo SET "
+                . "patrimonio = ?,  "
                 . "nome = ?,  "
                 . "data_atesto = ?,  "
                 . "nota_fiscal  = ?,  "
@@ -159,12 +168,14 @@ class Ativos {
                 . "conservacao_id = ?, "
                 . "usuario_id  = ?, "
                 . "categoria_id  = ?, "
+                . "estado_id  = ?, "
                 . "empenho  = ? "
                 . " WHERE patrimonio = ? ";
         
 //        $sql = Ativos::injectionCaracteres($sql);
         $stmt = DBSiap::getSiap()->prepare($sql);
         $stmt->execute(array(
+            $patrimonio,
             strtoupper(tirarAcentos($nome)),
             $data_atesto,
             strtoupper(tirarAcentos($nota_fiscal)),
@@ -179,8 +190,9 @@ class Ativos {
             $conservacao_id,
             $usuario,
             $categoria_id,
+            $estado_id,
             strtoupper(tirarAcentos($empenho)),
-            $patrimonio
+            $this->patrimonio
         ));
         return $stmt->errorInfo();
     }
@@ -195,6 +207,15 @@ class Ativos {
             return $msg;
         }
         self::logAtivo($patrimonio, $usuario);
+    }
+    
+    static function updateFoto($path, $template_id) {
+        $sql = "UPDATE siap.ativo SET foto = ? WHERE template_id = ?";
+
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array($path, $template_id));
+        return $stmt->rowCount();
+         
     }
 
     private function logAtivo($patrimonio, $usuario) {
@@ -299,7 +320,8 @@ class Ativos {
 				  where responsavel_id = '$cpf_usuario' and current_date between data_inicio and data_fim)";
         }
         
-        $sql = $sql." ORDER BY data_atesto desc limit 150";
+        //$sql = $sql." ORDER BY data_atesto desc limit 150";
+        $sql = $sql." ORDER BY data_atesto desc ";
         
         $stmt = DBSiap::getSiap()->prepare($sql);
         $stmt->execute(array());
@@ -358,8 +380,14 @@ class Ativos {
         return $resultado;
     }
     
-    static function getAllBySetor($setor_id) {
-        $sql = "select * from siap.ativo where setor_id = ? order by cadastro desc";
+    static function getAllBySetor($setor_id, $ordem= 'cadastro desc', $status = null) {
+        
+        $sql = "select * from siap.ativo "
+                . "where setor_id = ? ";
+                if ($status) {
+                  $sql .=   " and status_id = $status ";
+                }
+         $sql .= " order by $ordem";
         $stmt = DBSiap::getSiap()->prepare($sql);
         $stmt->execute(array($setor_id));
         $rows = $stmt->fetchAll();
@@ -585,5 +613,13 @@ class Ativos {
     function setEmpenho($empenho) {
         $this->empenho = $empenho;
     }
+    public function getEstado_id() {
+        return $this->estado_id;
+    }
+
+    public function setEstado_id($estado_id) {
+        $this->estado_id = $estado_id;
+    }
+
 
 }

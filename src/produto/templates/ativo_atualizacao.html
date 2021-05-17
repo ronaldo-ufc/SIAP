@@ -19,9 +19,9 @@
           <div class="col-md-2">
             <figure class="figure">
               {% if foto %}
-              <img class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/{{foto}}">
+              <img class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{ base_url}}/uploads/imagem/{{foto}}">
               {% else %}
-              <img class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{base_url()}}/uploads/imagem/sem_imagem.jpg">
+              <img class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{ base_url}}/uploads/imagem/sem_imagem.jpg">
               {% endif %}
               <figcaption class="figure-caption text-center text-muted">Imagem do Ativo</figcaption>
             </figure>
@@ -34,7 +34,7 @@
                     <input class="form-control" id="patrimonio" name="patrimonio" readonly value="{{patrimonio}}"/>
                   </div>
                 </div>-->
-              {{forms.input(form.patrimonio, 2, 'readOnly')}}
+              {{forms.input(form.patrimonio, 2)}}
               {{forms.input(form.nome, 4)}}
               {{forms.input(form.empenho, 2)}}
               {{forms.input(form.foto, 4)}}
@@ -46,19 +46,21 @@
               {{forms.input(form.categoria, 4, null, functions.btnAddItens('Categoria|categoria', 'Adicionar Tipo de Categoria'))}}
             </div>
             <div class="row">
-              {{forms.input(form.status, 2, null, functions.btnAddItens('Status|status', 'Adicionar Tipo de Status'))}}
+              {{forms.input(form.status, 3, null, functions.btnAddItens('Status|status', 'Adicionar Tipo de Status'))}}
+               {{forms.input(form.estado, 3, null, functions.btnAddItens('Estado|estado', 'Adicionar Tipo de Estado'))}}
               {{forms.input(form.estado_de_conservacao, 3, null, functions.btnAddItens('Estado de Conservação|estado_de_conservacao', 'Adicionar Estado de Conservação'))}}
               {{forms.input(form.tipo_de_aquisicao, 3, null, functions.btnAddItens('Tipo de Aquisição|tipo_de_aquisicao', 'Adicionar Tipo de Aquisição'))}}
+
+            </div>
+            <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="setor">Setor</label>
                   <input class="form-control" id="setor_nome" name="setor_nome" readonly value="{{setor_nome}}"/>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              {{forms.input(form.marca, 6, null, functions.btnAddItens('Marca|marca', 'Adicionar Marca'))}}
-              {{forms.input(form.modelo, 6, null, functions.btnAddItens('Modelo|modelo', 'Adicionar Modelo'))}}
+              {{forms.input(form.marca, 4, null, functions.btnAddItens('Marca|marca', 'Adicionar Marca'))}}
+              {{forms.input(form.modelo, 4, null, functions.btnAddItens('Modelo|modelo', 'Adicionar Modelo'))}}
 
             </div>
           </div>
@@ -82,14 +84,14 @@
           </div>
           <div class="col-md-1">
             <div class="form-group">
-              <!--              <a  data-toggle="modal" data-target="#modalExcluir" onclick="btnExcluir(' {{base_url()}}/ativo/delete/{{patrimonio}} ', 'Excluir bem', 'Deseja realmente excluir o bem?')" class="btn btn-danger">
+              <!--              <a  data-toggle="modal" data-target="#modalExcluir" onclick="btnExcluir(' {{ base_url}}/ativo/delete/{{patrimonio}} ', 'Excluir bem', 'Deseja realmente excluir o bem?')" class="btn btn-danger">
                               <i class="far fa-trash-alt"></i> Excluir
                             </a>-->
 
-              <a  data-toggle="modal" data-target="#modalCancelar" onclick="btnCancelar(' {{base_url()}}/ativo/show?nome = & categoria = n & modelo = n & conservacao = n & setor = n & dataAtesto = & fornecedor = & notaFiscal = & status = n & empenho = & descricao = ', 'Cancelar atualização', 'Deseja realmente cancelar a atualização do bem?<br />Todas as alterações serão perdidas')" class="btn btn-danger">
+              <a  data-toggle="modal" data-target="#modalCancelar" onclick="btnCancelar(' {{ base_url}}/ativo/show?nome = & categoria = n & modelo = n & conservacao = n & setor = n & dataAtesto = & fornecedor = & notaFiscal = & status = n & empenho = & descricao = ', 'Cancelar atualização', 'Deseja realmente cancelar a atualização do bem?<br />Todas as alterações serão perdidas')" class="btn btn-danger">
                 <i class="fas fa-times"></i> Cancelar
               </a>
-              <!--<a onclick="btnExcluir(' {{base_url()}}/ativo/delete/{{ativo.patrimonio}} ', 'Deseja realmente excluir o bem?')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i></a>-->
+              <!--<a onclick="btnExcluir(' {{ base_url}}/ativo/delete/{{ativo.patrimonio}} ', 'Deseja realmente excluir o bem?')"  id="btnExcluir" style="cursor: pointer;"> <i class="far fa-trash-alt"></i></a>-->
             </div>
           </div>
         </div>

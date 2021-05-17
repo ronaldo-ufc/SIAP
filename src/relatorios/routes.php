@@ -9,38 +9,42 @@ use \siap\relatorios\relatorio\CategoriaFiltro;
 use siap\relatorios\relatorio\ItemAprovados;
 
 $app->get('/bens', function($request, $response, $args) {
-  $setores = Setor::getAll();
-  return $this->renderer->render($response, 'bens_permanentes.html', array('setores' => $setores));
+    $setores = Setor::getAll();
+    $status = \siap\cadastro\models\Status::getAll();
+    return $this->renderer->render($response, 'bens_permanentes.html', array(
+        'setores' => $setores,
+        'status' => $status
+        ));
 })->setName('RelatoriosBemPermanente');
 
 $app->get('/gerarpdf-bens', function($request, $response, $args) {
-//  ini_set('display_errors',1);
-//  ini_set('display_startup_erros',1);
-//  error_reporting(E_ALL);
-    
-//  $dompdf = $this->DOMPDF;
-//  $dompdf->setPaper('A4', 'landscape'); //landscape
-  $postParam = $request->getParams();
-  
-  if (intval($postParam["radio"]) != -1) {
-    $setor = Setor::getById(intval($postParam["radio"]));
-    $relatorio_setor = RelatorioSetor::bundle(intval($postParam["radio"]), $setor->getNome());
-    $header = $relatorio_setor->start_pdf();
-    if ($header[2] != NULL) {
-        return $response->withStatus(301)->withHeader('Location', 'bens');
-    } else {
-        echo $header[1]; return;
-    }
-  } else {
-      $relatorio_all_setor = \siap\relatorios\relatorio\TodosSetores::bundle();
-      $header = $relatorio_all_setor->start_pdf();
-      
-      if ($header[2] != NULL) {
-          return $response->withStatus(301)->withHeader('Location', 'bens');
-      } else {
-          echo $header[1]; return;
-      }
-  }
+    $postParam = $request->getParams();
+    header ("Pragma: no-cache");
+    header ("Content-type: application/x-msexcel");
+    header ("Content-Description: PHP Generated Data" );
+    if (intval($postParam["setor_id"]) == 'TODOS') {
+        $relatorio_all_setor = \siap\relatorios\relatorio\TodosSetores::bundle($postParam['status']);
+        if ($postParam['formato'] == 'xls'){
+            $body = $relatorio_all_setor->geraXls();
+            header ("Content-Disposition: attachment; filename=\"todos_bens_permanentes.xls\"" );
+        }else{
+            $body = $relatorio_all_setor->geraHtml();
+        }
+        echo $body[1]; return;
+        
+    }else{
+        $setor = Setor::getById(intval($postParam["setor_id"]));
+        $relatorio_setor = RelatorioSetor::bundle(intval($postParam["setor_id"]), $setor->getNome(), $postParam['status']);
+        
+        if ($postParam['formato'] == 'xls'){
+            $body = $relatorio_setor->geraXls();
+            header ("Content-Disposition: attachment; filename=\"".strtolower($setor->getNome()).".xls\"" );
+        }else{
+            $body = $relatorio_setor->geraHtml();
+        }
+        echo $body[1]; 
+        return;
+  } 
     
 })->setName('gerarPDFBens');
 

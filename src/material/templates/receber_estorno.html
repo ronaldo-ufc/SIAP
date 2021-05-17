@@ -34,7 +34,7 @@
               <tbody>
                 {% for item in itens %}
                 <tr>
-                  <td style="width: 60px"><img class="img-ativo-show"  style="background-image: url(' {{base_url()}}/uploads/imagem/{{item.produto.imagem}} '); " style="width: 55px;" class="img-thumbnail img-responsive" src="{{base_url()}}/uploads/imagem/{{item.produto.imagem}}">
+                  <td style="width: 60px"><img class="img-ativo-show"  style="background-image: url(' {{ base_url}}/uploads/imagem/{{item.produto.imagem}} '); " style="width: 55px;" class="img-thumbnail img-responsive" src="{{ base_url}}/uploads/imagem/{{item.produto.imagem}}">
                   </td>
                   <td>{{item.requisicao.numero}}</td>
                   <td>{{item.requisicao.destino.nome}}</td>
@@ -67,7 +67,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="{{ base_url() }}/materiais/estorno" method="POST">
+        <form action="{{  base_url }}/materiais/estorno" method="POST">
           <input type="hidden" name="requisicao" id="requisicao">
           <input type="hidden" name="produto" id="produto">
           <div class="row">

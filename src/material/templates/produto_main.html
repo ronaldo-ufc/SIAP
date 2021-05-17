@@ -101,7 +101,7 @@
               <tbody>
                 {% for produto in produtos %}
                 <tr class="{{produto.getCorClassQuantidadeMinima}}" ondblclick="editarProduto('{{produto.produto_codigo}}')">
-                  <td style="width: 60px"><img class="img-ativo-show"  style="background-image: url(' {{base_url()}}/uploads/imagem/{{produto.imagem}} '); " style="width: 55px;" class="img-thumbnail img-responsive" src="{{base_url()}}/uploads/imagem/{{produto.imagem}}">
+                  <td style="width: 60px"><img class="img-ativo-show"  style="background-image: url(' {{ base_url}}/uploads/imagem/{{produto.imagem}} '); " style="width: 55px;" class="img-thumbnail img-responsive" src="{{ base_url}}/uploads/imagem/{{produto.imagem}}">
                   </td>
                   <td > {{produto.getCodigo_ufc()}}</td>
 

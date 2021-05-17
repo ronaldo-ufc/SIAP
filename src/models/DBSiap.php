@@ -16,7 +16,7 @@ class DBSiap {
      */
     public static function getSiap() {
         if(self::$siap == null) {
-            self::$siap = new \PDO("pgsql:host=10.5.5.10 port=5432 dbname=ufccrateus user=postgres password=IBMpostgreS123");
+            self::$siap = new \PDO("pgsql:host=sistemas.crateus.ufc.br port=5433 dbname=ufccrateus user=ronaldo password=cc@ufc!_");
 //            self::$phoenix = new \PDO("pgsql:host=10.0.5.6 dbname=phoenix user=postgres password=IBMpostgreS", array(
 //                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
 //                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
