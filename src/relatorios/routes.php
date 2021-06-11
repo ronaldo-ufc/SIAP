@@ -7,6 +7,7 @@ use siap\setor\models\Setor;
 use siap\relatorios\relatorio\RelatorioSetor;
 use \siap\relatorios\relatorio\CategoriaFiltro;
 use siap\relatorios\relatorio\ItemAprovados;
+use siap\relatorios\relatorio\Dia;
 
 $app->get('/bens', function($request, $response, $args) {
     $setores = Setor::getAll();
@@ -260,3 +261,15 @@ $app->get('/setor-consumo/pdf', function($request, $response, $args) {
   $relatorio->imprimir($this->DOMPDF);
             
 })->setName('Relatorioconsumo-produto');
+
+$app->get('/dia', function($request, $response, $args) {
+    header ("Pragma: no-cache");
+    header ("Content-type: application/x-msexcel");
+    header ("Content-Description: PHP Generated Data" );
+    
+    $dia = new Dia();
+    $dia->geraXls();
+    
+    header ("Content-Disposition: attachment; filename=\"relatorio_dia.xls\"" );
+            
+})->setName('relatorio.dia');
