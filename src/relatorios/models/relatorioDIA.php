@@ -1,18 +1,22 @@
 <?php
+
 namespace siap\relatorios\models;
+
 use siap\models\DBSiap;
 
-class relatorioDIA{
+class relatorioDIA {
+
     private $grupo;
     private $media_material;
     private $quantidade;
     private $setor_ordem;
     private $setor_nome;
     private $setor_sigla;
+    private $bloco;
     private $numero_mes;
     private $ano;
-    
-    private function bundle($row){
+
+    private function bundle($row) {
         $u = new relatorioDIA();
         $u->setGrupo($row['grupo']);
         $u->setMedia_material($row['media_material']);
@@ -20,43 +24,46 @@ class relatorioDIA{
         $u->setSetor_ordem($row['setor_ordem']);
         $u->setSetor_nome($row['setor_nome']);
         $u->setSetor_sigla($row['setor_sigla']);
+        $u->setBloco($row['bloco']);
         $u->setNumero_mes($row['numero_mes']);
         $u->setAno($row['ano']);
-        
+
         return $u;
-        
     }
-    public function getAll(){
-    $sql = "select 
+
+    public function getAll() {
+        $sql = "select 
 	g.nome as grupo, 
 	round(avg(b.vlr_uni), 2) as media_material,
 	sum(b.quantidade) as quantidade,
 	s.setor_id as setor_ordem,
 	s.nome as setor_nome, 
-	s.sigla as setor_sigla, 
+	s.sigla as setor_sigla,
+	b2.nome as bloco,
 	extract(month from data) as numero_mes, 
 	extract(year from data) as ano
 	 
         from siap.produto p
         inner join siap.balanco b on p.produto_codigo = b.produto_codigo
         inner join public.setor s on b.setor_id = s.setor_id
+        inner join public.bloco b2 on b2.bloco_id = s.bloco_id 
         inner join public.grupo g on p.grupo_codigo = g.grupo_codigo
-        where b.tipo = 'E' and b.requisicao_codigo is null
-        group by g.nome, s.setor_id, s.nome, s.sigla, extract(month from data), extract(year from data)
+        where b.tipo = 'E' and b.requisicao_codigo is not null
+        group by g.nome, s.setor_id, s.nome, s.sigla, b2.nome, extract(month from data), extract(year from data)
 
-        order by g.nome asc, s.nome asc, ano asc, numero_mes asc";   
-            
-    $stmt = DBSiap::getSiap()->prepare($sql);
-    $stmt->execute(array());
-    $rows = $stmt->fetchAll();
-    //return $stmt->errorInfo();
-    $result = array();
-    foreach ($rows as $row) {
-        array_push($result, self::bundle($row));
+        order by g.nome asc, s.nome asc, ano asc, numero_mes asc";
+
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array());
+        $rows = $stmt->fetchAll();
+        //return $stmt->errorInfo();
+        $result = array();
+        foreach ($rows as $row) {
+            array_push($result, self::bundle($row));
+        }
+        return $result;
     }
-    return $result;
-  }
-    
+
     public function getGrupo() {
         return $this->grupo;
     }
@@ -121,6 +128,12 @@ class relatorioDIA{
         $this->setor_ordem = $setor_ordem;
     }
 
+    public function getBloco() {
+        return $this->bloco;
+    }
+
+    public function setBloco($bloco) {
+        $this->bloco = $bloco;
+    }
 
 }
-

@@ -428,3 +428,29 @@ function responsavelPorSetor($setor_id,$responsaveis){
     }
     return NULL;
 }
+
+function mesAbreviado($num_mes){
+    if($num_mes == 1) return  'JAN';
+    if($num_mes == 2) return  'FEV';
+    if($num_mes == 3) return  'MAR';
+    if($num_mes == 4) return  'ABR';
+    if($num_mes == 5) return  'MAI';
+    if($num_mes == 6) return  'JUN';
+    if($num_mes == 7) return  'JUL';
+    if($num_mes == 8) return  'AGO';
+    if($num_mes == 9) return  'SET';
+    if($num_mes == 10) return  'OUT';
+    if($num_mes == 11) return  'NOV';
+    if($num_mes == 12) return  'DEZ';
+    return  'NOT_FOUND';
+}
+
+function capitalize($str){
+    $lower = strtolower($str);
+    return ucwords($lower);
+}
+
+function upperInitial($str){
+    $lower = strtolower($str);
+    return ucfirst($lower);
+}
