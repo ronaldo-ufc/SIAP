@@ -106,7 +106,6 @@ $app->post('/editar/{setor_id}', function($request, $response, $args) {
     $updated->setBloco_id($bloco_id);
     $updated->setNome($setor);
     $updated->setSigla($sigla);
-    var_dump($updated);
     $result = $updated->update();
     if ($result[2]) {
         $this->flash->addMessage('danger', $result[2]);
@@ -117,3 +116,17 @@ $app->post('/editar/{setor_id}', function($request, $response, $args) {
     $rota = $this->get('router')->pathFor('SetorEditar', ['setor_id' => $args['setor_id']]);
     return $response->withStatus(301)->withHeader('Location', $rota);
 })->setName('SetorEditarPost');
+
+$app->get('/excluir/{setor_id}', function($request, $response, $args) {
+    $setor_id = $args['setor_id'];
+    $setor = new Setor($setor_id);
+    $result = $setor->delete();
+    if ($result[2]) {
+        $this->flash->addMessage('danger', $result[2]);
+    } else {
+        $this->flash->addMessage('success', 'Operação realizada com sucesso!');
+    }
+
+    $rota = $this->get('router')->pathFor('SetorNovo', []);
+    return $response->withStatus(301)->withHeader('Location', $rota);
+})->setName('SetorExcluir');

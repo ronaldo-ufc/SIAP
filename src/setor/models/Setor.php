@@ -103,11 +103,18 @@ class Setor {
         $stmt->execute(array(strtoupper(tirarAcentos($nome_setor)), strtoupper($sigla), $bloco_id));
         return $stmt->errorInfo();
     }
-
+    
     function update() {
         $sql = "UPDATE public.setor set nome = ?, sigla = ?, bloco_id = ?, ativo = ? WHERE setor_id = ?";
         $stmt = DBSiap::getSiap()->prepare($sql);
         $stmt->execute(array(strtoupper(tirarAcentos($this->getNome())), strtoupper($this->getSigla()), $this->getBloco_id(), $this->getAtivo(), $this->setor_id));
+        return $stmt->errorInfo();
+    }
+    
+    function delete() {
+        $sql = "DELETE FROM public.setor WHERE setor_id = ?";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array($this->setor_id));
         return $stmt->errorInfo();
     }
 

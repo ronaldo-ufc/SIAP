@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "forms.html" as forms %}
+{% import "uteis.html" as functions %}
 {% import "funcoes.html" as msg %}
 
 {% block content %}
@@ -11,7 +12,9 @@
         <div class="col-md-10 col-md-offset-1">
 
             <div class="panel panel-default">
-                <div class="panel-heading"><h4>Cadastrar Novo Setor</h4></div>
+                <div class="panel-heading">
+                    <h4>Cadastrar Novo Setor</h4>
+                </div>
                 <div class="panel-body">
                     <form name="pesquisa" action="" method="POST">
                         <div class="row">
@@ -33,7 +36,7 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group"><br>
-                                    <button  type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-search"></i> Salvar
                                     </button>
                                 </div>
@@ -47,11 +50,27 @@
                 <div class="panel-body table-responsive">
                     <table class="table table-condensed table-hover table-striped" id="tabela">
                         <thead class="bg-primary">
-                            <tr><td>Setor</td><td class="text-center">Sigla</td><td class="text-center">Ativo</td><td class="text-center">Editar</td></tr>
+                            <tr>
+                                <td>Setor</td>
+                                <td class="text-center">Sigla</td>
+                                <td class="text-center">Ativo</td>
+                                <td class="text-center">Editar</td>
+                                <td class="text-center">Excluir</td>
+                            </tr>
                         </thead>
                         <tbody>
                             {% for setor in setores %}
-                            <tr><td>{{setor.getNome}}</td><td class="text-center">{{setor.Sigla}}</td><td class="text-center">{{setor.Ativo}}</td><td class="text-center"><a href="editar/{{setor.setor_id}}" ><i class="fas fa-edit"></i></a></td></tr>
+                            <tr>
+                                <td>{{setor.getNome}}</td>
+                                <td class="text-center">{{setor.Sigla}}</td>
+                                <td class="text-center">{{setor.Ativo}}</td>
+                                <td class="text-center"><a href="editar/{{setor.setor_id}}"><i
+                                            class="fas fa-edit"></i></a></td>
+                                <td style="width: 50px;" class="text-center" data-toggle="modal"
+                                    data-target="#modalExcluir"><a id="btnExcluir"
+                                        onclick="btnExcluir('excluir/{{setor.setor_id}} ', 'Excluir setor' , 'Tem certeza que deseja excluir o setor {{setor.nome}} ?')"><i
+                                            class="fas fa-trash"></i></a></td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -60,4 +79,5 @@
         </div>
     </div>
 </div>
+{{ functions.modalExcluir() }}
 {% endblock %}
