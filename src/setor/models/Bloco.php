@@ -17,10 +17,10 @@ class Bloco {
         return $u;
     }
 
-    static function getAll() {
-        $sql = "select * from bloco order by nome";
+    static function getAll($bloco_id = 1) {
+        $sql = "select * from bloco b order by b.bloco_id = ? desc, nome";
         $stmt = DBSiap::getSiap()->prepare($sql);
-        $stmt->execute(array());
+        $stmt->execute(array($bloco_id));
         $rows = $stmt->fetchAll();
         $result = array();
         foreach ($rows as $row) {
@@ -33,7 +33,7 @@ class Bloco {
         $sql = "select * from bloco where bloco_id = ?";
         $stmt = DBSiap::getSiap()->prepare($sql);
         $stmt->execute(array($bloco_id));
-        $rows = $stmt->fetch();
+        $row = $stmt->fetch();
         if ($row == null) {
             return null;
         }

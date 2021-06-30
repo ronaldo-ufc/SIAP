@@ -11,17 +11,17 @@
         <div class="col-md-10 col-md-offset-1">
 
             <div class="panel panel-default">
-                <div class="panel-heading"><h4>Cadastrar Novo Setor</h4></div>
+                <div class="panel-heading"><h4>Editar Setor</h4></div>
                 <div class="panel-body">
                     <form name="pesquisa" action="" method="POST">
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="setor" class="control-label">Setor</label>
-                                <input name="setor" type="text" class="form-control" id="setor" required>
+                                <label for="setor" class="control-label">Nome</label>
+                                <input name="setor" value="{{setor.nome}}" type="text" class="form-control" id="setor" required>
                             </div>
                             <div class="col-md-1">
                                 <label for="setor" class="control-label">Sigla</label>
-                                <input name="sigla" type="text" class="form-control" id="sigla" required>
+                                <input name="sigla" value="{{setor.sigla}}" type="text" class="form-control" id="sigla" required>
                             </div>
                             <div class="col-md-2">
                                 <label for="bloco" class="control-label">Bloco</label>
@@ -29,6 +29,13 @@
                                     {% for bloco in blocos %}
                                     <option value={{ bloco.bloco_id }}>{{bloco.nome}}</option>
                                     {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="bloco" class="control-label">Ativo</label>
+                                <select class="col-md-1 form-control" name="ativo" id="ativo">
+                                    <option value="{{setor.ativo}}">{{setor.ativo == 'S'? 'Sim' : 'Não'}}</option>
+                                    <option value="{{setor.ativo == 'S'? 'N' : 'S'}}">{{setor.ativo == 'S'? 'Não' : 'Sim'}}</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
@@ -40,21 +47,6 @@
                             </div>
                         </div>
                     </form>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">Setores</div>
-                <div class="panel-body table-responsive">
-                    <table class="table table-condensed table-hover table-striped" id="tabela">
-                        <thead class="bg-primary">
-                            <tr><td>Setor</td><td class="text-center">Sigla</td><td class="text-center">Ativo</td><td class="text-center">Editar</td></tr>
-                        </thead>
-                        <tbody>
-                            {% for setor in setores %}
-                            <tr><td>{{setor.getNome}}</td><td class="text-center">{{setor.Sigla}}</td><td class="text-center">{{setor.Ativo}}</td><td class="text-center"><a href="editar/{{setor.setor_id}}" ><i class="fas fa-edit"></i></a></td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>

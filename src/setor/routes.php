@@ -81,3 +81,39 @@ $app->get('/responsavel/delete/{responsavel_id}/{setor_id}/{data_inicio}', funct
     }
     return $response->withStatus(301)->withHeader('Location', '../../../../responsavel');
 })->setName('SetorResponsavelDelete');
+
+$app->get('/editar/{setor_id}', function($request, $response, $args) {
+    $setor_id = $args['setor_id'];
+    $setor = Setor::getById($setor_id);
+    $blocos = Bloco::getAll($setor->getBloco()->getBloco_id());
+    $msg = getMensagem($this->flash->getMessages());
+    if(!$setor){
+        $msg[0] = "warning";
+        $msg[1] = "Setor não encontrado !";
+    }
+    return $this->renderer->render($response, 'setor_editar.html', array('setor' => $setor, 'blocos' => $blocos, 'classe'=> $msg[0], 'texto'=>$msg[1]));
+})->setName('SetorEditar');
+
+$app->post('/editar/{setor_id}', function($request, $response, $args) {
+    $postParam = $request->getParams();
+    $setor = tirarAcentos($postParam['setor']);
+    $sigla = tirarAcentos($postParam['sigla']);
+    $bloco_id = tirarAcentos($postParam['bloco']);
+    $ativo = tirarAcentos($postParam['ativo']);
+    
+    $updated = new Setor($args['setor_id']);
+    $updated->setAtivo($ativo);
+    $updated->setBloco_id($bloco_id);
+    $updated->setNome($setor);
+    $updated->setSigla($sigla);
+    var_dump($updated);
+    $result = $updated->update();
+    if ($result[2]) {
+        $this->flash->addMessage('danger', $result[2]);
+    } else {
+        $this->flash->addMessage('success', 'Operação realizada com sucesso!');
+    }
+
+    $rota = $this->get('router')->pathFor('SetorEditar', ['setor_id' => $args['setor_id']]);
+    return $response->withStatus(301)->withHeader('Location', $rota);
+})->setName('SetorEditarPost');

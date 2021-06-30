@@ -11,18 +11,23 @@ class Setor {
     private $ativo;
     private $sigla;
     private $responsavel;
+    private $bloco_id;
     private $bloco;
 
     private function bundle($row) {
-        $u = new Setor();
+        $u = new Setor($row['setor_id']);
         $bloco = \siap\setor\models\Bloco::getById($row['bloco_id']);
-        $u->setSetor_id($row['setor_id']);
         $u->setNome($row['nome']);
         $u->setAtivo($row['ativo']);
         $u->setSigla($row['sigla']);
+        $u->setBloco_id($row['bloco_id']);
         $u->setBloco($bloco);
 
         return $u;
+    }
+
+    public function __construct($setor_id) {
+        $this->setor_id = $setor_id;
     }
 
     static function getAll() {
@@ -99,6 +104,13 @@ class Setor {
         return $stmt->errorInfo();
     }
 
+    function update() {
+        $sql = "UPDATE public.setor set nome = ?, sigla = ?, bloco_id = ?, ativo = ? WHERE setor_id = ?";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array(strtoupper(tirarAcentos($this->getNome())), strtoupper($this->getSigla()), $this->getBloco_id(), $this->getAtivo(), $this->setor_id));
+        return $stmt->errorInfo();
+    }
+
     function getSetor_id() {
         return $this->setor_id;
     }
@@ -145,6 +157,14 @@ class Setor {
 
     public function setBloco($bloco) {
         $this->bloco = $bloco;
+    }
+
+    public function getBloco_id() {
+        return $this->bloco_id;
+    }
+
+    public function setBloco_id($bloco_id) {
+        $this->bloco_id = $bloco_id;
     }
 
 }
