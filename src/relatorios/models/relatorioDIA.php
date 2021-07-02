@@ -5,7 +5,7 @@ namespace siap\relatorios\models;
 use siap\models\DBSiap;
 
 class relatorioDIA {
-
+    private $grupo_codigo;
     private $grupo;
     private $media_material;
     private $quantidade;
@@ -18,6 +18,7 @@ class relatorioDIA {
 
     private function bundle($row) {
         $u = new relatorioDIA();
+        $u->setGrupo_codigo($row['grupo_codigo']);
         $u->setGrupo($row['grupo']);
         $u->setMedia_material($row['media_material']);
         $u->setQuantidade($row['quantidade']);
@@ -30,39 +31,94 @@ class relatorioDIA {
 
         return $u;
     }
-
-    public function getAll() {
+    
+    public function getGrupos(){
         $sql = "select 
-	g.nome as grupo, 
-	round(avg(b.vlr_uni), 2) as media_material,
-	sum(b.quantidade) as quantidade,
-	s.setor_id as setor_ordem,
-	s.nome as setor_nome, 
-	s.sigla as setor_sigla,
-	b2.nome as bloco,
-	extract(month from data) as numero_mes, 
-	extract(year from data) as ano
-	 
+            g.grupo_codigo,
+            g.nome as grupo, 
+            s.setor_id as setor_ordem,
+            s.nome as setor_nome, 
+            s.sigla as setor_sigla,
+            b2.nome as bloco
+            from siap.produto p
+            inner join siap.balanco b on p.produto_codigo = b.produto_codigo
+            inner join public.setor s on b.setor_id = s.setor_id
+            inner join public.bloco b2 on b2.bloco_id = s.bloco_id 
+            inner join public.grupo g on p.grupo_codigo = g.grupo_codigo
+            where b.tipo = 'E' and b.requisicao_codigo is not null
+            group by g.grupo_codigo, g.nome, s.setor_id, s.nome, s.sigla, b2.nome
+
+            order by g.nome asc, s.nome asc";
+        
+            $stmt = DBSiap::getSiap()->prepare($sql);
+            $stmt->execute(array());
+            $rows = $stmt->fetchAll();
+            //return $stmt->errorInfo();
+            $result = array();
+            foreach ($rows as $row) {
+                array_push($result, self::bundle($row));
+            }
+            return $result;
+    }
+    
+    static function getAll($grupo, $setor, $mes, $ano) {
+        $sql = "select
+        sum(b.quantidade) as quantidade,
+	round(avg(b.vlr_uni), 2) as media
+	
         from siap.produto p
         inner join siap.balanco b on p.produto_codigo = b.produto_codigo
         inner join public.setor s on b.setor_id = s.setor_id
         inner join public.bloco b2 on b2.bloco_id = s.bloco_id 
         inner join public.grupo g on p.grupo_codigo = g.grupo_codigo
-        where b.tipo = 'E' and b.requisicao_codigo is not null
-        group by g.nome, s.setor_id, s.nome, s.sigla, b2.nome, extract(month from data), extract(year from data)
-
-        order by g.nome asc, s.nome asc, ano asc, numero_mes asc";
+        where g.grupo_codigo = ? and 
+		s.setor_id = ? and 
+		extract(month from data) = ? and
+		extract(year from data) = ? and 
+		b.tipo = 'E' and 
+		b.requisicao_codigo is not null";
 
         $stmt = DBSiap::getSiap()->prepare($sql);
-        $stmt->execute(array());
-        $rows = $stmt->fetchAll();
-        //return $stmt->errorInfo();
-        $result = array();
-        foreach ($rows as $row) {
-            array_push($result, self::bundle($row));
+        $stmt->execute(array($grupo, $setor, $mes, $ano));
+        $row = $stmt->fetch();
+        if ($row == null){
+          return false;
         }
-        return $result;
+        return array($row['quantidade'], $row['media']);
     }
+
+//    public function getAll() {
+//        $sql = "select 
+//	g.nome as grupo, 
+//	round(avg(b.vlr_uni), 2) as media_material,
+//	sum(b.quantidade) as quantidade,
+//	s.setor_id as setor_ordem,
+//	s.nome as setor_nome, 
+//	s.sigla as setor_sigla,
+//	b2.nome as bloco,
+//	extract(month from data) as numero_mes, 
+//	extract(year from data) as ano
+//	 
+//        from siap.produto p
+//        inner join siap.balanco b on p.produto_codigo = b.produto_codigo
+//        inner join public.setor s on b.setor_id = s.setor_id
+//        inner join public.bloco b2 on b2.bloco_id = s.bloco_id 
+//        inner join public.grupo g on p.grupo_codigo = g.grupo_codigo
+//        where b.tipo = 'E' and b.requisicao_codigo is not null
+//        group by g.nome, s.setor_id, s.nome, s.sigla, b2.nome, extract(month from data), extract(year from data)
+//
+//        order by g.nome asc, s.nome asc, ano asc, numero_mes asc";
+//
+//        $stmt = DBSiap::getSiap()->prepare($sql);
+//        $stmt->execute(array());
+//        $rows = $stmt->fetchAll();
+//        //return $stmt->errorInfo();
+//        $result = array();
+//        foreach ($rows as $row) {
+//            array_push($result, self::bundle($row));
+//        }
+//        return $result;
+//    }
 
     public function getGrupo() {
         return $this->grupo;
@@ -135,5 +191,13 @@ class relatorioDIA {
     public function setBloco($bloco) {
         $this->bloco = $bloco;
     }
+    public function getGrupo_codigo() {
+        return $this->grupo_codigo;
+    }
+
+    public function setGrupo_codigo($grupo_codigo) {
+        $this->grupo_codigo = $grupo_codigo;
+    }
+
 
 }

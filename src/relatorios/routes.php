@@ -262,7 +262,7 @@ $app->get('/setor-consumo/pdf', function($request, $response, $args) {
             
 })->setName('Relatorioconsumo-produto');
 
-$app->get('/dia', function($request, $response, $args) {
+$app->get('/dia', function($request, $response, $args) {    
     header ("Pragma: no-cache");
     header ("Content-type: application/x-msexcel");
     header ("Content-Description: PHP Generated Data" );
