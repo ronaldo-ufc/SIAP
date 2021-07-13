@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% import "forms.html" as forms %}
+{% import "uteis.html" as functions %}
+{% import "funcoes.html" as msg %}
+
+{% block content %}
+
+<div class="col-md-12">
+    {{ msg.messagem(classe, texto)}}
+</div>
+<div class="col-md-12">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li><a href="../produto"><i class="fas fa-box-open"></i> Visualizar Produtos</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4 class=" text-capitalize text-muted"><i class="fas fa-retweet"></i> ATUALIZAR PREÇO {{produto.nome}}</h4></div>
+        <div class="panel-body">
+            <form name="cadastro" action="" method="POST" enctype="multipart/form-data">
+                <input name="atualizar_imagem" type="hidden" value="" id="caminho">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <input name="imagem_produto" type="hidden" value="{{produto.imagem}}" id="img_cod">
+
+                                <figure class="figure">
+                                    {% if produto.imagem %}
+                                    <img id="perfil" class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{ base_url}}/uploads/imagem/{{produto.imagem}}">
+                                    {% else %}
+                                    <img id="perfil" class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{ base_url}}/uploads/imagem/sem_imagem.jpg">
+                                    {% endif %}
+
+                                </figure>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label for="c_ufc" class="control-label">Cód. UFC</label>
+                                        <input name="c_ufc" type="text" class="form-control" id="c_ufc" value="{{produto.codigo_ufc}}" disabled>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="c_barras" class="control-label">Cód. Barras</label>
+                                        <input name="c_barras" type="text" class="form-control" id="c_barras" value="{{produto.codigo_barras}}" disabled>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="nome" class="control-label">Descrição</label>
+                                        <input name="nome" type="text" class="form-control" id="nome" value="{{produto.nome}}" disabled>
+                                    </div>
+                                     <div class="col-md-4">
+                                        <label for="preco" class="control-label">Preço (R$)</label>
+                                        <input onKeyPress="return(moeda(this, '.', ',', event))" value="{{valor_uni}}" id="preco" class="form-control" name="preco" type="text" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="form-group"><br>
+                                    <button  type="submit" class="btn btn-primary">
+                                        <i class="fas fa-retweet"></i> Atualizar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{ functions.modalImagens(imagens) }}
+{{ functions.modalItens() }}
+{{ functions.modalExcluir() }}
+{{ functions.modalCancelar() }}
+{% endblock %}
+
+{% block link %} 
+<script>
+
+    function escolherImagem(img) {
+        $("#perfil").attr('src', BASE_URL + '/uploads/imagem/' + img);
+        $("#caminho").val(img);
+        //document.getElementById('fileUpload').addEventListener('change', fileChanged(), false);
+    }
+
+</script>
+
+{% endblock %}
+
