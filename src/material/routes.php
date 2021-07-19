@@ -11,6 +11,7 @@ use siap\material\models\MontaBuscasItens;
 use siap\material\models\RequisicaoItens;
 use siap\material\models\Estoque;
 use siap\imagem\models\Imagem;
+use siap\material\models\MediaPrecoAnual;
 
 include_once 'public/uteis/funcoes.php';
 
@@ -113,22 +114,24 @@ $app->post('/movimentacao', function($request, $response, $args) {
 
 $app->get('/ajustar/{produto_codigo}', function($request, $response, $args) {
     $produto = Produto::getById($args['produto_codigo']);
-    $balanco = Balanco::getByProduto($produto->getProduto_codigo());
+    $produto_balanco = new MediaPrecoAnual($args['produto_codigo']);
+    $balanco = $produto_balanco->getAll();
     $msg = getMensagem($this->flash->getMessages());
-    return $this->renderer->render($response, 'produto_ajustar_preco.html', array('produto' => $produto, 'valor_uni' => $balanco->getVlr_uni(), 'classe' => $msg[0], 'texto' => $msg[1]));
+    return $this->renderer->render($response, 'produto_ajustar_preco.html', array(
+        'produto' => $produto, 
+        'balanco' => $balanco,
+        'classe' => $msg[0], 
+        'texto' => $msg[1]
+    ));
 })->setName('AjustePreco');
 
 $app->post('/ajustar/{produto_codigo}', function($request, $response, $args) {
     $params = $request->getParams();
-    $produtoCod = $args['produto_codigo'];
-    $rota = $this->get('router')->pathFor('AjustePreco', array('produto_codigo' => $produtoCod));
-    $produto = Produto::getById($produtoCod);
-    if(!$produto){
-        $this->flash->addMessage('danger', "Nenhum produto encontrado para este código");
-        return $response->withStatus(301)->withHeader('Location', $rota);
-    }
     
-    $msg = Balanco::updateAllPrecoByProduto($produto->getProduto_codigo(), $params['preco']);
+    $rota = $this->get('router')->pathFor('AjustePreco', array('produto_codigo' => $args['produto_codigo']));
+    $produto = new MediaPrecoAnual($params['produto_codigo']);
+    
+    $msg = $produto->updateMediaPreco($params['media'], $params['ano']);
 
     if ($msg[2]) {
         $this->flash->addMessage('danger', $msg[2]);

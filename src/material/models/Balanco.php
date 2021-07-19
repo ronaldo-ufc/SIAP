@@ -52,23 +52,16 @@ class Balanco {
         return $u;
     }
 
-    static function getByProduto($produto_codigo) {
-        $sql = "select * from siap.balanco where produto_codigo = ? order by data asc fetch first 1 rows only";
-        $stmt = DBSiap::getSiap()->prepare($sql);
-        $stmt->execute(array($produto_codigo));
-        $row = $stmt->fetch();
-        if ($row == null) {
-            return false;
-        }
-        return self::bundle($row);
-    }
-    
-    static function updateAllPrecoByProduto($produto_codigo, $preco) {
-        $sql = "update siap.balanco set vlr_uni = ? where produto_codigo = ?";
-        $stmt = DBSiap::getSiap()->prepare($sql);
-        $stmt->execute(array(moedaBanco($preco), $produto_codigo));
-        return $stmt->errorInfo();
-    }
+//    static function getByProduto($produto_codigo) {
+//        $sql = "select * from siap.balanco where produto_codigo = ? order by data asc fetch first 1 rows only";
+//        $stmt = DBSiap::getSiap()->prepare($sql);
+//        $stmt->execute(array($produto_codigo));
+//        $row = $stmt->fetch();
+//        if ($row == null) {
+//            return false;
+//        }
+//        return self::bundle($row);
+//    }
 
     static function getAllAgrupadoByProduto($produto_codigo, $data_ini, $data_fim, $setor_id = 22) {
         $sql = "select setor_id, produto_codigo, siap.qtdRequisitadoBysetor(produto_codigo, setor_id, ?, ?) as quantidade  from siap.balanco b "
