@@ -110,6 +110,10 @@ function formatHora($hora) {
     return $_var[0] . ":" . $_var[1];
 }
 
+function moeda($valor){
+    return number_format($valor,2,",",".");
+}
+
 function moedaBanco($get_valor) {
 
     $source = array('.', ',');

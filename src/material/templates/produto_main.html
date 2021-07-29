@@ -112,8 +112,7 @@
                                     <td > {{produto.grupo.nome}}</td>
                                     <td > {{produto.statusNome}}</td>
                                     <td class="col-md-2 text-center">
-                                        <a title="Ajustar valor" href="ajustar/{{produto.produto_codigo}}"><i class="fas fa-dollar-sign fa-2x"></i></a> &nbsp;&nbsp;&nbsp;
-                                        <a href="editar"> {{functions.btnAddEntrada(produto.nome~'|'~produto.produto_codigo, 'Entrada no estoque')}}</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a href="balanco/{{produto.produto_codigo}}"><i class="fas fa-dollar-sign fa-2x"></i> Balanço</a> &nbsp;&nbsp;&nbsp;&nbsp;
                                         <a title="Excluir" onclick="return confirm('Tem certeza que deseja excluir o produto {{produto.nome}} ?')" href="excluir/{{produto.produto_codigo}}"><i style="color: #900000" class="far fa-trash-alt fa-2x"></i></a>
                                     </td>
                                 </tr>
@@ -131,21 +130,21 @@
 
 <script>
     function verifica(value){
-    var input = document.getElementById("requisicao");
-    if (value == 'R'){
-    input.disabled = false;
-    } else{
-    input.disabled = true;
-    input.value = null;
-    }
+        var input = document.getElementById("requisicao");
+        if (value == 'R'){
+            input.disabled = false;
+        } else{
+            input.disabled = true;
+            input.value = null;
+        }
     };
     function disebleValorUnitario(){
-    var input = document.getElementById("vlr_uni");
-    input.disabled = true;
+        var input = document.getElementById("vlr_uni");
+        input.disabled = true;
     };
     function enableValorUnitario(){
-    var input = document.getElementById("vlr_uni");
-    input.disabled = false;
+        var input = document.getElementById("vlr_uni");
+        input.disabled = false;
     };
 
 </script>

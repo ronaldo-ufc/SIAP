@@ -53,6 +53,55 @@ $app->post('/produto/novo', function($request, $response, $args) {
     return $response->withStatus(301)->withHeader('Location', '../produto');
 })->setName('NovoProduto');
 
+$app->get('/balanco/{produto_codigo}', function($request, $response, $args) {
+    $msg = getMensagem($this->flash->getMessages());
+    $produto = Produto::getById($args['produto_codigo']);
+    $balanco = Balanco::getByProduto($args['produto_codigo']);
+    $produto_balanco = new MediaPrecoAnual($args['produto_codigo']);
+    $balanco_media_preco = $produto_balanco->getAll();
+    return $this->renderer->render($response, 'produto_entrada.html', 
+            array(
+                'produto' => $produto,
+                'balanco' => $balanco,
+                'balanco_media_preco'=> $balanco_media_preco,
+                'classe' => $msg[0], 
+                'texto' => $msg[1]
+            ));
+        
+})->setName('entrada.produto');
+
+$app->post('/balanco/{produto_codigo}', function($request, $response, $args) {
+    $params = $request->getParams();
+    if (!$params['vlr_uni'] or moedaBanco($params['vlr_uni']) <= 0){
+        $this->flash->addMessage('warning', 'Um valor unitário deve ser preenchido!.');
+        return $response->withStatus(301)->withHeader('Location', $_SERVER['HTTP_REFERER']);
+    }
+    $msg = Estoque::movimentacao($params);
+
+    if ($msg[2]) {
+        $this->flash->addMessage('danger', $msg[2]);
+    } else {
+        $this->flash->addMessage('success', 'Movimentação realizada com sucesso');
+    }
+    return $response->withStatus(301)->withHeader('Location', $_SERVER['HTTP_REFERER']);
+})->setName('MovimentacaoDeProduto');
+
+$app->get('/balanco/excluir/{balanco_codigo}', function($request, $response, $args) {
+    $balanco = Balanco::getByCodigo($args['balanco_codigo']);
+    if ($balanco->isBalancoSolicitacaoSetores()){
+        $this->flash->addMessage('warning', 'Um valor unitário deve ser preenchido!.');
+        return $response->withStatus(301)->withHeader('Location', $_SERVER['HTTP_REFERER']);
+    }
+    $msg = Balanco::delete($args['balanco_codigo']);
+
+    if ($msg[2]) {
+        $this->flash->addMessage('danger', $msg[2]);
+    } else {
+        $this->flash->addMessage('success', 'Registro excluido com sucesso');
+    }
+    return $response->withStatus(301)->withHeader('Location', $_SERVER['HTTP_REFERER']);
+})->setName('balanco.excluir');
+
 $app->map(['GET', 'DELETE'], '/excluir/{produto_codigo}', function($request, $response, $args) {
     $produto_codigo = $args['produto_codigo'];
 
@@ -82,7 +131,18 @@ $app->post('/produto/editar/{produto_codigo}', function($request, $response, $ar
         $file = $upload->preparar($_FILES['img'], $this->get('upload_directory_imagem'));
     }
 
-    $msg = Produto::update($postParam['c_ufc'], $postParam['c_barras'], $postParam['nome'], $postParam['unidade'], $postParam['grupo'], $postParam['observacao'], $postParam['quantidade_minima'], $file, $postParam['localizacao'], $args['produto_codigo']);
+    $msg = Produto::update(
+            $postParam['c_ufc'], 
+            $postParam['c_barras'], 
+            $postParam['nome'], 
+            $postParam['unidade'], 
+            $postParam['grupo'], 
+            $postParam['observacao'], 
+            $postParam['quantidade_minima'], 
+            $file, $postParam['localizacao'],
+            $postParam['status'],
+            $args['produto_codigo']
+    );
     if ($msg[2]) {
         $this->flash->addMessage('danger', $msg[2]);
     } else {
@@ -100,35 +160,8 @@ $app->get('/produto/editar/{produto_codigo}', function($request, $response, $arg
     return $this->renderer->render($response, 'produto_editar.html', array('imagens' => $imagens, 'produto' => $produto, 'unidades' => $unidades, 'grupos' => $grupos));
 })->setName('editarProduto');
 
-$app->post('/movimentacao', function($request, $response, $args) {
-
-    $msg = Estoque::movimentacao($request->getParams());
-
-    if ($msg[2]) {
-        $this->flash->addMessage('danger', $msg[2]);
-    } else {
-        $this->flash->addMessage('success', 'Movimentação realizada com sucesso');
-    }
-    return $response->withStatus(301)->withHeader('Location', $_SERVER['HTTP_REFERER']);
-})->setName('MovimentacaoDeProduto');
-
-$app->get('/ajustar/{produto_codigo}', function($request, $response, $args) {
-    $produto = Produto::getById($args['produto_codigo']);
-    $produto_balanco = new MediaPrecoAnual($args['produto_codigo']);
-    $balanco = $produto_balanco->getAll();
-    $msg = getMensagem($this->flash->getMessages());
-    return $this->renderer->render($response, 'produto_ajustar_preco.html', array(
-        'produto' => $produto, 
-        'balanco' => $balanco,
-        'classe' => $msg[0], 
-        'texto' => $msg[1]
-    ));
-})->setName('AjustePreco');
-
-$app->post('/ajustar/{produto_codigo}', function($request, $response, $args) {
+$app->post('/balanco/ajustar/{produto_codigo}', function($request, $response, $args) {
     $params = $request->getParams();
-    
-    $rota = $this->get('router')->pathFor('AjustePreco', array('produto_codigo' => $args['produto_codigo']));
     $produto = new MediaPrecoAnual($params['produto_codigo']);
     
     $msg = $produto->updateMediaPreco($params['media'], $params['ano']);
@@ -139,7 +172,7 @@ $app->post('/ajustar/{produto_codigo}', function($request, $response, $args) {
         $this->flash->addMessage('success', 'Preço atualizado com sucesso');
     }
 
-    return $response->withStatus(301)->withHeader('Location', $rota);
+   return $response->withStatus(301)->withHeader('Location', $_SERVER['HTTP_REFERER']);
 })->setName('AjustePrecoPost');
 
 

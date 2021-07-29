@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+{% import "forms.html" as forms %}
+{% import "uteis.html" as functions %}
+{% import "funcoes.html" as msg %}
+
+{% block content %}
+<div class="col-md-12">
+    <!--{{ forms.error_message(form, mensagem )}}-->
+    {{ msg.messagem(classe, texto)}}
+</div>
+<div class="col-md-12">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li><a href="../produto"><i class="fas fa-box-open"></i> Visualizar Produtos</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="text-uppercase text-center">Balanço</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <input name="imagem_produto" type="hidden" value="{{produto.imagem}}" id="img_cod">
+
+                    <figure class="figure">
+                        {% if produto.imagem %}
+                        <img id="perfil" class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{ base_url}}/uploads/imagem/{{produto.imagem}}">
+                        {% else %}
+                        <img id="perfil" class="img-responsive img-thumbnail"  alt="imagem do bem" src="{{ base_url}}/uploads/imagem/sem_imagem.jpg">
+                        {% endif %}
+
+                    </figure>
+                </div>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="c_ufc" class="control-label">Cód. UFC</label>
+                            <input name="c_ufc" type="text" class="form-control" id="c_ufc" value="{{produto.codigo_ufc}}" disabled>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="c_barras" class="control-label">Cód. Barras</label>
+                            <input name="c_barras" type="text" class="form-control" id="c_barras" value="{{produto.codigo_barras}}" disabled>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="nome" class="control-label">Descrição</label>
+                            <input name="nome" type="text" class="form-control" id="nome" value="{{produto.nome}}" disabled>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="estoque" class="control-label text-capitalize">Estoque ({{produto.unidade.nome}})</label>
+                            <input type="text" class="form-control" id="estoque" value="{{produto.quantidade}}" disabled>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="vlr_unitario" class="control-label">Valor Unitário (R$)</label>
+                            <input type="text" class="form-control" id="vlr_unitario" value="{{produto.vlr_uni}}" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <hr>
+                    <h4 class="text-center text-style">MOVIMENTAÇÃO</h4>
+                    <form action="" method="POST">
+                      <input type="hidden" id="item" name="produto_codigo" value="{{produto.produto_codigo}}">
+                      <div class="row">
+                        <br>
+                        <div class="col-md-12">
+                          <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-secondary active" onclick="entrada()">
+                              <input value="E" type="radio" name="tipo" id="btn_entrada" autocomplete="off" checked> Entrada
+                            </label>&nbsp;&nbsp;
+                            <label class="btn btn-secondary" onclick="saida()">
+                              <input  value="S" type="radio" name="tipo" id="btn_saida" autocomplete="off"> &nbsp;&nbsp;Saída&nbsp;&nbsp;
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                            <div class="col-md-4">
+                              <label for="options">Tipo da Movimentação</label>
+                              <select class="form-control" id="options" onchange="verifica(this.value)" name="movimentacao_tipo" required="">
+                                <option value="R">Requisição</option>
+                                <option value="I">Inventário</option>
+                              </select>
+                            </div>
+                            <div class="col-md-4">
+                              <label for="quantidade">Núm. Requisição</label>
+                              <input disabled="" class="form-control" id="requisicao" name="requisicao_central" type="text" value="" required="">
+                            </div>
+                            <div class="col-md-2">
+                              <label for="quantidade">Qtde. ({{produto.unidade.nome}})</label>
+                              <input class="form-control" id="quantidade" name="quantidade" type="number" value="1" min="1" required>
+                            </div>
+                            <div class="col-md-2">
+                              <label for="quantidade">Vlr. ({{produto.unidade.nome}})</label>
+                              <input required="" onKeyPress="return(moeda(this, '.', ',', event))" id="vlr_uni" class="form-control" name="vlr_uni" type="text">
+                            </div>
+                      </div>
+                      <br>
+                      <div class="modal-footer">
+                        <input class="btn btn-primary" type="submit" value="Salvar">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                      </div>
+                    </form>
+                </div>
+            </div>
+            
+            <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                 <hr>
+                            <h4 class="text-style text-center text-uppercase">Médias Anuais de Preços</h4>
+                           
+                            </div>
+                            
+                            <div class="col-md-6 ">
+                                <table class="table  table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <td>Ano</td>
+                                            <td>Média</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for b in balanco_media_preco %}
+                                        <tr class="text-center">                                         
+                                            <td>{{b.ano}}</td>
+                                            <td >
+                                                <form action="ajustar/{{produto.produto_codigo}}" method="POST">
+                                                    <input type="hidden" name="ano" value="{{b.ano}}">
+                                                    <input type="hidden" name="produto_codigo" value="{{b.produto_codigo}}">
+                                                    <div class="col-md-3">
+                                                        <input name="media" onKeyPress="return(moeda(this, '.', ',', event))" type="text" class="form-control" value="{{b.media}}">
+                                                    </div>
+                                                     <div class="col-md-2">
+                                                        <input type="submit" class="btn btn-primary" value="Salvar">
+                                                     </div>
+                                                </form>
+                                            </td>
+                                           
+                                        </tr>
+                                         {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+            
+                <div class="row">
+                    <div class="col-md-12">
+                        <hr>
+                        <h4 class="text-style text-center">HISTÓRICO</h4>
+                        <table id="tblbalanco" class="table table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>Data</th>
+                                    <th>Mov</th>
+                                    <th>Operação</th>
+                                    
+                                    <th>Setor</th>
+                                    <th class="text-right">Qtd ({{produto.unidade.nome}})</th>
+                                    <th class="text-right">Valor Uni.</th>
+                                    <th>Oper</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entrada in balanco %}
+                                <tr>
+                                    <td>{{entrada.data|date('d/m/Y')}}</td>
+                                    <td>{{entrada.movimentacao_tipo_nome}}</td>
+                                    <td>{{entrada.tipo_nome}}</td>
+                                     <td>{{entrada.setor.nome}}</td>
+                                     <td class="text-right">{{entrada.quantidade}}</td>
+                                     <td class="text-right">R$ {{entrada.vlr_uni_moeda}}</td>
+                                     <td>
+                                         {% if entrada.isBalancoSolicitacaoSetores == false %}
+                                         <a onclick="return confirm('Deseja realmente excluir o registro?')" href="excluir/{{entrada.balanco_codigo}}">Excluir</a>
+                                         {% endif %}
+                                     </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    function verifica(value){
+        var input = document.getElementById("requisicao");
+        if (value == 'R'){
+            input.disabled = false;
+        } else{
+            input.disabled = true;
+            input.value = null;
+        }
+    };
+    const selectMov = document.getElementById("options");
+    
+    function saida(){
+        var input = document.getElementById("vlr_uni");
+        var input_vlr_uni = document.getElementById("vlr_unitario");
+        input.value = input_vlr_uni.value;
+        input.readOnly = true;
+        var optionsList = {
+           I: "Inventário"
+        };
+        preencheSelect(optionsList);
+    };
+    function entrada(){
+        var input = document.getElementById("vlr_uni");
+        input.readOnly = false;
+        var optionsList = {
+            R: "Requisição",
+            I: "Inventário"
+        };
+        preencheSelect(optionsList);
+    };
+    
+    function preencheSelect(optionsList){
+        //Limpa os options
+        selectMov.options.length = 0;
+        for(op in optionsList) {
+            option = new Option(optionsList[op], op);
+            selectMov.options[selectMov.options.length] = option;
+        }
+    }
+    
+    
+
+</script>
+{% endblock %}
+{% block link %} 
+
+<script> 
+$(document).ready(function () {
+      
+        var tblbalanco = $('#tblbalanco').DataTable({
+            "lengthMenu": [[25, 20, 15, 10, 5, -1], [25, 20, 15, 10, 5, "TUDO"]],
+            order: [[0, 'DESC']],
+             "aoColumnDefs": [ { type: 'date-uk', aTargets: [0] }],
+            "language": {
+                "lengthMenu": "Mostrando _MENU_ registros por página",
+                "zeroRecords": "Nenhum registro encontrado",
+                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Nenhum registro disponível",
+                "infoFiltered": "(Filtrado de _MAX_ registros no total)",
+                "search": "Pesquisa",
+                "paginate": {
+                    first: "Primeira página",
+                    previous: "Anterior",
+                    next: "Próximo",
+                    last: "Última página"
+                }
+            }
+        });
+    });
+    </script>
+{% endblock %}

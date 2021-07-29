@@ -20,7 +20,9 @@ class Produto {
   private $unidade;
   private $grupo;
   public static $quantidade = 0;
-  
+  private static $vlr_uni = 0;
+
+
   private function bundle($row){
     $u = new Produto();
     $u->setProduto_codigo($row['produto_codigo']);
@@ -78,7 +80,7 @@ class Produto {
   
   static function getAllByNome($nome){
     $nome = "%".$nome."%";
-    $sql = "select * from siap.produto where nome ilike ? order by nome asc limit 6";
+    $sql = "select * from siap.produto where nome ilike ? and status = 'A' order by nome asc limit 6";
     $stmt = DBSiap::getSiap()->prepare($sql);
     $stmt->execute(array($nome));
     $rows = $stmt->fetchAll();
@@ -97,10 +99,10 @@ class Produto {
     return $stmt->errorInfo();
   }
   
-  static function update($c_ufc, $c_barras, $nome, $unidade, $grupo, $observacao, $quantidade_minima, $imagem, $localizacao, $produto_codigo){
-    $sql = "UPDATE siap.produto SET codigo_ufc=?, nome=?, observacao=?, unidade_codigo=?, grupo_codigo=?, codigo_barras=?, quantidade_minima=?, imagem = ?, localizacao=? WHERE produto_codigo = ?";
+  static function update($c_ufc, $c_barras, $nome, $unidade, $grupo, $observacao, $quantidade_minima, $imagem, $localizacao, $status, $produto_codigo){
+    $sql = "UPDATE siap.produto SET codigo_ufc=?, nome=?, observacao=?, unidade_codigo=?, grupo_codigo=?, codigo_barras=?, quantidade_minima=?, imagem = ?, localizacao=?, status=? WHERE produto_codigo = ?";
     $stmt = DBSiap::getSiap()->prepare($sql);
-    $stmt->execute(array($c_ufc, strtoupper(tirarAcentos($nome)), strtoupper(tirarAcentos($observacao)), $unidade, $grupo, $c_barras, $quantidade_minima, $imagem, $localizacao, $produto_codigo));
+    $stmt->execute(array($c_ufc, strtoupper(tirarAcentos($nome)), strtoupper(tirarAcentos($observacao)), $unidade, $grupo, $c_barras, $quantidade_minima, $imagem, $localizacao, $status, $produto_codigo));
     return $stmt->errorInfo();
   }
   
@@ -227,6 +229,24 @@ class Produto {
     }
     
     return $row['item_quantidade'];
+  }
+  private function getVlr_unitario($setor){
+    $sql = "select * from siap.media_estoque(?, ?)";
+    $stmt = DBSiap::getSiap()->prepare($sql);
+    $stmt->execute(array($this->produto_codigo, $setor));
+    $row = $stmt->fetch();
+    if ($row == null){
+      return 0;
+    }
+    
+    return $row['media_estoque'];
+  }
+  
+  public function getvlr_uni($setor = 22){
+        if ($this->vlr_uni == 0) {
+            $this->vlr_uni = self::getVlr_unitario($setor);
+        }
+        return moeda($this->vlr_uni);
   }
 
   public function getQuantidade() {

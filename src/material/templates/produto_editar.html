@@ -60,6 +60,7 @@
                     <input id="fileUpload" name="img" type="file" class="form-control" id="img" value="{{produto.foto}}">
                   </div>
                 </div>
+                  <br>
                 <div class="row">
                   <div class="col-md-4">
                     <label for="unidade" class="control-label">Unidade</label> {{functions.btnAddItens('Unidade|unidade', 'Adicionar uma Unidade de Medida')}}
@@ -87,6 +88,21 @@
                     <input name="localizacao" type="text" class="form-control" id="localizacao" required value="{{produto.localizacao}}">
                   </div>
                 </div>
+                  <br>
+                  <div class="row">
+                      <div class="col-md-2">
+                          <label for="status" class="control-label">Estatus</label>
+                          <select name="status" id="status" class="form-control">
+                              {% if produto.status == 'A' %}
+                                <option value="{{produto.status}}">Ativo</option>
+                                <option value="I">Inativo</option>
+                              {% else %}
+                              <option value="I">Inativo</option>
+                              <option value="{{produto.status}}">Ativo</option>
+                              {% endif %}
+                          </select>
+                      </div>
+                  </div>
               </div>
             </div>
 

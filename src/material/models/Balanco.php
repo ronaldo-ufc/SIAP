@@ -33,6 +33,7 @@ class Balanco {
     private $produto;
     private $quantidade;
     private $vlr_uni;
+    private $movimentacao_tipo;
 
     private function bundle($row) {
         $u = new Balanco();
@@ -46,22 +47,46 @@ class Balanco {
         $u->setRequisicao_codigo($row['requisicao_codigo']);
         $u->setQuantidade($row['quantidade']);
         $u->setVlr_uni($row['vlr_uni']);
+        $u->setMovimentacao_tipo($row['movimentacao_tipo']);
         $u->setRequisicao(Requisicao::getByCodigo($row['requisicao_codigo']));
         $u->setSetor(\siap\setor\models\Setor::getById($row['setor_id']));
         $u->setProduto(Produto::getById($row['produto_codigo']));
         return $u;
     }
+    
+    static function getByCodigo($balanco_codigo) {
+        $sql = "select * from siap.balanco "
+                . "where balanco_codigo = ? order by data desc";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array($balanco_codigo));
+        $row = $stmt->fetch();
+        if ($row == null){
+          return false;
+        }
+        return self::bundle($row);
+        
+    }
 
-//    static function getByProduto($produto_codigo) {
-//        $sql = "select * from siap.balanco where produto_codigo = ? order by data asc fetch first 1 rows only";
-//        $stmt = DBSiap::getSiap()->prepare($sql);
-//        $stmt->execute(array($produto_codigo));
-//        $row = $stmt->fetch();
-//        if ($row == null) {
-//            return false;
-//        }
-//        return self::bundle($row);
-//    }
+    static function getByProduto($produto_codigo) {
+        $sql = "select * from siap.balanco "
+                . "where produto_codigo = ? order by data desc";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array($produto_codigo));
+        $rows = $stmt->fetchAll();
+        //return $stmt->errorInfo();
+        $result = array();
+        foreach ($rows as $row) {
+            array_push($result, self::bundle($row));
+        }
+        return $result;
+    }
+    
+    static function delete($balanco_codigo){
+        $sql = "DELETE FROM siap.balanco WHERE balanco_codigo = ?";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array($balanco_codigo));
+        return $stmt->errorInfo();
+    }
 
     static function getAllAgrupadoByProduto($produto_codigo, $data_ini, $data_fim, $setor_id = 22) {
         $sql = "select setor_id, produto_codigo, siap.qtdRequisitadoBysetor(produto_codigo, setor_id, ?, ?) as quantidade  from siap.balanco b "
@@ -208,6 +233,39 @@ class Balanco {
 
     public function setVlr_uni($vlr_uni) {
         $this->vlr_uni = $vlr_uni;
+    }
+    public function getMovimentacao_tipo() {
+        return $this->movimentacao_tipo;
+    }
+
+    public function setMovimentacao_tipo($movimentacao_tipo) {
+        $this->movimentacao_tipo = $movimentacao_tipo;
+    }
+    
+    public function getVlr_uni_moeda(){
+        return moeda($this->vlr_uni);
+    }
+            
+    function getMovimentacao_tipo_nome(){
+        switch ($this->movimentacao_tipo){
+            case 'R' : return 'Requisição';
+            case 'I' : return 'Invetário';
+            case 'A' : return 'Ajuste';
+        }
+    }
+    
+    function gettipo_nome(){
+        switch ($this->tipo){
+            case 'E' : return 'Entrada';
+            case 'S' : return 'Saída';
+        }
+    }
+    
+    function isBalancoSolicitacaoSetores(){
+        if ($this->movimentacao_tipo == null) {
+            return true;
+        }
+        return false;
     }
 
 }
