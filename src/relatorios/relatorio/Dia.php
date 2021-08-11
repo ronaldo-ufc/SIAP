@@ -30,7 +30,8 @@ class Dia {
                             . '<td>' . upperInitial($grupo->getSetor_ordem()) . '</td>'
                             . '<td>' . upperInitial($grupo->getSetor_nome()) . '</td>'
                             . '<td>' . $grupo->getSetor_sigla() . '</td>'
-                            . '<td>' . upperInitial($grupo->getBloco()) . '</td>'
+                            . '<td>' . $grupo->getBloco() . '</td>'
+                            . '<td>' . mesCompleto($mes) . '</td>'
                             . '<td>' . mesAbreviado($mes) . '</td>'
                             . '<td>' . upperInitial($mes) . '</td>'
                             . '<td>' . upperInitial($ano) . '</td>'
@@ -57,6 +58,7 @@ class Dia {
                         <th >Setor</th>
                         <th >Abreviacao</th>
                         <th >Bloco</th>
+                        <th >Mes</th>
                         <th >Mes abreviado</th>
                         <th >Ordem do Mes</th>
                         <th >Ano</th>

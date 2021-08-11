@@ -449,6 +449,22 @@ function mesAbreviado($num_mes){
     return  'NOT_FOUND';
 }
 
+function mesCompleto($num_mes){
+    if($num_mes == 1) return  'JANEIRO';
+    if($num_mes == 2) return  'FEVEREIRO';
+    if($num_mes == 3) return  'MARÇO';
+    if($num_mes == 4) return  'ABRIL';
+    if($num_mes == 5) return  'MAIO';
+    if($num_mes == 6) return  'JUNHO';
+    if($num_mes == 7) return  'JULHO';
+    if($num_mes == 8) return  'AGOSTO';
+    if($num_mes == 9) return  'SETEMBRO';
+    if($num_mes == 10) return  'OUTUBRO';
+    if($num_mes == 11) return  'NOVEMBRO';
+    if($num_mes == 12) return  'DEZEMBRO';
+    return  'NOT_FOUND';
+}
+
 function capitalize($str){
     $lower = strtolower($str);
     return ucwords($lower);
