@@ -16,7 +16,7 @@ $app->get('/novo', function($request, $response, $args) {
 
 $app->post('/novo', function($request, $response, $args) {
     $postParam = $request->getParams();
-    $setor = tirarAcentos($postParam['setor']);
+    $setor = $postParam['setor'];
     $sigla = tirarAcentos($postParam['sigla']);
     $bloco_id = tirarAcentos($postParam['bloco']);
     $result = Setor::create($setor, $sigla, $bloco_id);
@@ -96,7 +96,7 @@ $app->get('/editar/{setor_id}', function($request, $response, $args) {
 
 $app->post('/editar/{setor_id}', function($request, $response, $args) {
     $postParam = $request->getParams();
-    $setor = tirarAcentos($postParam['setor']);
+    $setor = $postParam['setor'];
     $sigla = tirarAcentos($postParam['sigla']);
     $bloco_id = tirarAcentos($postParam['bloco']);
     $ativo = tirarAcentos($postParam['ativo']);
