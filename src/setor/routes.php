@@ -100,12 +100,14 @@ $app->post('/editar/{setor_id}', function($request, $response, $args) {
     $sigla = tirarAcentos($postParam['sigla']);
     $bloco_id = tirarAcentos($postParam['bloco']);
     $ativo = tirarAcentos($postParam['ativo']);
+    $ordem = is_numeric($postParam['ordem'])? intval($postParam['ordem']) : null;
     
     $updated = new Setor($args['setor_id']);
     $updated->setAtivo($ativo);
     $updated->setBloco_id($bloco_id);
     $updated->setNome($setor);
     $updated->setSigla($sigla);
+    $updated->setOrdem($ordem);
     $result = $updated->update();
     if ($result[2]) {
         $this->flash->addMessage('danger', $result[2]);

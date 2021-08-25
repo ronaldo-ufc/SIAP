@@ -38,6 +38,10 @@
                                     <option value="{{setor.ativo == 'S'? 'N' : 'S'}}">{{setor.ativo == 'S'? 'Não' : 'Sim'}}</option>
                                 </select>
                             </div>
+                            <div class="col-md-1">
+                                <label for="setor" class="control-label">Ordem</label>
+                                <input name="ordem" value="{{setor.ordem}}" type="text" class="form-control" id="ordem" >
+                            </div>
                             <div class="col-md-2">
                                 <div class="form-group"><br>
                                     <button  type="submit" class="btn btn-primary">
