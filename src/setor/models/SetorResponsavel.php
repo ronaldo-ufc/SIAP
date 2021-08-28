@@ -80,10 +80,12 @@ class SetorResponsavel {
         return $stmt->errorInfo();
     }
 
-    static function getResponsavelBySetorAndData($setor, $data) {
-        $sql = "select * from setor_responsavel where setor_id = ? and (? <= data_fim and ? >= data_inicio)";
+    static function getResponsavelBySetor($setor, $data_ini, $data_fim) {
+        $sql = "select * 
+                from setor_responsavel 
+                where setor_id = 1 and  ? >= data_inicio and ? <= data_fim";
         $stmt = DBSiap::getSiap()->prepare($sql);
-        $stmt->execute(array($setor, $data, $data));
+        $stmt->execute(array($setor, $data_ini, $data_fim));
         $row = $stmt->fetch();
         if ($row == null) {
             return false;

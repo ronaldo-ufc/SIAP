@@ -182,17 +182,14 @@ $app->map(['GET', 'POST'], '/empenho', function($request, $response, $args) {
 $app->map(['GET', 'POST'], '/responsavel', function($request, $response, $args) {
     $mensagemErro = NULL;
     if ($request->isPost()) {
-        $dompdf = $this->DOMPDF;
-        $dompdf->setPaper('A4', 'portrait'); //landscape
         $postParam = $request->getParams();
-        $responsavel = siap\relatorios\relatorio\Responsavel::bundle();
-        $header = $responsavel->start_pdf($postParam['dataInicio'], $postParam['dataFim']);
-        if ($header[2] != NULL) {
-            $mensagemErro = $header[2];
+        $relatorio = new siap\relatorios\relatorio\Responsavel();
+        $header = $relatorio->start_pdf($postParam['dataInicio'], $postParam['dataFim']);
+        
+        if (!$header) {
             return $this->renderer->render($response, 'bens_responsavel.html', array('mensagemErro' => $mensagemErro));
-        } else {
-            return $this->renderer->render($response, 'gerar_pdf.html', array('dompdf' => $dompdf, 'array' => array("Attachment" => false), 'header' => $header[1]));
-        }
+        } 
+        $relatorio->imprimir($this->DOMPDF);
     }
     return $this->renderer->render($response, 'bens_responsavel.html', array('mensagemErro' => $mensagemErro));
 })->setName('RelatorioResponsavel');

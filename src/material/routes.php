@@ -72,6 +72,10 @@ $app->get('/balanco/{produto_codigo}', function($request, $response, $args) {
 
 $app->post('/balanco/{produto_codigo}', function($request, $response, $args) {
     $params = $request->getParams();
+    if ($params['quantidade'] <= 0){
+        $this->flash->addMessage('warning', 'Informe uma quantidade acima de zero.');
+        return $response->withStatus(301)->withHeader('Location', $_SERVER['HTTP_REFERER']);
+    }
     if (!$params['vlr_uni'] or moedaBanco($params['vlr_uni']) <= 0){
         $this->flash->addMessage('warning', 'Um valor unitário deve ser preenchido!.');
         return $response->withStatus(301)->withHeader('Location', $_SERVER['HTTP_REFERER']);

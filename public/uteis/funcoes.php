@@ -424,14 +424,14 @@ function formData($data){
 
 
 //Retorna o responsável pelo setor dentre uma lista de responsáveis
-function responsavelPorSetor($setor_id,$responsaveis){
-    foreach ($responsaveis as $responsavel){
-        if($responsavel->getSetor_id() == $setor_id){
-            return $responsavel;
-        }
-    }
-    return NULL;
-}
+//function responsavelPorSetor($setor_id, $responsaveis){
+//    foreach ($responsaveis as $responsavel){
+//        if($responsavel->getSetor_id() == $setor_id){
+//            return $responsavel;
+//        }
+//    }
+//    return NULL;
+//}
 
 function mesAbreviado($num_mes){
     if($num_mes == 1) return  'JAN';

@@ -75,7 +75,7 @@
                         <br>
                         <div class="col-md-12">
                           <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-secondary active" onclick="entrada()">
+                            <label class="btn btn-secondary" onclick="entrada()">
                               <input value="E" type="radio" name="tipo" id="btn_entrada" autocomplete="off" checked> Entrada
                             </label>&nbsp;&nbsp;
                             <label class="btn btn-secondary" onclick="saida()">
@@ -88,12 +88,11 @@
                             <div class="col-md-4">
                               <label for="options">Tipo da Movimentação</label>
                               <select class="form-control" id="options" onchange="verifica(this.value)" name="movimentacao_tipo" required="">
-                                <option value="R">Requisição</option>
-                                <option value="I">Inventário</option>
+                                
                               </select>
                             </div>
                             <div class="col-md-4">
-                              <label for="quantidade">Núm. Requisição</label>
+                              <label for="quantidade">Descrição</label>
                               <input disabled="" class="form-control" id="requisicao" name="requisicao_central" type="text" value="" required="">
                             </div>
                             <div class="col-md-2">
@@ -206,17 +205,23 @@
         } else{
             input.disabled = true;
             input.value = null;
+            movimentacaoAjuste();
         }
     };
-    const selectMov = document.getElementById("options");
     
-    function saida(){
+    function movimentacaoAjuste(){
         var input = document.getElementById("vlr_uni");
         var input_vlr_uni = document.getElementById("vlr_unitario");
         input.value = input_vlr_uni.value;
         input.readOnly = true;
+    }
+    
+    const selectMov = document.getElementById("options");
+    
+    function saida(){
+        movimentacaoAjuste();
         var optionsList = {
-           I: "Inventário"
+           A: "Ajuste"
         };
         preencheSelect(optionsList);
     };
@@ -224,8 +229,9 @@
         var input = document.getElementById("vlr_uni");
         input.readOnly = false;
         var optionsList = {
+           '': "Selecione...",
             R: "Requisição",
-            I: "Inventário"
+            A: "Ajuste"
         };
         preencheSelect(optionsList);
     };

@@ -41,6 +41,18 @@ class Setor {
         }
         return $result;
     }
+    
+    static function getAllAtivos() {
+        $sql = "select * from setor where ativo = 'S' order by nome";
+        $stmt = DBSiap::getSiap()->prepare($sql);
+        $stmt->execute(array());
+        $rows = $stmt->fetchAll();
+        $result = array();
+        foreach ($rows as $row) {
+            array_push($result, self::bundle($row));
+        }
+        return $result;
+    }
 
     static function getAllById($id) {
         $sql = "select * from setor where setor_id = ?  union all  select * from setor  where setor_id <> ? order by nome";

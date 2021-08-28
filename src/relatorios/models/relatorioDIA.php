@@ -44,8 +44,8 @@ class relatorioDIA {
             inner join siap.balanco b on p.produto_codigo = b.produto_codigo
             inner join public.setor s on b.setor_id = s.setor_id
             inner join public.bloco b2 on b2.bloco_id = s.bloco_id 
-            inner join public.grupo g on p.grupo_codigo = g.grupo_codigo
-            where b.tipo = 'E' and b.requisicao_codigo is not null
+            inner join public.grupo g on p.grupo_codigo = g.grupo_codigo 
+            where b.tipo = 'E' and b.requisicao_codigo is not null and s.setor_id <> 22
             group by g.grupo_codigo, g.nome, s.setor_id, s.nome, s.sigla, b2.nome
 
             order by g.nome asc, s.nome asc";
