@@ -124,8 +124,7 @@ class Requisicao{
   
   static function getAllByFiltro($numero, $status, $setor, $inicio, $fim){
     $sql = "SELECT * FROM siap.requisicao "
-            . "WHERE data >= CURRENT_DATE - 365 and "
-            . "status like '$status' and "
+            . "WHERE status like '$status' and "
             . "status <> 'C'";
     if($numero){
         $sql = $sql." AND numero like '%$numero%' ";
@@ -135,6 +134,8 @@ class Requisicao{
     }
     if ($inicio && $fim){
        $sql = $sql. " AND data between '$inicio' and '$fim' ";
+    }else{
+        $sql .= " AND data >= CURRENT_DATE - 365 ";
     }
     $sql = $sql." ORDER BY data desc, requisicao_codigo desc";
     
