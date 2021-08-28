@@ -466,11 +466,13 @@ function mesCompleto($num_mes){
 }
 
 function capitalize($str){
+    if(!$str) return '';
     $lower = strtolower($str);
     return ucwords($lower);
 }
 
 function upperInitial($str){
+    if(!$str) return '';
     $lower = strtolower($str);
     return ucfirst($lower);
 }

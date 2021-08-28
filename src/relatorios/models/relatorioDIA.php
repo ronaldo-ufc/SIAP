@@ -35,8 +35,9 @@ class relatorioDIA {
     public function getGrupos(){
         $sql = "select 
             g.grupo_codigo,
-            g.nome as grupo, 
-            s.setor_id as setor_ordem,
+            g.nome as grupo,
+            s.setor_id,
+            s.ordem as setor_ordem,
             s.nome as setor_nome, 
             s.sigla as setor_sigla,
             b2.nome as bloco

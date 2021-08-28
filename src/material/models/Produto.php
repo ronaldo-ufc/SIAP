@@ -95,14 +95,14 @@ class Produto {
   static function create($c_ufc, $c_barras, $nome, $unidade, $grupo, $observacao, $quantidade_minima, $localizacao){
     $sql = "INSERT INTO siap.produto (codigo_ufc, nome, observacao, unidade_codigo, grupo_codigo, codigo_barras, quantidade_minima, localizacao) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = DBSiap::getSiap()->prepare($sql);
-    $stmt->execute(array($c_ufc, strtoupper(tirarAcentos($nome)), strtoupper(tirarAcentos($observacao)), $unidade, $grupo, $c_barras, $quantidade_minima,$localizacao));
+    $stmt->execute(array($c_ufc, $nome, strtoupper(tirarAcentos($observacao)), $unidade, $grupo, $c_barras, $quantidade_minima,$localizacao));
     return $stmt->errorInfo();
   }
   
   static function update($c_ufc, $c_barras, $nome, $unidade, $grupo, $observacao, $quantidade_minima, $imagem, $localizacao, $status, $produto_codigo){
     $sql = "UPDATE siap.produto SET codigo_ufc=?, nome=?, observacao=?, unidade_codigo=?, grupo_codigo=?, codigo_barras=?, quantidade_minima=?, imagem = ?, localizacao=?, status=? WHERE produto_codigo = ?";
     $stmt = DBSiap::getSiap()->prepare($sql);
-    $stmt->execute(array($c_ufc, strtoupper(tirarAcentos($nome)), strtoupper(tirarAcentos($observacao)), $unidade, $grupo, $c_barras, $quantidade_minima, $imagem, $localizacao, $status, $produto_codigo));
+    $stmt->execute(array($c_ufc, $nome, strtoupper(tirarAcentos($observacao)), $unidade, $grupo, $c_barras, $quantidade_minima, $imagem, $localizacao, $status, $produto_codigo));
     return $stmt->errorInfo();
   }
   
